@@ -58,6 +58,8 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
 
+        this.setTitle(getIntent().getExtras().get("label").toString());
+
         webview.loadUrl(((Uri) getIntent().getExtras().get("url")).toString());
     }
 }
