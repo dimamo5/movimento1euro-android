@@ -1,5 +1,7 @@
-package com.artisans.code.movimento1euro;
+package com.artisans.code.movimento1euro.menus;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,8 +17,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.artisans.code.movimento1euro.R;
+
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final String NEWS_URL = "http://movimento1euro.com/sobre-nos/noticias";
+    private final String ABOUT_US_URL = "http://movimento1euro.com/sobre-nos/a-associacao";
+    private final String CONTACTS_URL = "http://movimento1euro.com/contactos";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +54,7 @@ public class MainMenu extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.getWindow().setStatusBarColor(ContextCompat.getColor(this.getApplicationContext(),R.color.colorPrimaryDark));
+            this.getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         }
     }
 
@@ -86,21 +96,30 @@ public class MainMenu extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        /*if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-        }*/
+        if (id == R.id.nav_news){
+            Uri uri = Uri.parse(NEWS_URL);
+            Intent intent = new Intent(this, WebViewActivity.class);
+            intent.putExtra("url", uri);
+            startActivity(intent);
+        }else if (id == R.id.nav_about_us){
+            Uri uri = Uri.parse(ABOUT_US_URL);
+            Intent intent = new Intent(this, WebViewActivity.class);
+            intent.putExtra("url", uri);
+            startActivity(intent);
+        }else if (id == R.id.nav_contacts){
+            Uri uri = Uri.parse(CONTACTS_URL);
+            Intent intent = new Intent(this, WebViewActivity.class);
+            intent.putExtra("url", uri);
+            startActivity(intent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 }
