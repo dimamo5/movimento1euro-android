@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +21,12 @@ import com.artisans.code.movimento1euro.R;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final String NEWS_URL = "http://movimento1euro.com/sobre-nos/noticias";
+    private final String ABOUT_US_URL = "http://movimento1euro.com/sobre-nos/a-associacao";
+    private final String CONTACTS_URL = "http://movimento1euro.com/contactos";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,7 @@ public class MainMenu extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //this.getWindow().setStatusBarColor(ContextCompat.getColor(this.getApplicationContext(),R.color.colorPrimaryDark));
+            this.getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         }
     }
 
@@ -90,7 +97,17 @@ public class MainMenu extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_news){
-            Uri uri = Uri.parse("http://www.google.com");
+            Uri uri = Uri.parse(NEWS_URL);
+            Intent intent = new Intent(this, WebViewActivity.class);
+            intent.putExtra("url", uri);
+            startActivity(intent);
+        }else if (id == R.id.nav_about_us){
+            Uri uri = Uri.parse(ABOUT_US_URL);
+            Intent intent = new Intent(this, WebViewActivity.class);
+            intent.putExtra("url", uri);
+            startActivity(intent);
+        }else if (id == R.id.nav_contacts){
+            Uri uri = Uri.parse(CONTACTS_URL);
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", uri);
             startActivity(intent);
