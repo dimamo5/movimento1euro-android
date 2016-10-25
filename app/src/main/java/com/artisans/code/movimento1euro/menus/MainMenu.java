@@ -83,7 +83,9 @@ public class MainMenu extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -100,16 +102,19 @@ public class MainMenu extends AppCompatActivity
             Uri uri = Uri.parse(NEWS_URL);
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", uri);
+            intent.putExtra("label", "Noticias");
             startActivity(intent);
         }else if (id == R.id.nav_about_us){
             Uri uri = Uri.parse(ABOUT_US_URL);
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", uri);
+            intent.putExtra("label", "Sobre nós");
             startActivity(intent);
         }else if (id == R.id.nav_contacts){
             Uri uri = Uri.parse(CONTACTS_URL);
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", uri);
+            intent.putExtra("label", "Contactos");
             startActivity(intent);
         }
 
