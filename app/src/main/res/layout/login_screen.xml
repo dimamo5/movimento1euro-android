@@ -15,11 +15,11 @@
         android:paddingRight="24dp"
         android:weightSum="1">
 
-        <ImageView android:src="@drawable/img_movimento_1_euro"
+        <ImageView android:src="@drawable/logo"
             android:layout_width="match_parent"
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/img_movimento_1_euro"
+            app:srcCompat="@drawable/logo"
             android:scaleType="fitCenter"
             android:layout_height="100dp"
             android:contentDescription="@string/content_description_logo" />
