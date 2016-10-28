@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="@string/hint_email"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="20sp"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -51,7 +51,7 @@
                 android:inputType="textPassword"
                 android:hint="@string/hint_password"
                 android:textSize="20sp"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/darker_gray"/>
 
         </android.support.design.widget.TextInputLayout>
 
