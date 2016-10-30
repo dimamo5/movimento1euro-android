@@ -22,9 +22,9 @@ import com.artisans.code.movimento1euro.R;
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final String NEWS_URL = "http://movimento1euro.com/sobre-nos/noticias";
-    private final String ABOUT_US_URL = "http://movimento1euro.com/sobre-nos/a-associacao";
-    private final String CONTACTS_URL = "http://movimento1euro.com/contactos";
+    private final String NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
+    private final String ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
+    private final String CONTACTS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.contacts_path);
 
 
 
