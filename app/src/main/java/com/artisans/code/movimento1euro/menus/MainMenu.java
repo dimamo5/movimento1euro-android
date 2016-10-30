@@ -53,6 +53,10 @@ public class MainMenu extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //when this activity starts the fragment displayed is the one of the first drawer
+        //  this line selects it (only visual effect)
+        navigationView.getMenu().getItem(0).setChecked(true);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         }
