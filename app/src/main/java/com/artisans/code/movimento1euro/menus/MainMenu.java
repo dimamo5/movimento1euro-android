@@ -19,12 +19,14 @@ import android.view.MenuItem;
 
 import com.artisans.code.movimento1euro.R;
 
+import java.util.Arrays;
+
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final String NEWS_URL = "http://movimento1euro.com/sobre-nos/noticias";
-    private final String ABOUT_US_URL = "http://movimento1euro.com/sobre-nos/a-associacao";
-    private final String CONTACTS_URL = "http://movimento1euro.com/contactos";
+    public final static String NEWS_URL = "http://movimento1euro.com/sobre-nos/noticias";
+    public final static String ABOUT_US_URL = "http://movimento1euro.com/sobre-nos/a-associacao";
+    public final static String CONTACTS_URL = "http://movimento1euro.com/contactos";
 
 
 
@@ -100,31 +102,29 @@ public class MainMenu extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        Integer id = item.getItemId();
 
-        if (id == R.id.nav_news){
-            Uri uri = Uri.parse(NEWS_URL);
+        Integer ids[]    = {R.id.nav_news,         R.id.nav_about_us,          R.id.nav_contacts};
+        Uri     links[]  = {Uri.parse(NEWS_URL),   Uri.parse(ABOUT_US_URL),    Uri.parse(CONTACTS_URL)};
+        String  labels[] = {"Noticias",            "Sobre nós",                "Contactos"};
+
+        int option = Arrays.asList(ids).indexOf(id);
+        if (option >= 0) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", uri);
-            intent.putExtra("label", "Noticias");
-            startActivity(intent);
-        }else if (id == R.id.nav_about_us){
-            Uri uri = Uri.parse(ABOUT_US_URL);
-            Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", uri);
-            intent.putExtra("label", "Sobre nós");
-            startActivity(intent);
-        }else if (id == R.id.nav_contacts){
-            Uri uri = Uri.parse(CONTACTS_URL);
-            Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", uri);
-            intent.putExtra("label", "Contactos");
+            intent.putExtra("url", links[option]);
+            intent.putExtra("label", labels[option]);
             startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private boolean isWebview(int id) {
+        int links[] = {R.id.nav_news, R.id.nav_about_us, R.id.nav_contacts};
+
+        return Arrays.asList(links).contains(id);
     }
 
     @Override

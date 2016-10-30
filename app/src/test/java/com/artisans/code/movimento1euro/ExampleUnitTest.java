@@ -1,5 +1,10 @@
 package com.artisans.code.movimento1euro;
 
+import android.content.Intent;
+import android.net.Uri;
+
+import com.artisans.code.movimento1euro.menus.MainMenu;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
