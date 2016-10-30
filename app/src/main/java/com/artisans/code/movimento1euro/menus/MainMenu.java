@@ -28,8 +28,7 @@ public class MainMenu extends AppCompatActivity
     public final static String ABOUT_US_URL = "http://movimento1euro.com/sobre-nos/a-associacao";
     public final static String CONTACTS_URL = "http://movimento1euro.com/contactos";
 
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
