@@ -85,17 +85,15 @@ public class LoginActivity extends AppCompatActivity {
         protected JSONObject doInBackground(String... parameters) {
             String urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.login_path);
             Map<String, String> parametersMap = new HashMap<>();
-            parametersMap.put("email", parameters[0]);
+            parametersMap.put("mail", parameters[0]);
             parametersMap.put("password", parameters[1]);
             JSONObject result = null;
 
             try {
                 URL url = new URL(urlString);
-
+                Log.e("url", url.toString());
                 HttpURLConnection request = PostBuilder.buildConnection(url, parametersMap);
-                request.connect();
 
-//                InputStream in = new BufferedInputStream(request.getInputStream());
 
                 BufferedReader br=new BufferedReader(new InputStreamReader(url.openStream()));
 

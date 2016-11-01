@@ -1,6 +1,9 @@
 package com.artisans.code.movimento1euro;
 
+import android.util.Log;
+
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -21,13 +24,13 @@ public class PostBuilder {
         HttpURLConnection request = (HttpURLConnection) url.openConnection();
 
         request.addRequestProperty("Content-Length", Integer.toString(parametersStr.length()));
-        request.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        request.addRequestProperty("Content-Type", "application/json");
         request.setRequestMethod("POST");
         request.setDoInput(true);
         request.setDoOutput(true);
 
-        PrintWriter out = new PrintWriter(request.getOutputStream());
-        out.print(parametersStr);
+        OutputStreamWriter out = new OutputStreamWriter(request.getOutputStream());
+        out.write(parametersStr);
         out.close();
 
         return request;
