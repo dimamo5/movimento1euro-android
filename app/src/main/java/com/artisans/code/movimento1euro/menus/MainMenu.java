@@ -22,9 +22,9 @@ import com.artisans.code.movimento1euro.R;
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final String NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
-    private final String ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
-    private final String CONTACTS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.contacts_path);
+    protected String NEWS_URL;
+    protected String ABOUT_US_URL;
+    protected String CONTACTS_URL;
 
 
 
@@ -34,6 +34,10 @@ public class MainMenu extends AppCompatActivity
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
+        ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
+        CONTACTS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.contacts_path);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
