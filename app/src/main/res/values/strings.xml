@@ -15,7 +15,7 @@
     <string name="action_about">Sobre</string>
 
     <!--API-->
-    <string name="api_server_url"></string> <!--todo find api_server_url-->
+    <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="login_path">/login</string>
 
     <!--WEBSITE URLS-->

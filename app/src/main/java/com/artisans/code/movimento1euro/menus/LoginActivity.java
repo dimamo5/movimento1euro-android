@@ -2,12 +2,14 @@ package com.artisans.code.movimento1euro.menus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -109,8 +111,9 @@ public class LoginActivity extends AppCompatActivity {
                 br.close();
 
                 jsonString = sb.toString();
-
+                Log.e("jsonString", jsonString);
                 result = new JSONObject(jsonString);
+                Log.e("Result", result.toString());
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
@@ -124,8 +127,30 @@ public class LoginActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(JSONObject result) {
+            try {
+                if(result == null || result.getString("result").equals("failed")){
+                    Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
+                String token = result.getString("token");
+                long id = result.getLong("id");
+                String name = result.getString("name");
 
+                SharedPreferences loginInfo = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor editor = loginInfo.edit();
+                editor.putString("token", token);
+                editor.putLong("id", id);
+                editor.putString("name", name);
+
+                Intent intent = new Intent(activity, MainMenu.class);
+                startActivity(intent);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
     }
 }
