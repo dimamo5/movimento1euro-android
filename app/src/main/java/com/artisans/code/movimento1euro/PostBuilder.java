@@ -1,4 +1,4 @@
-package com.artisans.code.movimento1euro.menus;
+package com.artisans.code.movimento1euro;
 
 import java.io.IOException;
 import java.io.PrintWriter;
