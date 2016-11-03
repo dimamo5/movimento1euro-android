@@ -16,7 +16,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent;
 
-        if(getPreferences(MODE_PRIVATE).getString("token", null) != null){
+        if(getSharedPreferences("userInfo",MODE_PRIVATE).getString("token", null) != null){
             intent = new Intent(this, MainMenu.class);
         }else{
             intent = new Intent(this, LoginActivity.class);

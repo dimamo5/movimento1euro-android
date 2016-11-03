@@ -28,8 +28,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -45,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
 
-        inputEmail.setText("diogo@cenas.com");
+        inputEmail.setText("diogo@cenas.pt");
         inputPassword.setText("123");
 
         Button signUpBtn = (Button) findViewById(R.id.btn_sign_up);
@@ -133,12 +137,19 @@ public class LoginActivity extends AppCompatActivity {
                 String token = result.getString("token");
                 long id = result.getLong("id");
                 String name = result.getString("name");
+                String expirationDateStr = result.getString("expDate");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                Date expDate = simpleDateFormat.parse(expirationDateStr);
 
-                SharedPreferences loginInfo = getPreferences(MODE_PRIVATE);
+                SharedPreferences loginInfo = getSharedPreferences("userInfo",MODE_PRIVATE);
                 SharedPreferences.Editor editor = loginInfo.edit();
                 editor.putString("token", token);
                 editor.putLong("id", id);
-                editor.putString("name", name);
+                editor.putString("username", name);
+                editor.putString("expDate",expDate.toString());
+                editor.apply();
+
 
                 Intent intent = new Intent(activity, MainMenu.class);
                 startActivity(intent);
@@ -147,6 +158,8 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
                 Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
                 return;
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
     }
