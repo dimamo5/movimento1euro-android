@@ -1,5 +1,6 @@
 package com.artisans.code.movimento1euro;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -36,22 +37,12 @@ public class PostBuilder {
         request.setDoOutput(true);
         request.setChunkedStreamingMode(0);
         request.addRequestProperty("Content-Type", "application/json");
-//        request.addRequestProperty("Content-Type","x-www-form-urlencoded");
 
         request.connect();
         Log.e("parametersStr", parametersStr);
         OutputStreamWriter out = new OutputStreamWriter(request.getOutputStream());
 
-//        out.write(parametersStr);
-
-        JSONObject sendObject = new JSONObject();
-        for (String key:parameters.keySet()) {
-            try {
-                sendObject.put(key, parameters.get(key));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        JSONObject sendObject = getJsonObject(parameters);
         out.write(sendObject.toString());
         Log.e("sendObject", sendObject.toString());
 
@@ -60,6 +51,19 @@ public class PostBuilder {
         return request;
 
 
+    }
+
+    @NonNull
+    private static JSONObject getJsonObject(Map<String, String> parameters) {
+        JSONObject sendObject = new JSONObject();
+        for (String key:parameters.keySet()) {
+            try {
+                sendObject.put(key, parameters.get(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return sendObject;
     }
 
     private static final char PARAMETER_DELIMITER = '&';
