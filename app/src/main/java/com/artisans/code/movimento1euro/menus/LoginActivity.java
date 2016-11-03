@@ -21,8 +21,10 @@ import com.artisans.code.movimento1euro.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -42,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_screen);
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
+
+        inputEmail.setText("diogo@cenas.com");
+        inputPassword.setText("123");
 
         Button signUpBtn = (Button) findViewById(R.id.btn_sign_up);
         signUpBtn.setOnClickListener(new View.OnClickListener() {
@@ -95,22 +100,16 @@ public class LoginActivity extends AppCompatActivity {
                 HttpURLConnection request = PostBuilder.buildConnection(url, parametersMap);
 
 
-                BufferedReader br=new BufferedReader(new InputStreamReader(url.openStream()));
+                InputStream in =new BufferedInputStream(request.getInputStream());
 
-                char[] buffer = new char[1024];
+                BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                StringBuilder responseStrBuilder = new StringBuilder();
 
-                String jsonString = new String();
+                String inputStr;
+                while ((inputStr = streamReader.readLine()) != null)
+                    responseStrBuilder.append(inputStr);
+                result = new JSONObject(responseStrBuilder.toString());
 
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line+"\n");
-                }
-                br.close();
-
-                jsonString = sb.toString();
-                Log.e("jsonString", jsonString);
-                result = new JSONObject(jsonString);
                 Log.e("Result", result.toString());
             } catch (IOException e) {
                 e.printStackTrace();

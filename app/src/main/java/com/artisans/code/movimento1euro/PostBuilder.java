@@ -2,6 +2,12 @@ package com.artisans.code.movimento1euro;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -10,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -22,18 +29,37 @@ public class PostBuilder {
     public static HttpURLConnection buildConnection(URL url, Map<String, String> parameters) throws IOException {
         String parametersStr = createQueryStringForParameters(parameters);
         HttpURLConnection request = (HttpURLConnection) url.openConnection();
-
-        request.addRequestProperty("Content-Length", Integer.toString(parametersStr.length()));
-        request.addRequestProperty("Content-Type", "application/json");
+        request.setReadTimeout(10000);
+        request.setConnectTimeout(15000);
         request.setRequestMethod("POST");
         request.setDoInput(true);
         request.setDoOutput(true);
+        request.setChunkedStreamingMode(0);
+        request.addRequestProperty("Content-Type", "application/json");
+//        request.addRequestProperty("Content-Type","x-www-form-urlencoded");
 
+        request.connect();
+        Log.e("parametersStr", parametersStr);
         OutputStreamWriter out = new OutputStreamWriter(request.getOutputStream());
-        out.write(parametersStr);
-        out.close();
 
+//        out.write(parametersStr);
+
+        JSONObject sendObject = new JSONObject();
+        for (String key:parameters.keySet()) {
+            try {
+                sendObject.put(key, parameters.get(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        out.write(sendObject.toString());
+        Log.e("sendObject", sendObject.toString());
+
+        out.flush();
+        out.close();
         return request;
+
+
     }
 
     private static final char PARAMETER_DELIMITER = '&';
