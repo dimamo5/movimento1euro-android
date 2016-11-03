@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putLong("id", id);
                 editor.putString("username", name);
                 editor.putString("expDate",expDate.toString());
-                editor.apply();
+                editor.commit();
 
 
                 Intent intent = new Intent(activity, MainMenu.class);

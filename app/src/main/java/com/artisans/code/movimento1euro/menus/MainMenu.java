@@ -1,13 +1,11 @@
 package com.artisans.code.movimento1euro.menus;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -133,6 +131,10 @@ public class MainMenu extends AppCompatActivity
             intent.putExtra("url", uri);
             intent.putExtra("label", "Contactos");
             startActivity(intent);
+        }else if(id == R.id.nav_logout){
+            logout();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -140,7 +142,12 @@ public class MainMenu extends AppCompatActivity
         return true;
     }
 
+    protected void logout(){
+        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().commit();
 
+    }
 
     @Override
     protected void onStart() {
