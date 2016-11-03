@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
 
+import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
