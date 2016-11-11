@@ -6,5 +6,21 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="content_description_logo">Logo</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="btn_sign_up">Sign Up</string>
+
     <string name="action_about">Sobre</string>
+
+    <!--API-->
+    <string name="api_server_url">http://staging.diogomoura.me/api</string>
+    <string name="login_path">/login</string>
+
+    <!--WEBSITE URLS-->
+    <string name="website_url">http://movimento1euro.com</string>
+    <string name="about_us_path">/sobre-nos/a-associacao</string>
+    <string name="news_path">/sobre-nos/noticias</string>
+    <string name="contacts_path">/contactos</string>
 </resources>

@@ -2,50 +2,51 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.artisans.code.movimento1euro">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:versionCode="@string/versionCode"
-        android:versionName="@string/versionName"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:versionCode="@string/versionCode"
+        android:versionName="@string/versionName">
+        <activity
+            android:name=".menus.SplashScreen"
+            android:label="@string/app_name"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        
         <activity
             android:name=".menus.MainMenu"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".menus.WebViewActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="com.artisans.code.movimento1euro.menus.MainMenu">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:parentActivityName=".menus.MainMenu"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".menus.AboutActivity"
             android:label="Sobre"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="com.artisans.code.movimento1euro.menus.MainMenu">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:parentActivityName=".menus.MainMenu"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".menus.LoginActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

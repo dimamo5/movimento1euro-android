@@ -14,7 +14,7 @@
     android:weightSum="1">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/nav_profile_pic"
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:srcCompat="@drawable/ic_default_user"
@@ -22,16 +22,29 @@
         android:layout_weight="0.68" />
 
     <TextView
+        android:id="@+id/nav_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Username"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Subscrição até: XX-XX-XXXX" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subscrição até: " />
+
+        <TextView
+            android:id="@+id/nav_expiration_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="XX-XX-XXXX" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

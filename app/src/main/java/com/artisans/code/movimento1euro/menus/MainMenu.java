@@ -1,12 +1,12 @@
 package com.artisans.code.movimento1euro.menus;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,15 +16,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
+
+import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final String NEWS_URL = "http://movimento1euro.com/sobre-nos/noticias";
-    private final String ABOUT_US_URL = "http://movimento1euro.com/sobre-nos/a-associacao";
-    private final String CONTACTS_URL = "http://movimento1euro.com/contactos";
+    protected String NEWS_URL;
+    protected String ABOUT_US_URL;
+    protected String CONTACTS_URL;
+
+    TextView username;
+    TextView expDate;
 
 
 
@@ -34,6 +42,11 @@ public class MainMenu extends AppCompatActivity
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
+        ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
+        CONTACTS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.contacts_path);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,11 +65,13 @@ public class MainMenu extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View hView =  navigationView.getHeaderView(0);
+        username = (TextView)hView.findViewById(R.id.nav_username);
+        expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
-        }
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -116,6 +131,10 @@ public class MainMenu extends AppCompatActivity
             intent.putExtra("url", uri);
             intent.putExtra("label", "Contactos");
             startActivity(intent);
+        }else if(id == R.id.nav_logout){
+            logout();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -123,8 +142,35 @@ public class MainMenu extends AppCompatActivity
         return true;
     }
 
+    protected void logout(){
+        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().commit();
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
+
+        refreshInfo();
+
+    }
+
+    private void refreshInfo() {
+
+        //refreshInfoRequest();
+
+        SharedPreferences preferences = getSharedPreferences("userInfo",MODE_PRIVATE);
+        String username = preferences.getString("username", "");
+
+        Date expDate = new Date(preferences.getString("expDate",""));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+        String expDateStr = sdf.format(expDate);
+        Log.e("username", username);
+        Log.e("expDate", expDateStr);
+
+        this.username.setText(username);
+        this.expDate.setText(expDateStr);
     }
 }
