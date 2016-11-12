@@ -135,6 +135,7 @@ public class MainMenu extends AppCompatActivity
             logout();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

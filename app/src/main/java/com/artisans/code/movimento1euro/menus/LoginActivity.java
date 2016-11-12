@@ -153,6 +153,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(activity, MainMenu.class);
                 startActivity(intent);
+                activity.finish();
 
             } catch (JSONException e) {
                 e.printStackTrace();
