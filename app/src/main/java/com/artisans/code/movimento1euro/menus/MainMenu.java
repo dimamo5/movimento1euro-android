@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 
 import java.util.Arrays;
 import java.text.SimpleDateFormat;
@@ -146,6 +148,8 @@ public class MainMenu extends AppCompatActivity
         SharedPreferences sharedPreferences = getSharedPreferences("userInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().commit();
+
+        LoginManager.getInstance().logOut();
 
     }
 

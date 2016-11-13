@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 AccessToken token = loginResult.getAccessToken();
 
-                Toast toast = Toast.makeText(activity,token.getToken(), Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(activity,token.getUserId(), Toast.LENGTH_SHORT);
                 toast.show();
             }
 
