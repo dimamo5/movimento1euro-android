@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import com.facebook.FacebookSdk;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
 
+        // TODO: 13-11-2016 Remover isto antes de entregar
         inputEmail.setText("diogo@cenas.pt");
         inputPassword.setText("123");
 
