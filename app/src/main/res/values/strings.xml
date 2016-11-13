@@ -14,6 +14,9 @@
 
     <string name="action_about">Sobre</string>
 
+    <!--FACEBOOK API-->
+    <string name="facebook_app_id">208375452933152</string>
+
     <!--API-->
     <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="login_path">/login</string>
