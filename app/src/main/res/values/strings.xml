@@ -16,6 +16,7 @@
 
     <!--FACEBOOK API-->
     <string name="facebook_app_id">208375452933152</string>
+    <string name="fb_login_protocol_scheme">fb208375452933152</string>
 
     <!--API-->
     <string name="api_server_url">http://staging.diogomoura.me/api</string>

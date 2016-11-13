@@ -34,7 +34,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,10 +50,14 @@ public class LoginActivity extends AppCompatActivity {
     EditText inputEmail;
     EditText inputPassword;
     AppCompatActivity activity = this;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.login_screen);
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
@@ -73,8 +85,49 @@ public class LoginActivity extends AppCompatActivity {
                 login(view);
             }
         });
+
+
+        facebookLoginInit();
     }
 
+    private void facebookLoginInit() {
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+        loginButton.setReadPermissions("email");
+        // Other app specific specialization
+
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                AccessToken token = loginResult.getAccessToken();
+
+                Toast toast = Toast.makeText(activity,token.getToken(), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast toast = Toast.makeText(activity,"Login Canceled", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                exception.printStackTrace();
+                Toast toast = Toast.makeText(activity,exception.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 
     public void login(View view) {
         // Gets the URL from the UI's text field.
@@ -165,4 +218,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
