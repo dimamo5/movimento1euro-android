@@ -53,6 +53,11 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
+    public enum LoginType {
+        STANDARD,
+        FACEBOOK
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login(view);
+                standardLogin(view);
             }
         });
 
@@ -101,7 +106,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 AccessToken token = loginResult.getAccessToken();
-
+                Log.e("userID", token.getUserId());
+                Log.e("token", token.getToken());
                 Toast toast = Toast.makeText(activity,token.getUserId(), Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -129,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void login(View view) {
+    public void standardLogin(View view) {
         // Gets the URL from the UI's text field.
         String email = inputEmail.getText().toString();
         String password = inputPassword.getText().toString();
@@ -137,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new LoginTask().execute(email,password);
+            new LoginTask(LoginType.STANDARD).execute(email,password);
         } else {
             Toast toast = Toast.makeText(this,"Failed Connection", Toast.LENGTH_SHORT);
             toast.show();
@@ -145,13 +151,42 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private class LoginTask extends AsyncTask<String, Void, JSONObject> {
+        LoginType type;
+
+        public LoginTask(LoginType type){
+            super();
+            this.type = type;
+        }
+
         @Override
         protected JSONObject doInBackground(String... parameters) {
-            String urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.login_path);
+
+            String urlString;
             Map<String, String> parametersMap = new HashMap<>();
-            parametersMap.put("mail", parameters[0]);
-            parametersMap.put("password", parameters[1]);
+            switch (type){
+                case STANDARD:
+                    urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.std_login_path);
+                    parametersMap.put("mail", parameters[0]);
+                    parametersMap.put("password", parameters[1]);
+                    break;
+                case FACEBOOK:
+                    urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.fb_login_path);
+                    parametersMap.put("facebookId", parameters[0]);
+                    parametersMap.put("token",parameters[1]);
+                    break;
+                default:
+                    try {
+                        throw new Exception();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+            }
+
+
             JSONObject result = null;
+
+
 
             try {
                 URL url = new URL(urlString);
@@ -197,15 +232,7 @@ public class LoginActivity extends AppCompatActivity {
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
                 Date expDate = simpleDateFormat.parse(expirationDateStr);
 
-                SharedPreferences loginInfo = getSharedPreferences("userInfo",MODE_PRIVATE);
-                SharedPreferences.Editor editor = loginInfo.edit();
-                editor.putString("token", token);
-                editor.putLong("id", id);
-                editor.putString("username", name);
-                editor.putString("expDate",expDate.toString());
-                editor.commit();
-
-
+                saveLoginInfo(token, id, name, expDate);
                 Intent intent = new Intent(activity, MainMenu.class);
                 startActivity(intent);
 
@@ -216,6 +243,16 @@ public class LoginActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        }
+
+        private void saveLoginInfo(String token, long id, String name, Date expDate) {
+            SharedPreferences loginInfo = getSharedPreferences("userInfo",MODE_PRIVATE);
+            SharedPreferences.Editor editor = loginInfo.edit();
+            editor.putString("token", token);
+            editor.putLong("id", id);
+            editor.putString("username", name);
+            editor.putString("expDate",expDate.toString());
+            editor.commit();
         }
     }
 
