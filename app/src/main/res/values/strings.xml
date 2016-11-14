@@ -21,7 +21,7 @@
     <!--API-->
     <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
-    <string name="fb_login_path"></string>
+    <string name="fb_login_path">/loginFB</string>
 
     <!--WEBSITE URLS-->
     <string name="website_url">http://movimento1euro.com</string>
