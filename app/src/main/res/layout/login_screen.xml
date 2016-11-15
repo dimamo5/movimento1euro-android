@@ -94,13 +94,13 @@
 
         </LinearLayout>
 
-        <Button
-            android:text="Facebook (temp)"
-            android:layout_width="match_parent"
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebook_login_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button2"
-            android:layout_weight="1"
-            android:background="@android:color/holo_blue_dark" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp" />
 
     </LinearLayout>
 </ScrollView>
