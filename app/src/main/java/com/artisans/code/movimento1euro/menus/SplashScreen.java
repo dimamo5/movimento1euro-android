@@ -13,6 +13,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
  */
 
 public class SplashScreen extends AppCompatActivity {
+    public final static String TAG = SplashScreen.class.getCanonicalName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +22,7 @@ public class SplashScreen extends AppCompatActivity {
         Intent intent;
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(this.toString(), "Firebase Token: " + firebaseToken);
+        Log.d(TAG, "Firebase Token: " + firebaseToken);
 
         if(getSharedPreferences("userInfo",MODE_PRIVATE).getString("token", null) != null){
             intent = new Intent(this, MainMenu.class);

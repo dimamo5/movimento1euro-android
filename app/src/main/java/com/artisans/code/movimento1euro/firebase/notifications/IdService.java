@@ -10,12 +10,13 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  */
 
 public class IdService extends FirebaseInstanceIdService {
+    public final static String TAG = IdService.class.getCanonicalName();
 
     @Override
     public void onTokenRefresh() {
         super.onTokenRefresh();
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(this.toString(),"Refresh Token: "+ refreshedToken);
+        Log.d(TAG,"Refresh Token: "+ refreshedToken);
 
         // TODO: 15-11-2016 Mandar token para o servidor
 

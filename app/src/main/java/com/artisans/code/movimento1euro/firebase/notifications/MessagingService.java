@@ -20,7 +20,7 @@ import com.google.firebase.messaging.RemoteMessage;
  */
 
 public class MessagingService extends FirebaseMessagingService {
-    private final String TAG = "MessagingService";
+    private final String TAG = MessagingService.class.getCanonicalName();
 
 
     @Override
