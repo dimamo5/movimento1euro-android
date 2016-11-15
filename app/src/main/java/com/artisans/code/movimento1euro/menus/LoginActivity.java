@@ -41,6 +41,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -221,6 +222,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 if(result == null || result.getString("result").equals("failed")){
                     Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
+                    LoginManager.getInstance().logOut();
                     return;
                 }
 
@@ -239,8 +241,10 @@ public class LoginActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
                 Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
+                LoginManager.getInstance().logOut();
                 return;
             } catch (ParseException e) {
+                LoginManager.getInstance().logOut();
                 e.printStackTrace();
             }
         }
