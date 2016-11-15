@@ -107,8 +107,9 @@ public class LoginActivity extends AppCompatActivity {
                 AccessToken token = loginResult.getAccessToken();
                 Log.e("userID", token.getUserId());
                 Log.e("token", token.getToken());
-                Toast toast = Toast.makeText(activity,token.getUserId(), Toast.LENGTH_SHORT);
-                toast.show();
+                /*Toast toast = Toast.makeText(activity,token.getUserId(), Toast.LENGTH_SHORT);
+                toast.show();*/
+                new LoginTask(LoginType.FACEBOOK).execute(token.getUserId(), token.getToken());
             }
 
             @Override
@@ -170,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 case FACEBOOK:
                     urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.fb_login_path);
-                    parametersMap.put("facebookId", parameters[0]);
+                    parametersMap.put("id", parameters[0]);
                     parametersMap.put("token",parameters[1]);
                     break;
                 default:
