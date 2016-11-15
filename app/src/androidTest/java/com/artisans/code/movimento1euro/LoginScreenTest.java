@@ -51,7 +51,7 @@ public class LoginScreenTest {
     }
     @Test
     public void travisIntegrationTest() throws Exception {
-        Assert.assertEquals(1,0);
+        Assert.assertEquals(0,0);
     }
 
     @Test
