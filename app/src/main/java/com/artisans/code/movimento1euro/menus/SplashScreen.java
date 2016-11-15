@@ -20,7 +20,7 @@ public class SplashScreen extends AppCompatActivity {
         Intent intent;
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Firebase Token", firebaseToken);
+        Log.d(this.toString(), "Firebase Token: " + firebaseToken);
 
         if(getSharedPreferences("userInfo",MODE_PRIVATE).getString("token", null) != null){
             intent = new Intent(this, MainMenu.class);
