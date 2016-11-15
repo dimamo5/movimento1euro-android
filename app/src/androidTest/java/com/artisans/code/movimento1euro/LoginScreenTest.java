@@ -8,6 +8,8 @@ import android.support.test.runner.AndroidJUnit4;
 import com.artisans.code.movimento1euro.menus.LoginActivity;
 import com.artisans.code.movimento1euro.menus.MainMenu;
 
+import junit.framework.Assert;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +48,10 @@ public class LoginScreenTest {
         enterCredentials("diogo@cenas.pt", "123");
 
         Intents.intended(hasComponent(new ComponentName(getTargetContext(), MainMenu.class)));
+    }
+    @Test
+    public void travisIntegrationTest() throws Exception {
+        Assert.assertEquals(1,0);
     }
 
     @Test
