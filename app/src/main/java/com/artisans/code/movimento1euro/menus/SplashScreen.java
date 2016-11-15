@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import com.facebook.FacebookSdk;
+
 /**
  * Created by duarte on 28-10-2016.
  */
@@ -19,6 +21,8 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
         Intent intent;
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
