@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,31 +14,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.artisans.code.movimento1euro.PostBuilder;
+import com.artisans.code.movimento1euro.network.ApiRequest;
 import com.artisans.code.movimento1euro.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -151,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private class LoginTask extends AsyncTask<String, Void, JSONObject> {
+    private class LoginTask extends ApiRequest{
         LoginType type;
 
         public LoginTask(LoginType type){
@@ -162,8 +151,6 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected JSONObject doInBackground(String... parameters) {
 
-            String urlString;
-            Map<String, String> parametersMap = new HashMap<>();
             switch (type){
                 case STANDARD:
                     urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.std_login_path);
@@ -185,37 +172,11 @@ public class LoginActivity extends AppCompatActivity {
             }
 
 
-            JSONObject result = null;
-
-
-
-            try {
-                URL url = new URL(urlString);
-                Log.e("url", url.toString());
-                HttpURLConnection request = PostBuilder.buildConnection(url, parametersMap);
-
-
-                InputStream in =new BufferedInputStream(request.getInputStream());
-
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-                StringBuilder responseStrBuilder = new StringBuilder();
-
-                String inputStr;
-                while ((inputStr = streamReader.readLine()) != null)
-                    responseStrBuilder.append(inputStr);
-                result = new JSONObject(responseStrBuilder.toString());
-
-                Log.e("Result", result.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
+            JSONObject result = executeRequest();
 
             return result;
         }
+
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(JSONObject result) {
