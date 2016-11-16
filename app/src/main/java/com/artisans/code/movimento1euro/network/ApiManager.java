@@ -1,5 +1,6 @@
 package com.artisans.code.movimento1euro.network;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -24,17 +25,21 @@ public class ApiManager {
     private ApiManager() {
     }
 
-    public void updateFirebaseToken(){
+    public void updateFirebaseToken(Context context){
         String token = FirebaseInstanceId.getInstance().getToken();
-        new UpdateFirebaseTokenTask().execute(token);
+        new UpdateFirebaseTokenTask(context).execute(token);
     }
 
     private class UpdateFirebaseTokenTask extends ApiRequest{
+        public UpdateFirebaseTokenTask(Context context) {
+            super(context);
+            this.setMethod(ConnectionBuilder.Request.PUT);
+        }
 
         @Override
         protected JSONObject doInBackground(String... parameters) {
-            urlString = Resources.getSystem().getString(R.string.api_server_url) + Resources.getSystem().getString(R.string.upd_firebase_token_path);
-            parametersMap.put("token", parameters[0]);
+            urlString = context.getString(R.string.api_server_url) + context.getString(R.string.upd_firebase_token_path);
+            parametersMap.put("firebaseToken", parameters[0]);
 
             JSONObject result = executeRequest();
 
@@ -45,7 +50,10 @@ public class ApiManager {
         protected void onPostExecute(JSONObject result) {
             try {
                 if(result == null || !result.getString("result").equals("success")) {
-                    Log.e(TAG, "Token update request result: " + result.getString("result"));
+                    if(result != null)
+                        Log.e(TAG, "Token update request failed. Result: " + result);
+                    else
+                        Log.e(TAG, "Token update request Failed");
                 }else {
                     Log.d(TAG, "Token Update Request Successful");
                 }

@@ -6,45 +6,46 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by duarte on 30-10-2016.
  */
 
-public class PostBuilder {
+public class ConnectionBuilder {
+    public static final String TAG = ConnectionBuilder.class.getCanonicalName();
 
-    public static HttpURLConnection buildConnection(URL url, Map<String, String> parameters) throws IOException {
+    public enum Request{
+        POST,
+        PUT
+    }
+
+    public static HttpURLConnection buildConnection(URL url,Request requestMethod,String token ,Map<String, String> parameters) throws IOException {
         String parametersStr = createQueryStringForParameters(parameters);
         HttpURLConnection request = (HttpURLConnection) url.openConnection();
         request.setReadTimeout(10000);
         request.setConnectTimeout(15000);
-        request.setRequestMethod("POST");
         request.setDoInput(true);
         request.setDoOutput(true);
+        request.setRequestMethod(requestMethod.toString());
         request.setChunkedStreamingMode(0);
         request.addRequestProperty("Content-Type", "application/json");
+        request.addRequestProperty("Authorization", token);
+
 
         request.connect();
-        Log.e("parametersStr", parametersStr);
+        Log.d(TAG,"parametersStr: " + parametersStr);
+        Log.d(TAG, "Authorization token: " + token);
         OutputStreamWriter out = new OutputStreamWriter(request.getOutputStream());
 
         JSONObject sendObject = getJsonObject(parameters);
         out.write(sendObject.toString());
-        Log.e("sendObject", sendObject.toString());
+        Log.d("sendObject", sendObject.toString());
 
         out.flush();
         out.close();

@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("token", token.getToken());
                 /*Toast toast = Toast.makeText(activity,token.getUserId(), Toast.LENGTH_SHORT);
                 toast.show();*/
-                new LoginTask(LoginType.FACEBOOK).execute(token.getUserId(), token.getToken());
+                new LoginTask(getApplicationContext(), LoginType.FACEBOOK).execute(token.getUserId(), token.getToken());
             }
 
             @Override
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new LoginTask(LoginType.STANDARD).execute(email,password);
+            new LoginTask(getApplicationContext(), LoginType.STANDARD).execute(email,password);
         } else {
             Toast toast = Toast.makeText(this,"Failed Connection", Toast.LENGTH_SHORT);
             toast.show();
@@ -144,8 +144,8 @@ public class LoginActivity extends AppCompatActivity {
     private class LoginTask extends ApiRequest{
         LoginType type;
 
-        public LoginTask(LoginType type){
-            super();
+        public LoginTask(Context context, LoginType type){
+            super(context);
             this.type = type;
         }
 
@@ -200,6 +200,7 @@ public class LoginActivity extends AppCompatActivity {
                 Date expDate = simpleDateFormat.parse(expirationDateStr);
 
                 saveLoginInfo(token, id, name, expDate);
+                ApiManager.getInstance().updateFirebaseToken(getApplicationContext());
                 Intent intent = new Intent(activity, MainMenu.class);
                 startActivity(intent);
                 activity.finish();
@@ -223,8 +224,6 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("username", name);
             editor.putString("expDate",expDate.toString());
             editor.commit();
-
-            ApiManager.getInstance().updateFirebaseToken();
         }
     }
 
