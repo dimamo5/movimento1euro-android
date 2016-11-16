@@ -45,7 +45,6 @@ public abstract class ApiRequest extends AsyncTask<String, Void, JSONObject> {
                 responseStrBuilder.append(inputStr);
             result = new JSONObject(responseStrBuilder.toString());
 
-            Log.e("Result", result.toString());
         } catch (IOException e) {
             e.printStackTrace();
             return null;

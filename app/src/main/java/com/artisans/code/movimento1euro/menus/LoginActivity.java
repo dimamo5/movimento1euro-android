@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import com.artisans.code.movimento1euro.network.ApiManager;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -181,7 +182,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONObject result) {
             try {
-                if(result == null || result.getString("result").equals("failed")){
+                if(result == null
+                        || result.getString("result").equals("login failed")
+                        || result.getString("result").equals("wrong params")
+                        || result.getString("result").equals("error")){
                     Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
                     LoginManager.getInstance().logOut();
                     return;
@@ -219,6 +223,8 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("username", name);
             editor.putString("expDate",expDate.toString());
             editor.commit();
+
+            ApiManager.getInstance().updateFirebaseToken();
         }
     }
 

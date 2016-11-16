@@ -2,6 +2,7 @@ package com.artisans.code.movimento1euro.firebase.notifications;
 
 import android.util.Log;
 
+import com.artisans.code.movimento1euro.network.ApiManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -18,7 +19,7 @@ public class IdService extends FirebaseInstanceIdService {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG,"Refresh Token: "+ refreshedToken);
 
-        // TODO: 15-11-2016 Mandar token para o servidor
+        ApiManager.getInstance().updateFirebaseToken();
 
     }
 }
