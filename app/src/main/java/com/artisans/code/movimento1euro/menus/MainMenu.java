@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.ViewLastCausesFragment;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 
@@ -27,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainMenu extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener {
 
     protected String NEWS_URL;
     protected String ABOUT_US_URL;
@@ -70,6 +71,29 @@ public class MainMenu extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         username = (TextView)hView.findViewById(R.id.nav_username);
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
+
+        // Check that the activity is using the layout version with
+        // the fragment_container FrameLayout
+        if (findViewById(R.id.menu_fragment) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Create a new Fragment to be placed in the activity layout
+            ViewLastCausesFragment firstFragment = new ViewLastCausesFragment();
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            firstFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.menu_fragment, firstFragment).commit();
+        }
 
     }
 
@@ -177,5 +201,10 @@ public class MainMenu extends AppCompatActivity
 
         this.username.setText(username);
         this.expDate.setText(expDateStr);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        
     }
 }
