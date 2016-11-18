@@ -4,13 +4,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.artisans.code.movimento1euro.menus.MainMenu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,12 +94,13 @@ public class ViewLastCausesFragment extends Fragment {
         txtName = (TextView) view.findViewById(R.id.last_causes_item_name);
         txtMoney = (TextView) view.findViewById(R.id.last_causes_item_money);
 
-        HashMap<String,String> temp=new HashMap<String, String>();
-        temp.put(Constants.MONTH_COLUMN, "Mes");
-        temp.put(Constants.NAME_COLUMN, "Nome");
-        temp.put(Constants.MONEY_COLUMN, "XXX.XX€");
-        list.add(temp);
-        list.add(temp);
+        for (int i = 0; i < 50; i++) {
+            HashMap<String,String> temp=new HashMap<String, String>();
+            temp.put(Constants.MONTH_COLUMN, "Mes " + i);
+            temp.put(Constants.NAME_COLUMN, "Nome " + i);
+            temp.put(Constants.MONEY_COLUMN, i+"€");
+            list.add(temp);
+        }
 
         SimpleAdapter adapter = new SimpleAdapter(
                 this.getContext(),
@@ -105,6 +111,14 @@ public class ViewLastCausesFragment extends Fragment {
         );
 
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //TODO delete activity variable on MainMenu.java
+                Toast.makeText(MainMenu.activity, Integer.toString(i)+" Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }

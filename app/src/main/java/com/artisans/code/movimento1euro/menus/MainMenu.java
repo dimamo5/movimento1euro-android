@@ -34,9 +34,11 @@ public class MainMenu extends AppCompatActivity
     protected String ABOUT_US_URL;
     protected String CONTACTS_URL;
 
+    //TODO delete. It is only required to make a Toast on ViewLastCausesFragment.java
+    public static AppCompatActivity activity;
+
     TextView username;
     TextView expDate;
-
 
 
     @Override
@@ -95,6 +97,8 @@ public class MainMenu extends AppCompatActivity
                     .add(R.id.menu_fragment, firstFragment).commit();
         }
 
+        //TODO delete. It's only required to make a Toast on ViewLastCausesFragment.java
+        activity = this;
     }
 
 
