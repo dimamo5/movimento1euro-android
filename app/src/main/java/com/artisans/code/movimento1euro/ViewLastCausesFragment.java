@@ -106,14 +106,6 @@ public class ViewLastCausesFragment extends Fragment {
 
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //TODO delete activity variable on MainMenu.java
-                Toast.makeText(MainMenu.activity, Integer.toString(i)+" Clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         return view;
     }
 

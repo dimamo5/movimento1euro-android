@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -74,16 +75,10 @@ public class MainMenu extends AppCompatActivity
         username = (TextView)hView.findViewById(R.id.nav_username);
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
 
-        // Check that the activity is using the layout version with
-        // the fragment_container FrameLayout
-        if (findViewById(R.id.menu_fragment) != null) {
-
-            viewLastCausesFragment = new ViewLastCausesFragment();
-
-            // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.menu_fragment, viewLastCausesFragment).commit();
-        }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        viewLastCausesFragment = new ViewLastCausesFragment();
+        transaction.replace(R.id.menu_fragment, viewLastCausesFragment);
+        transaction.commit();
 
         //TODO delete. It's only required to make a Toast on ViewLastCausesFragment.java
         activity = this;
