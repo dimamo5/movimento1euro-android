@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
@@ -35,9 +36,6 @@ public class MainMenu extends AppCompatActivity
     protected String ABOUT_US_URL;
     protected String CONTACTS_URL;
 
-    //TODO delete. It is only required to make a Toast on ViewLastCausesFragment.java
-    public static AppCompatActivity activity;
-
     TextView username;
     TextView expDate;
     ViewLastCausesFragment viewLastCausesFragment;
@@ -47,21 +45,15 @@ public class MainMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Causas em votação");
         setSupportActionBar(toolbar);
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_nav);
+        spinner.setVisibility(View.INVISIBLE);
 
         NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
         ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
         CONTACTS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.contacts_path);
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -74,14 +66,6 @@ public class MainMenu extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         username = (TextView)hView.findViewById(R.id.nav_username);
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        viewLastCausesFragment = new ViewLastCausesFragment();
-        transaction.replace(R.id.menu_fragment, viewLastCausesFragment);
-        transaction.commit();
-
-        //TODO delete. It's only required to make a Toast on ViewLastCausesFragment.java
-        activity = this;
     }
 
     public void cardClick(View view) {
@@ -151,6 +135,12 @@ public class MainMenu extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.nav_prev_winners) {
+            getSupportActionBar().setTitle("Vencedores Passados");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            viewLastCausesFragment = new ViewLastCausesFragment();
+            transaction.replace(R.id.menu_fragment, viewLastCausesFragment);
+            transaction.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

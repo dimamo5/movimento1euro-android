@@ -4,16 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.artisans.code.movimento1euro.menus.MainMenu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,12 +83,10 @@ public class ViewLastCausesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.e("rotation", "\n\t------update------\n");
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_view_last_causes, container, false);
+        View view = inflater.inflate(R.layout.fragment_previous_winners, container, false);
 
         listView = (ListView) view.findViewById(R.id.last_causes_list);
-
         for (int i = 0; i < 50; i++) {
             HashMap<String,String> temp=new HashMap<String, String>();
             temp.put(Constants.MONTH_COLUMN, "Mes " + i);
@@ -95,23 +94,44 @@ public class ViewLastCausesFragment extends Fragment {
             temp.put(Constants.MONEY_COLUMN, i+"€");
             list.add(temp);
         }
-
         SimpleAdapter adapter = new SimpleAdapter(
                 this.getContext(),
                 list,
-                R.layout.last_cause_item,
+                R.layout.item_previous_winner,
                 new String[] {Constants.MONTH_COLUMN,Constants.NAME_COLUMN,Constants.MONEY_COLUMN},
                 new int[] {R.id.last_causes_item_month,R.id.last_causes_item_name, R.id.last_causes_item_money}
         );
-
         listView.setAdapter(adapter);
+
+        Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
+        spinner.setVisibility(View.VISIBLE);
+        ArrayList<String> arrayList1 = new ArrayList<String>();
+        arrayList1.add("2016");
+        arrayList1.add("2015");
+        arrayList1.add("2014");
+        arrayList1.add("2013");
+        ArrayAdapter<String> adp = new ArrayAdapter<String> (this.getContext(),
+                R.layout.spinner_previous_winnners_selected_year,arrayList1);
+        adp.setDropDownViewResource(R.layout.spinner_previous_winnners_year);
+        spinner.setAdapter(adp);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getActivity(), 2016-i+" Clicked", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         return view;
     }
 
     public void cardClick(View view) {
-        //TODO delete activity variable on MainMenu.java
-        Toast.makeText(MainMenu.activity, listView.getPositionForView(view)+" Clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), listView.getPositionForView(view)+" Clicked", Toast.LENGTH_SHORT).show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
