@@ -4,16 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.menus.MainMenu;
@@ -78,23 +75,18 @@ public class ViewLastCausesFragment extends Fragment {
         public static final String NAME_COLUMN="Name";
         public static final String MONEY_COLUMN="Money";
     }
-    TextView txtMonth;
-    TextView txtName;
-    TextView txtMoney;
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
     ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.e("rotation", "\n\t------update------\n");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_last_causes, container, false);
 
         listView = (ListView) view.findViewById(R.id.last_causes_list);
-
-        txtMonth = (TextView) view.findViewById(R.id.last_causes_item_month);
-        txtName = (TextView) view.findViewById(R.id.last_causes_item_name);
-        txtMoney = (TextView) view.findViewById(R.id.last_causes_item_money);
 
         for (int i = 0; i < 50; i++) {
             HashMap<String,String> temp=new HashMap<String, String>();
