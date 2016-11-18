@@ -39,7 +39,7 @@ public class MainMenu extends AppCompatActivity
 
     TextView username;
     TextView expDate;
-
+    ViewLastCausesFragment viewLastCausesFragment = new ViewLastCausesFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,23 +85,22 @@ public class MainMenu extends AppCompatActivity
                 return;
             }
 
-            // Create a new Fragment to be placed in the activity layout
-            ViewLastCausesFragment firstFragment = new ViewLastCausesFragment();
-
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
-            firstFragment.setArguments(getIntent().getExtras());
+            viewLastCausesFragment.setArguments(getIntent().getExtras());
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.menu_fragment, firstFragment).commit();
+                    .add(R.id.menu_fragment, viewLastCausesFragment).commit();
         }
 
         //TODO delete. It's only required to make a Toast on ViewLastCausesFragment.java
         activity = this;
     }
 
-
+    public void cardClick(View view) {
+        viewLastCausesFragment.cardClick(view);
+    }
 
     @Override
     public void onBackPressed() {

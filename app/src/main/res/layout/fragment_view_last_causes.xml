@@ -10,5 +10,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/last_causes_list" />
+        android:id="@+id/last_causes_list"
+        android:listSelector="@android:color/transparent"
+        android:divider="@android:drawable/list_selector_background"/>
 </FrameLayout>

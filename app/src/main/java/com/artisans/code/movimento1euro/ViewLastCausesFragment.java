@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,7 @@ public class ViewLastCausesFragment extends Fragment {
     TextView txtName;
     TextView txtMoney;
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
+    ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,7 +90,7 @@ public class ViewLastCausesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_last_causes, container, false);
 
-        ListView listView = (ListView) view.findViewById(R.id.last_causes_list);
+        listView = (ListView) view.findViewById(R.id.last_causes_list);
 
         txtMonth = (TextView) view.findViewById(R.id.last_causes_item_month);
         txtName = (TextView) view.findViewById(R.id.last_causes_item_name);
@@ -121,6 +123,11 @@ public class ViewLastCausesFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void cardClick(View view) {
+        //TODO delete activity variable on MainMenu.java
+        Toast.makeText(MainMenu.activity, listView.getPositionForView(view)+" Clicked", Toast.LENGTH_SHORT).show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
