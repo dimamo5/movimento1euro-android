@@ -14,7 +14,7 @@ import org.json.JSONObject;
  * Created by duarte on 16-11-2016.
  */
 public class ApiManager {
-    public final static String TAG = ApiManager.class.getCanonicalName();
+    public final static String TAG = ApiManager.class.getSimpleName();
 
     private static ApiManager ourInstance = new ApiManager();
 

@@ -18,7 +18,7 @@ import java.util.Map;
  */
 
 public class ConnectionBuilder {
-    public static final String TAG = ConnectionBuilder.class.getCanonicalName();
+    public static final String TAG = ConnectionBuilder.class.getSimpleName();
 
     public enum Request{
         POST,
@@ -39,13 +39,13 @@ public class ConnectionBuilder {
 
 
         request.connect();
-        Log.d(TAG,"parametersStr: " + parametersStr);
-        Log.d(TAG, "Authorization token: " + token);
+        /*Log.d(TAG,"parametersStr: " + parametersStr);
+        Log.d(TAG, "Authorization token: " + token);*/
         OutputStreamWriter out = new OutputStreamWriter(request.getOutputStream());
 
         JSONObject sendObject = getJsonObject(parameters);
         out.write(sendObject.toString());
-        Log.d("sendObject", sendObject.toString());
+        /*Log.d("sendObject", sendObject.toString());*/
 
         out.flush();
         out.close();

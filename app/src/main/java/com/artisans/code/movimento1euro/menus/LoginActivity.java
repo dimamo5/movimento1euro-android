@@ -37,7 +37,9 @@ import com.facebook.login.widget.LoginButton;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
     private final String REGISTRATION_URL = "http://movimento1euro.com/inscreva-se-aqui";
+
     EditText inputEmail;
     EditText inputPassword;
     AppCompatActivity activity = this;
@@ -96,8 +98,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 AccessToken token = loginResult.getAccessToken();
-                Log.e("userID", token.getUserId());
-                Log.e("token", token.getToken());
+                Log.d(TAG, "userID: " + token.getUserId());
+                Log.d(TAG, "token: " + token.getToken());
                 /*Toast toast = Toast.makeText(activity,token.getUserId(), Toast.LENGTH_SHORT);
                 toast.show();*/
                 new LoginTask(getApplicationContext(), LoginType.FACEBOOK).execute(token.getUserId(), token.getToken());

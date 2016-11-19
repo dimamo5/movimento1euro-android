@@ -29,7 +29,7 @@ import java.util.Date;
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String TAG = MainMenu.class.getCanonicalName();
+    public static final String TAG = MainMenu.class.getSimpleName();
 
     protected String NEWS_URL;
     protected String ABOUT_US_URL;
