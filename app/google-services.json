@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "195726226782",
+    "firebase_url": "https://movimento1euro-2a1a3.firebaseio.com",
+    "project_id": "movimento1euro-2a1a3",
+    "storage_bucket": "movimento1euro-2a1a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195726226782:android:e27b4cd44f0cbf64",
+        "android_client_info": {
+          "package_name": "com.artisans.code.movimento1euro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "195726226782-su5g8c89hk7sneldtn8q1unhsn58tfqr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwhpFiL6qBg76l1oq2TM7UfY9xC2DWLbo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,31 +14,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.artisans.code.movimento1euro.PostBuilder;
+import com.artisans.code.movimento1euro.network.ApiRequest;
 import com.artisans.code.movimento1euro.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 
+import com.artisans.code.movimento1euro.network.ApiManager;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -47,7 +37,9 @@ import com.facebook.login.widget.LoginButton;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
     private final String REGISTRATION_URL = "http://movimento1euro.com/inscreva-se-aqui";
+
     EditText inputEmail;
     EditText inputPassword;
     AppCompatActivity activity = this;
@@ -106,11 +98,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 AccessToken token = loginResult.getAccessToken();
-                Log.e("userID", token.getUserId());
-                Log.e("token", token.getToken());
+                Log.d(TAG, "userID: " + token.getUserId());
+                Log.d(TAG, "token: " + token.getToken());
                 /*Toast toast = Toast.makeText(activity,token.getUserId(), Toast.LENGTH_SHORT);
                 toast.show();*/
-                new LoginTask(LoginType.FACEBOOK).execute(token.getUserId(), token.getToken());
+                new LoginTask(getApplicationContext(), LoginType.FACEBOOK).execute(token.getUserId(), token.getToken());
             }
 
             @Override
@@ -144,26 +136,24 @@ public class LoginActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new LoginTask(LoginType.STANDARD).execute(email,password);
+            new LoginTask(getApplicationContext(), LoginType.STANDARD).execute(email,password);
         } else {
             Toast toast = Toast.makeText(this,"Failed Connection", Toast.LENGTH_SHORT);
             toast.show();
         }
     }
 
-    private class LoginTask extends AsyncTask<String, Void, JSONObject> {
+    private class LoginTask extends ApiRequest{
         LoginType type;
 
-        public LoginTask(LoginType type){
-            super();
+        public LoginTask(Context context, LoginType type){
+            super(context);
             this.type = type;
         }
 
         @Override
         protected JSONObject doInBackground(String... parameters) {
 
-            String urlString;
-            Map<String, String> parametersMap = new HashMap<>();
             switch (type){
                 case STANDARD:
                     urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.std_login_path);
@@ -185,42 +175,19 @@ public class LoginActivity extends AppCompatActivity {
             }
 
 
-            JSONObject result = null;
-
-
-
-            try {
-                URL url = new URL(urlString);
-                Log.e("url", url.toString());
-                HttpURLConnection request = PostBuilder.buildConnection(url, parametersMap);
-
-
-                InputStream in =new BufferedInputStream(request.getInputStream());
-
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-                StringBuilder responseStrBuilder = new StringBuilder();
-
-                String inputStr;
-                while ((inputStr = streamReader.readLine()) != null)
-                    responseStrBuilder.append(inputStr);
-                result = new JSONObject(responseStrBuilder.toString());
-
-                Log.e("Result", result.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
+            JSONObject result = executeRequest();
 
             return result;
         }
+
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(JSONObject result) {
             try {
-                if(result == null || result.getString("result").equals("failed")){
+                if(result == null
+                        || result.getString("result").equals("login failed")
+                        || result.getString("result").equals("wrong params")
+                        || result.getString("result").equals("error")){
                     Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
                     LoginManager.getInstance().logOut();
                     return;
@@ -235,6 +202,7 @@ public class LoginActivity extends AppCompatActivity {
                 Date expDate = simpleDateFormat.parse(expirationDateStr);
 
                 saveLoginInfo(token, id, name, expDate);
+                ApiManager.getInstance().updateFirebaseToken(getApplicationContext());
                 Intent intent = new Intent(activity, MainMenu.class);
                 startActivity(intent);
                 activity.finish();
