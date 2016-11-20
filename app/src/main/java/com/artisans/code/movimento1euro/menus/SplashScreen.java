@@ -16,6 +16,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialize facebook sdk
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         Intent intent;
