@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_screen);
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
+        findViewById(R.id.layout_login_screen).requestFocus();
 
         // TODO: 13-11-2016 Remover isto antes de entregar
         inputEmail.setText("diogo@cenas.pt");
