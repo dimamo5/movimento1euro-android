@@ -18,6 +18,7 @@ import com.facebook.AccessToken;
 import com.facebook.FacebookActivity;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import junit.framework.Assert;
 
@@ -95,6 +96,10 @@ public class LoginScreenTest {
         Log.e(TAG,"FACEBOOK CLIENT TOKEN: " + fbToken);
         Assert.assertNull(fbToken);
         Assert.assertNull(fbId);
+    }
+
+    public void testFirebaseToken () throws Exception{
+        Assert.assertNotNull(FirebaseInstanceId.getInstance().getToken());
     }
 
     @Test
