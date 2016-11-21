@@ -9,10 +9,16 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="content_description_logo">Logo</string>
-    <string name="btn_sign_in">Sign In</string>
-    <string name="btn_sign_up">Sign Up</string>
+    <string name="btn_sign_in">Iniciar sessão</string>
+    <string name="btn_sign_up">Registar</string>
 
     <string name="action_about">Sobre</string>
+
+    <!--MENSAGENS DE ERRO-->
+        <!--LOGIN-->
+        <string name="failed_connection">Ligação Falhou</string>
+        <string name="failed_login">Falha a iniciar sessão</string>
+        <string name="wrong_parameters">Pârametros Errados</string>
 
     <!--FACEBOOK API-->
     <string name="facebook_app_id">208375452933152</string>

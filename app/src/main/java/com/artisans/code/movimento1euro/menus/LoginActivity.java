@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()) {
             new LoginTask(getApplicationContext(), LoginType.STANDARD).execute(email,password);
         } else {
-            Toast toast = Toast.makeText(this,"Failed Connection", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this,activity.getString(R.string.failed_connection), Toast.LENGTH_SHORT);
             toast.show();
         }
     }
@@ -188,7 +188,12 @@ public class LoginActivity extends AppCompatActivity {
                         || result.getString("result").equals("login failed")
                         || result.getString("result").equals("wrong params")
                         || result.getString("result").equals("error")){
-                    Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
+
+                    if(result.getString("result").equals("wrong params")){
+                        Toast.makeText(activity.getApplicationContext(), context.getString(R.string.wrong_parameters), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(activity.getApplicationContext(), context.getString(R.string.failed_login), Toast.LENGTH_SHORT).show();
+                    }
                     LoginManager.getInstance().logOut();
                     return;
                 }
@@ -209,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(activity.getApplicationContext(), "Failed Login", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), context.getString(R.string.failed_login), Toast.LENGTH_SHORT).show();
                 LoginManager.getInstance().logOut();
                 return;
             } catch (ParseException e) {
