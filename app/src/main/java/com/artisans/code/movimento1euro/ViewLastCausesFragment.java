@@ -1,6 +1,7 @@
 package com.artisans.code.movimento1euro;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,7 +26,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.artisans.code.movimento1euro.ViewLastCausesFragment.Constants.YEAR_COLUMN;
 
 
 /**
@@ -52,9 +57,12 @@ public class ViewLastCausesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    ArrayList<String> yearsList = new ArrayList<String>();
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    ArrayList<HashMap<String, String>> fullList = new ArrayList<HashMap<String, String>>();
+    ArrayAdapter<String> spinnerAdapter;
     ListView listView;
-    SimpleAdapter adapter;
+    SimpleAdapter listAdapter;
 
     public ViewLastCausesFragment() {
         // Required empty public constructor
@@ -91,6 +99,7 @@ public class ViewLastCausesFragment extends Fragment {
         public static final String MONTH_COLUMN = "Month";
         public static final String NAME_COLUMN = "Name";
         public static final String MONEY_COLUMN = "Money";
+        public static final String YEAR_COLUMN = "Year";
     }
 
 
@@ -105,11 +114,16 @@ public class ViewLastCausesFragment extends Fragment {
 
             HttpResponse<String> response = null;
 
+            SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
+            String token = userDetails.getString("token", "");
+            Log.d("causes", "token: " + token);
+            Log.d("causes", "path: " +getResources().getString(R.string.api_server_url) + getResources().getString(R.string.winner_causes_path) );
+
             try {
-                response = Unirest.get("http://staging.diogomoura.me/api/winnerCauses")
+                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.winner_causes_path))
                         .header("accept", "application/json")
                         .header("content-type", "application/json")
-                        .header("Authorization", "d51dae9e0cdef919b5dae431b95fb199728b3003174be8e51834cbea7aa61bd73ed2a272a96c3c449fc0c74689f32681")
+                        .header("Authorization", token)
                         .asString();
             } catch (UnirestException e) {
                 Log.d("causes", e.getMessage());
@@ -123,16 +137,29 @@ public class ViewLastCausesFragment extends Fragment {
 
                 JSONObject obj = new JSONObject(response.getBody());
                 JSONArray arr = obj.getJSONArray("causes");
+
+                yearsList.clear();
+                fullList.clear();
+
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject o = arr.getJSONObject(i);
+                    String year = o.getString("date").substring(0, 4);
+
+                    if (!yearsList.contains(year)) {
+                        yearsList.add(year);
+                    }
+
                     HashMap<String, String> temp = new HashMap<String, String>();
                     temp.put(Constants.MONTH_COLUMN, "Mes " + o.getString("month"));
                     temp.put(Constants.NAME_COLUMN, "Nome " + o.getString("name"));
+                    temp.put(Constants.YEAR_COLUMN, year);
                     temp.put(Constants.MONEY_COLUMN, i + "€");
-                    list.add(temp);
+                    fullList.add(temp);
                 }
 
+                Collections.sort(yearsList);
 
+                //yearsList.add();
             } catch (JSONException e) {
                 Log.d("causes", "JSONException: " + e.getMessage());
             } catch (Exception e) {
@@ -152,10 +179,21 @@ public class ViewLastCausesFragment extends Fragment {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(JSONObject result) {
-            Log.d("causes", "before adapter notified");
-            adapter.notifyDataSetChanged();
-            Log.d("causes", "adapter notified");
+            spinnerAdapter.notifyDataSetChanged();
+            updateFromSpinner(yearsList.get(0));
         }
+    }
+
+    public void updateFromSpinner(String year) {
+        list.clear();
+        for(HashMap<String, String> item : fullList) {
+            String y  = item.get(YEAR_COLUMN);
+
+            if(y.equals(year))
+                list.add(item);
+        }
+
+        listAdapter.notifyDataSetChanged();
     }
 
 
@@ -181,31 +219,29 @@ public class ViewLastCausesFragment extends Fragment {
         }
         */
 
-        adapter = new SimpleAdapter(
+        listAdapter = new SimpleAdapter(
                 this.getContext(),
                 list,
                 R.layout.item_previous_winner,
                 new String[]{Constants.MONTH_COLUMN, Constants.NAME_COLUMN, Constants.MONEY_COLUMN},
                 new int[]{R.id.last_causes_item_month, R.id.last_causes_item_name, R.id.last_causes_item_money}
         );
-        listView.setAdapter(adapter);
+        listView.setAdapter(listAdapter);
 
         Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
         spinner.setVisibility(View.VISIBLE);
-        ArrayList<String> arrayList1 = new ArrayList<String>();
-        arrayList1.add("2016");
-        arrayList1.add("2015");
-        arrayList1.add("2014");
-        arrayList1.add("2013");
-        ArrayAdapter<String> adp = new ArrayAdapter<String>(this.getContext(),
-                R.layout.spinner_previous_winnners_selected_year, arrayList1);
-        adp.setDropDownViewResource(R.layout.spinner_previous_winnners_year);
-        spinner.setAdapter(adp);
+
+        //TODO: Get existing years list
+        spinnerAdapter = new ArrayAdapter<String>(this.getContext(),
+                R.layout.spinner_previous_winners_selected_year, yearsList);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_previous_winners_year);
+        spinner.setAdapter(spinnerAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), 2016 - i + " Clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), yearsList.get(i) + " Clicked", Toast.LENGTH_SHORT).show();
+                updateFromSpinner(yearsList.get(i));
             }
 
             @Override
