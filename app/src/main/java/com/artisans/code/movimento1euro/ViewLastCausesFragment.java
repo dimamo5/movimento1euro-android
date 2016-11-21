@@ -71,6 +71,13 @@ public class ViewLastCausesFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
+        spinner.setVisibility(View.GONE);
+    }
+
     public class Constants {
         public static final String MONTH_COLUMN="Month";
         public static final String NAME_COLUMN="Name";

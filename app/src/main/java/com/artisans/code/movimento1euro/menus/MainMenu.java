@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -22,15 +20,16 @@ import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.ViewLastCausesFragment;
-import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 
-import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.artisans.code.movimento1euro.ViewCausesFragment;
+
 public class MainMenu extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
+        ViewCausesFragment.OnFragmentInteractionListener {
 
     protected String NEWS_URL;
     protected String ABOUT_US_URL;
@@ -39,6 +38,7 @@ public class MainMenu extends AppCompatActivity
     TextView username;
     TextView expDate;
     ViewLastCausesFragment viewLastCausesFragment;
+    ViewCausesFragment viewCausesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,10 @@ public class MainMenu extends AppCompatActivity
         toolbar.setTitle("Causas em votação");
         setSupportActionBar(toolbar);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner_nav);
-        spinner.setVisibility(View.INVISIBLE);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        viewCausesFragment = new ViewCausesFragment();
+        transaction.replace(R.id.menu_fragment, viewCausesFragment);
+        transaction.commit();
 
         NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
         ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
@@ -140,6 +142,12 @@ public class MainMenu extends AppCompatActivity
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             viewLastCausesFragment = new ViewLastCausesFragment();
             transaction.replace(R.id.menu_fragment, viewLastCausesFragment);
+            transaction.commit();
+        } else if (id == R.id.nav_causes) {
+            getSupportActionBar().setTitle("Causas em votação");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            viewCausesFragment = new ViewCausesFragment();
+            transaction.replace(R.id.menu_fragment, viewCausesFragment);
             transaction.commit();
         }
 
