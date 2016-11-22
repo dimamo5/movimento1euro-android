@@ -28,6 +28,7 @@
     <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
     <string name="fb_login_path">/loginFB</string>
+    <string name="winner_causes_path">/winnerCauses</string>
     <string name="upd_firebase_token_path">/firebaseToken</string>
 
     <!--WEBSITE URLS-->
@@ -35,4 +36,7 @@
     <string name="about_us_path">/sobre-nos/a-associacao</string>
     <string name="news_path">/sobre-nos/noticias</string>
     <string name="contacts_path">/contactos</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

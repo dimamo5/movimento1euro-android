@@ -4,8 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,18 +15,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
-import com.facebook.AccessToken;
+import com.artisans.code.movimento1euro.ViewLastCausesFragment;
 import com.facebook.login.LoginManager;
 
-import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.artisans.code.movimento1euro.ViewCausesFragment;
+
 public class MainMenu extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
+        ViewCausesFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainMenu.class.getSimpleName();
 
@@ -37,29 +39,25 @@ public class MainMenu extends AppCompatActivity
 
     TextView username;
     TextView expDate;
-
-
+    ViewLastCausesFragment viewLastCausesFragment;
+    ViewCausesFragment viewCausesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Causas em votação");
         setSupportActionBar(toolbar);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        viewCausesFragment = new ViewCausesFragment();
+        transaction.replace(R.id.menu_fragment, viewCausesFragment);
+        transaction.commit();
 
         NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
         ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
         CONTACTS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.contacts_path);
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -72,10 +70,11 @@ public class MainMenu extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         username = (TextView)hView.findViewById(R.id.nav_username);
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
-
     }
 
-
+    public void cardClick(View view) {
+        viewLastCausesFragment.cardClick(view);
+    }
 
     @Override
     public void onBackPressed() {
@@ -140,6 +139,18 @@ public class MainMenu extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.nav_prev_winners) {
+            getSupportActionBar().setTitle("Vencedores Passados");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            viewLastCausesFragment = new ViewLastCausesFragment();
+            transaction.replace(R.id.menu_fragment, viewLastCausesFragment);
+            transaction.commit();
+        } else if (id == R.id.nav_causes) {
+            getSupportActionBar().setTitle("Causas em votação");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            viewCausesFragment = new ViewCausesFragment();
+            transaction.replace(R.id.menu_fragment, viewCausesFragment);
+            transaction.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -178,5 +189,10 @@ public class MainMenu extends AppCompatActivity
 
         this.username.setText(username);
         this.expDate.setText(expDateStr);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        
     }
 }
