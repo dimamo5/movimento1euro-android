@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import com.facebook.FacebookSdk;
 
@@ -12,6 +15,8 @@ import com.facebook.FacebookSdk;
  */
 
 public class SplashScreen extends AppCompatActivity {
+    public final static String TAG = SplashScreen.class.getCanonicalName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +25,9 @@ public class SplashScreen extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         Intent intent;
+
+        String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Firebase Token: " + firebaseToken);
 
         if(getSharedPreferences("userInfo",MODE_PRIVATE).getString("token", null) != null){
             intent = new Intent(this, MainMenu.class);

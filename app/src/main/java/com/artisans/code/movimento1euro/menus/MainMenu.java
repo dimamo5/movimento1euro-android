@@ -31,6 +31,8 @@ public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
         ViewCausesFragment.OnFragmentInteractionListener {
 
+    public static final String TAG = MainMenu.class.getSimpleName();
+
     protected String NEWS_URL;
     protected String ABOUT_US_URL;
     protected String CONTACTS_URL;
@@ -183,8 +185,7 @@ public class MainMenu extends AppCompatActivity
         Date expDate = new Date(preferences.getString("expDate",""));
         SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
         String expDateStr = sdf.format(expDate);
-        Log.e("username", username);
-        Log.e("expDate", expDateStr);
+
 
         this.username.setText(username);
         this.expDate.setText(expDateStr);
