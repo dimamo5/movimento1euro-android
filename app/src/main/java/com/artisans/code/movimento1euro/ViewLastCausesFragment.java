@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,8 +128,6 @@ public class ViewLastCausesFragment extends Fragment {
 
             SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
             String token = userDetails.getString("token", "");
-            Log.d("causes", "token: " + token);
-            Log.d("causes", "path: " +getResources().getString(R.string.api_server_url) + getResources().getString(R.string.winner_causes_path) );
 
             try {
                 response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.winner_causes_path))
@@ -139,16 +136,12 @@ public class ViewLastCausesFragment extends Fragment {
                         .header("Authorization", token)
                         .asString();
             } catch (UnirestException e) {
-                Log.d("causes", e.getMessage());
-            }
 
-            Log.d("causes", "completed");
+            }
 
             try {
 
-                if (response != null)
-                    Log.d("causes", response.toString());
-                else
+                if (response == null)
                     throw new Exception("Não foi possível carregar as causas passadas. Verifique a sua conexão.");
 
                 JSONObject obj = new JSONObject(response.getBody());
@@ -182,9 +175,9 @@ public class ViewLastCausesFragment extends Fragment {
 
                 //yearsList.add();
             } catch (JSONException e) {
-                Log.d("causes", "JSONException: " + e.getMessage());
+                // Log.d("causes", "JSONException: " + e.getMessage());
             } catch (Exception e) {
-                Log.d("causes", "Exception: " + e.getMessage());
+                // Log.d("causes", "Exception: " + e.getMessage());
 
                 try {
                     Looper.prepare();
@@ -192,7 +185,7 @@ public class ViewLastCausesFragment extends Fragment {
                     result.put("errorMessage", e.getMessage());
 
                 }catch(Exception b){
-                    Log.d("causes", "Exception: " +  b.getMessage());
+                    // Log.d("causes", "Exception: " +  b.getMessage());
                 }
             }
             // int code = response.getCode();
@@ -216,9 +209,9 @@ public class ViewLastCausesFragment extends Fragment {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 }
             }catch(JSONException e){
-                Log.d("causes", e.getMessage());
+                // Log.d("causes", e.getMessage());
             }catch(Exception b){
-                Log.d("causes", b.getMessage());
+                // Log.d("causes", b.getMessage());
             }
 
 
@@ -255,7 +248,7 @@ public class ViewLastCausesFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.last_causes_list);
 
         new CausesTask().execute();
-        Log.d("causes", "executed new CausesTask()");
+        // Log.d("causes", "executed new CausesTask()");
 
         /*
         for (int i = 0; i < 50; i++) {
