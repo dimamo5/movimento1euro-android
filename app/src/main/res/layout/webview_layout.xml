@@ -4,15 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.artisans.code.movimento1euro.menus.WebViewActivity"
-    android:orientation="vertical">
+    tools:context="com.artisans.code.movimento1euro.menus.WebViewActivity">
 
 
     <include layout="@layout/toolbar_back_layout"></include>
 
-    <WebView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/web_swipeToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/webview"/>
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 </LinearLayout>

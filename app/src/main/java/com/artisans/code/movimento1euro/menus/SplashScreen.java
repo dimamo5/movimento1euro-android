@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.FacebookSdk;
+
 /**
  * Created by duarte on 28-10-2016.
  */
@@ -14,6 +16,9 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialize facebook sdk
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
         Intent intent;
 
         if(getSharedPreferences("userInfo",MODE_PRIVATE).getString("token", null) != null){

@@ -14,13 +14,22 @@
 
     <string name="action_about">Sobre</string>
 
+    <!--FACEBOOK API-->
+    <string name="facebook_app_id">208375452933152</string>
+    <string name="fb_login_protocol_scheme">fb208375452933152</string>
+
     <!--API-->
     <string name="api_server_url">http://staging.diogomoura.me/api</string>
-    <string name="login_path">/login</string>
+    <string name="std_login_path">/login</string>
+    <string name="fb_login_path">/loginFB</string>
+    <string name="winner_causes_path">/winnerCauses</string>
 
     <!--WEBSITE URLS-->
     <string name="website_url">http://movimento1euro.com</string>
     <string name="about_us_path">/sobre-nos/a-associacao</string>
     <string name="news_path">/sobre-nos/noticias</string>
     <string name="contacts_path">/contactos</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
