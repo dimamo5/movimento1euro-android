@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,8 +27,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.artisans.code.movimento1euro.ViewLastCausesFragment.Constants.YEAR_COLUMN;
@@ -48,6 +51,8 @@ public class ViewLastCausesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     */
+
+    public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
 
     // TODO: Rename and change types of parameters
     /*
@@ -120,6 +125,7 @@ public class ViewLastCausesFragment extends Fragment {
         protected JSONObject doInBackground(String... parameters) {
 
             HttpResponse<String> response = null;
+            JSONObject result = new JSONObject();
 
             SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
             String token = userDetails.getString("token", "");
@@ -137,10 +143,13 @@ public class ViewLastCausesFragment extends Fragment {
             }
 
             Log.d("causes", "completed");
-            if (response != null)
-                Log.d("causes", response.toString());
 
             try {
+
+                if (response != null)
+                    Log.d("causes", response.toString());
+                else
+                    throw new Exception("Não foi possível carregar as causas passadas. Verifique a sua conexão.");
 
                 JSONObject obj = new JSONObject(response.getBody());
                 JSONArray arr = obj.getJSONArray("causes");
@@ -157,8 +166,13 @@ public class ViewLastCausesFragment extends Fragment {
                     }
 
                     HashMap<String, String> temp = new HashMap<String, String>();
-                    temp.put(Constants.MONTH_COLUMN, "Mes " + o.getString("month"));
-                    temp.put(Constants.NAME_COLUMN, "Nome " + o.getString("name"));
+
+                    int month =  Integer.parseInt(o.getString("month"));
+                    if(month > 12 || month < 0)
+                        month = 0;
+                    temp.put(Constants.MONTH_COLUMN, "Mês de " + MONTHS.get(month)); // -1 because index starts at 0
+
+                    temp.put(Constants.NAME_COLUMN, "Nome: " + o.getString("name"));
                     temp.put(Constants.YEAR_COLUMN, year);
                     temp.put(Constants.MONEY_COLUMN, i + "€");
                     fullList.add(temp);
@@ -171,13 +185,21 @@ public class ViewLastCausesFragment extends Fragment {
                 Log.d("causes", "JSONException: " + e.getMessage());
             } catch (Exception e) {
                 Log.d("causes", "Exception: " + e.getMessage());
-                // Show message here: "Couldn't load causes from the network."
+
+                try {
+                    Looper.prepare();
+                    result.put("error", true);
+                    result.put("errorMessage", e.getMessage());
+
+                }catch(Exception b){
+                    Log.d("causes", "Exception: " +  b.getMessage());
+                }
             }
             // int code = response.getCode();
             // Map<String, String> headers = response.getHeaders();
             //InputStream rawBody = response.getRawBody();
 
-            JSONObject result = null;
+
 
 
             return result;
@@ -186,8 +208,23 @@ public class ViewLastCausesFragment extends Fragment {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(JSONObject result) {
+
+            try {
+                if(result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
+                    String message = result.getString("errorMessage");
+                    if (result.getBoolean("error") == true)
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                }
+            }catch(JSONException e){
+                Log.d("causes", e.getMessage());
+            }catch(Exception b){
+                Log.d("causes", b.getMessage());
+            }
+
+
             spinnerAdapter.notifyDataSetChanged();
-            updateFromSpinner(yearsList.get(0));
+            if(yearsList.size()!= 0)
+                updateFromSpinner(yearsList.get(0));
         }
     }
 
@@ -199,6 +236,10 @@ public class ViewLastCausesFragment extends Fragment {
             if(y.equals(year))
                 list.add(item);
         }
+
+        // QUICK FIX FOR THE MONTH ORDER -> DEPENDS ON API ORDER
+        //TODO: Check if API will return ordered or manipulate lists to sort well
+        Collections.reverse(list);
 
         listAdapter.notifyDataSetChanged();
     }
