@@ -29,7 +29,9 @@
     <string name="std_login_path">/login</string>
     <string name="fb_login_path">/loginFB</string>
     <string name="winner_causes_path">/winnerCauses</string>
-    <string name="upd_firebase_token_path">/firebaseToken</string>
+    <string name="view_causes_path">/viewCauses</string>
+    <string name="upd_firebase_token_path">/votingCauses</string>
+
 
     <!--WEBSITE URLS-->
     <string name="website_url">http://movimento1euro.com</string>
