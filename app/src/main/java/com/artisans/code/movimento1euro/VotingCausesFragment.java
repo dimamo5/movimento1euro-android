@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -61,10 +60,8 @@ public class VotingCausesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    ArrayList<String> yearsList = new ArrayList<String>();
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     ArrayList<HashMap<String, String>> fullList = new ArrayList<HashMap<String, String>>();
-    ArrayAdapter<String> spinnerAdapter;
     ListView listView;
     SimpleAdapter listAdapter;
 
@@ -102,15 +99,13 @@ public class VotingCausesFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
-        spinner.setVisibility(View.GONE);
     }
 
     public class Constants {
-        public static final String MONTH_COLUMN = "Month";
         public static final String NAME_COLUMN = "Name";
         public static final String MONEY_COLUMN = "Money";
-        public static final String YEAR_COLUMN = "Year";
+        public static final String DESCRIPTION_COLUMN = "Description";
+        //public static final String IMAGE_COLUMN = "Image";
     }
 
 
@@ -130,7 +125,7 @@ public class VotingCausesFragment extends Fragment {
             String token = userDetails.getString("token", "");
 
             try {
-                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.view_causes_path))
+                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.voting_causes_path))
                         .header("accept", "application/json")
                         .header("content-type", "application/json")
                         .header("Authorization", token)
@@ -147,33 +142,20 @@ public class VotingCausesFragment extends Fragment {
                 JSONObject obj = new JSONObject(response.getBody());
                 JSONArray arr = obj.getJSONArray("causes");
 
-                yearsList.clear();
                 fullList.clear();
 
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject o = arr.getJSONObject(i);
-                    String year = o.getString("date").substring(0, 4);
 
-                    if (!yearsList.contains(year)) {
-                        yearsList.add(year);
-                    }
+                    HashMap<String, String> temp = new HashMap<>();
 
-                    HashMap<String, String> temp = new HashMap<String, String>();
-
-                    int month =  Integer.parseInt(o.getString("month"));
-                    if(month > 12 || month < 0)
-                        month = 0;
-                    temp.put(Constants.MONTH_COLUMN, "Mês de " + MONTHS.get(month)); // -1 because index starts at 0
-
+                    //TODO adicionar imagem da causa ?
                     temp.put(Constants.NAME_COLUMN, "Nome: " + o.getString("name"));
-                    temp.put(Constants.YEAR_COLUMN, year);
-                    temp.put(Constants.MONEY_COLUMN, i + "€");
+                    temp.put(Constants.DESCRIPTION_COLUMN, o.getString("description"));
+                    temp.put(Constants.MONEY_COLUMN, "Valor da causa: " + i + "€");
                     fullList.add(temp);
                 }
 
-                Collections.sort(yearsList);
-
-                //yearsList.add();
             } catch (JSONException e) {
                 // Log.d("causes", "JSONException: " + e.getMessage());
             } catch (Exception e) {
@@ -184,15 +166,13 @@ public class VotingCausesFragment extends Fragment {
                     result.put("error", true);
                     result.put("errorMessage", e.getMessage());
 
-                }catch(Exception b){
+                } catch (Exception b) {
                     // Log.d("causes", "Exception: " +  b.getMessage());
                 }
             }
             // int code = response.getCode();
             // Map<String, String> headers = response.getHeaders();
             //InputStream rawBody = response.getRawBody();
-
-
 
 
             return result;
@@ -203,38 +183,17 @@ public class VotingCausesFragment extends Fragment {
         protected void onPostExecute(JSONObject result) {
 
             try {
-                if(result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
+                if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
                     String message = result.getString("errorMessage");
                     if (result.getBoolean("error") == true)
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 }
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 // Log.d("causes", e.getMessage());
-            }catch(Exception b){
+            } catch (Exception b) {
                 // Log.d("causes", b.getMessage());
             }
-
-
-            spinnerAdapter.notifyDataSetChanged();
-            if(yearsList.size()!= 0)
-                updateFromSpinner(yearsList.get(0));
         }
-    }
-
-    public void updateFromSpinner(String year) {
-        list.clear();
-        for(HashMap<String, String> item : fullList) {
-            String y  = item.get(YEAR_COLUMN);
-
-            if(y.equals(year))
-                list.add(item);
-        }
-
-        // QUICK FIX FOR THE MONTH ORDER -> DEPENDS ON API ORDER
-        //TODO: Check if API will return ordered or manipulate lists to sort well
-        Collections.reverse(list);
-
-        listAdapter.notifyDataSetChanged();
     }
 
 
@@ -243,9 +202,9 @@ public class VotingCausesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_previous_winners, container, false);
+        View view = inflater.inflate(R.layout.fragment_voting_causes, container, false);
 
-        listView = (ListView) view.findViewById(R.id.last_causes_list);
+        listView = (ListView) view.findViewById(R.id.causes_list);
 
         new CausesTask().execute();
         // Log.d("causes", "executed new CausesTask()");
@@ -264,32 +223,11 @@ public class VotingCausesFragment extends Fragment {
                 this.getContext(),
                 list,
                 R.layout.item_previous_winner,
-                new String[]{Constants.MONTH_COLUMN, Constants.NAME_COLUMN, Constants.MONEY_COLUMN},
-                new int[]{R.id.last_causes_item_month, R.id.last_causes_item_name, R.id.last_causes_item_money}
+                new String[]{Constants.NAME_COLUMN, Constants.DESCRIPTION_COLUMN, Constants.MONEY_COLUMN},
+                //TODO ADICIONAR COLUNA DA IMAGEM? -- R.id.voting_causes_item_image
+                new int[]{R.id.voting_causes_item_name, R.id.voting_causes_item_description, R.id.voting_causes_item_money}
         );
         listView.setAdapter(listAdapter);
-
-        Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
-        spinner.setVisibility(View.VISIBLE);
-
-        //TODO: Get existing years list
-        spinnerAdapter = new ArrayAdapter<String>(this.getContext(),
-                R.layout.spinner_previous_winners_selected_year, yearsList);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_previous_winners_year);
-        spinner.setAdapter(spinnerAdapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), yearsList.get(i) + " Clicked", Toast.LENGTH_SHORT).show();
-                updateFromSpinner(yearsList.get(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         return view;
     }

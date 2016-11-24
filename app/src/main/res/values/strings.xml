@@ -29,7 +29,7 @@
     <string name="std_login_path">/login</string>
     <string name="fb_login_path">/loginFB</string>
     <string name="winner_causes_path">/winnerCauses</string>
-    <string name="view_causes_path">/viewCauses</string>
+    <string name="voting_causes_path">/votingCauses</string>
     <string name="upd_firebase_token_path">/votingCauses</string>
 
 

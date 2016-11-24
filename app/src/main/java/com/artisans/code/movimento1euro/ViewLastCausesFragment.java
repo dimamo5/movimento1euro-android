@@ -245,7 +245,7 @@ public class ViewLastCausesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_previous_winners, container, false);
 
-        listView = (ListView) view.findViewById(R.id.last_causes_list);
+        listView = (ListView) view.findViewById(R.id.causes_list);
 
         new CausesTask().execute();
         // Log.d("causes", "executed new CausesTask()");
