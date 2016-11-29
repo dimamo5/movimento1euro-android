@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +131,7 @@ public class VotingCausesFragment extends Fragment {
                         .header("content-type", "application/json")
                         .header("Authorization", token)
                         .asString();
+                Log.d("Token: " , token.toString());
             } catch (UnirestException e) {
 
             }
@@ -142,7 +144,7 @@ public class VotingCausesFragment extends Fragment {
                 JSONObject obj = new JSONObject(response.getBody());
                 JSONArray arr = obj.getJSONArray("causes");
 
-                fullList.clear();
+                list.clear();
 
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject o = arr.getJSONObject(i);
@@ -153,7 +155,7 @@ public class VotingCausesFragment extends Fragment {
                     temp.put(Constants.NAME_COLUMN, "Nome: " + o.getString("name"));
                     temp.put(Constants.DESCRIPTION_COLUMN, o.getString("description"));
                     temp.put(Constants.MONEY_COLUMN, "Valor da causa: " + i + "€");
-                    fullList.add(temp);
+                    list.add(temp);
                 }
 
             } catch (JSONException e) {
@@ -174,7 +176,6 @@ public class VotingCausesFragment extends Fragment {
             // Map<String, String> headers = response.getHeaders();
             //InputStream rawBody = response.getRawBody();
 
-
             return result;
         }
 
@@ -193,7 +194,12 @@ public class VotingCausesFragment extends Fragment {
             } catch (Exception b) {
                 // Log.d("causes", b.getMessage());
             }
+            notifyChanges();
         }
+    }
+
+    public void notifyChanges(){
+        listAdapter.notifyDataSetChanged();
     }
 
 
@@ -206,7 +212,6 @@ public class VotingCausesFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.causes_list);
 
-        new CausesTask().execute();
         // Log.d("causes", "executed new CausesTask()");
 
         /*
@@ -222,11 +227,13 @@ public class VotingCausesFragment extends Fragment {
         listAdapter = new SimpleAdapter(
                 this.getContext(),
                 list,
-                R.layout.item_previous_winner,
+                R.layout.item_voting_cause,
                 new String[]{Constants.NAME_COLUMN, Constants.DESCRIPTION_COLUMN, Constants.MONEY_COLUMN},
                 //TODO ADICIONAR COLUNA DA IMAGEM? -- R.id.voting_causes_item_image
                 new int[]{R.id.voting_causes_item_name, R.id.voting_causes_item_description, R.id.voting_causes_item_money}
         );
+
+        new CausesTask().execute();
         listView.setAdapter(listAdapter);
 
         return view;
