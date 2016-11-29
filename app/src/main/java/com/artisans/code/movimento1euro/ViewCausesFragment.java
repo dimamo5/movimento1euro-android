@@ -65,7 +65,6 @@ public class ViewCausesFragment extends Fragment {
     ArrayList<String> yearsList = new ArrayList<String>();
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     ArrayList<HashMap<String, String>> fullList = new ArrayList<HashMap<String, String>>();
-    ArrayAdapter<String> spinnerAdapter;
     ListView listView;
     SimpleAdapter listAdapter;
 
@@ -103,8 +102,6 @@ public class ViewCausesFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
-        //spinner.setVisibility(View.GONE);
     }
 
     public class Constants {
@@ -220,30 +217,8 @@ public class ViewCausesFragment extends Fragment {
             }catch(Exception b){
                 Log.d("causes", b.getMessage());
             }
-
-
-            /*spinnerAdapter.notifyDataSetChanged();
-            if(yearsList.size()!= 0)
-                updateFromSpinner(yearsList.get(0));*/
         }
     }
-
-    public void updateFromSpinner(String year) {
-        list.clear();
-        for(HashMap<String, String> item : fullList) {
-            String y  = item.get(YEAR_COLUMN);
-
-            if(y.equals(year))
-                list.add(item);
-        }
-
-        // QUICK FIX FOR THE MONTH ORDER -> DEPENDS ON API ORDER
-        //TODO: Check if API will return ordered or manipulate lists to sort well
-        Collections.reverse(list);
-
-        listAdapter.notifyDataSetChanged();
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -275,28 +250,6 @@ public class ViewCausesFragment extends Fragment {
                 new int[]{R.id.last_causes_item_month, R.id.last_causes_item_name, R.id.last_causes_item_money}
         );
         listView.setAdapter(listAdapter);
-
-        /*Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
-        spinner.setVisibility(View.VISIBLE);
-
-        //TODO: Get existing years list
-        spinnerAdapter = new ArrayAdapter<String>(this.getContext(),
-                R.layout.spinner_previous_winners_selected_year, yearsList);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_previous_winners_year);
-        spinner.setAdapter(spinnerAdapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), yearsList.get(i) + " Clicked", Toast.LENGTH_SHORT).show();
-                updateFromSpinner(yearsList.get(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });*/
 
         return view;
     }
