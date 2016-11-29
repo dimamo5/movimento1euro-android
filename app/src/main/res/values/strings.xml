@@ -39,6 +39,9 @@
     <string name="news_path">/sobre-nos/noticias</string>
     <string name="contacts_path">/contactos</string>
 
+    <!-- voting button -->
+    <string name="voting_button">Votar</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.artisans.code.movimento1euro.menus;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -38,7 +39,7 @@ public class MainMenu extends AppCompatActivity
     TextView username;
     TextView expDate;
     ViewLastCausesFragment viewLastCausesFragment;
-    VotingCausesFragment votingCausesFragment;
+    VotingCausesFragment viewVotingCausesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +50,8 @@ public class MainMenu extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        votingCausesFragment = new VotingCausesFragment();
-        transaction.replace(R.id.menu_fragment, votingCausesFragment);
+        viewVotingCausesFragment = new VotingCausesFragment();
+        transaction.replace(R.id.menu_fragment, viewVotingCausesFragment);
         transaction.commit();
 
         NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
@@ -70,9 +71,14 @@ public class MainMenu extends AppCompatActivity
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
     }
 
-    public void cardClick(View view) {
+    public void cardClickLastCauses(View view) {
         viewLastCausesFragment.cardClick(view);
     }
+
+    public void cardClickVotingCauses(View view) {
+        viewVotingCausesFragment.cardClick(view);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -146,8 +152,8 @@ public class MainMenu extends AppCompatActivity
         } else if (id == R.id.nav_causes) {
             getSupportActionBar().setTitle("Causas em votação");
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            votingCausesFragment = new VotingCausesFragment();
-            transaction.replace(R.id.menu_fragment, votingCausesFragment);
+            viewVotingCausesFragment = new VotingCausesFragment();
+            transaction.replace(R.id.menu_fragment, viewVotingCausesFragment);
             transaction.commit();
         }
 

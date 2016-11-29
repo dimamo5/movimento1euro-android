@@ -212,18 +212,6 @@ public class VotingCausesFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.causes_list);
 
-        // Log.d("causes", "executed new CausesTask()");
-
-        /*
-        for (int i = 0; i < 50; i++) {
-            HashMap<String,String> temp=new HashMap<String, String>();
-            temp.put(Constants.MONTH_COLUMN, "Mes " + i);
-            temp.put(Constants.NAME_COLUMN, "Nome " + i);
-            temp.put(Constants.MONEY_COLUMN, i+"€");
-            list.add(temp);
-        }
-        */
-
         listAdapter = new SimpleAdapter(
                 this.getContext(),
                 list,
