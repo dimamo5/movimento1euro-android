@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.artisans.code.movimento1euro.ViewLastCausesFragment"
+    tools:context="com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment"
     android:id="@+id/view_last_causes_fragment">
 
     <!-- TODO: Update blank fragment layout -->

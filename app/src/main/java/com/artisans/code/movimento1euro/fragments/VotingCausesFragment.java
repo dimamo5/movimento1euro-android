@@ -1,4 +1,4 @@
-package com.artisans.code.movimento1euro;
+package com.artisans.code.movimento1euro.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,12 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.artisans.code.movimento1euro.elements.Cause;
+import com.artisans.code.movimento1euro.R;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -27,74 +27,26 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.artisans.code.movimento1euro.ViewLastCausesFragment.Constants.YEAR_COLUMN;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ViewLastCausesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ViewLastCausesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class VotingCausesFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    /*
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    */
 
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
 
-    // TODO: Rename and change types of parameters
-    /*
-    private String mParam1;
-    private String mParam2;
-    */
 
     private OnFragmentInteractionListener mListener;
 
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     ArrayList<HashMap<String, String>> fullList = new ArrayList<HashMap<String, String>>();
+    ArrayList<Cause> causesList = new ArrayList<>();
     ListView listView;
     SimpleAdapter listAdapter;
 
     public VotingCausesFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ViewLastCausesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ViewLastCausesFragment newInstance(String param1, String param2) {
-        ViewLastCausesFragment fragment = new ViewLastCausesFragment();
-        Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // mParam1 = getArguments().getString(ARG_PARAM1);
-            // mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -131,50 +83,51 @@ public class VotingCausesFragment extends Fragment {
                         .header("content-type", "application/json")
                         .header("Authorization", token)
                         .asString();
-                Log.d("Token: " , token.toString());
             } catch (UnirestException e) {
-
+                Log.e("API", "Bad request");
             }
 
             try {
-
                 if (response == null)
-                    throw new Exception("Não foi possível carregar as causas em votação. Verifique a sua conexão.");
+                    throw new Exception(getResources().getString(R.string.api_success_response));
 
                 JSONObject obj = new JSONObject(response.getBody());
-                JSONArray arr = obj.getJSONArray("causes");
+                if (obj.getString("result") != getResources().getString(R.string.user_connection_error))
+                    throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
+                JSONArray votingCauses = obj.getJSONArray("causes");
 
                 list.clear();
+                causesList.clear();
+                for (int j = 0; j < votingCauses.length(); j++) {
+                    //TODO discards useful information?
+                    JSONArray arr = votingCauses.getJSONObject(j).getJSONArray("causas");
+                    for (int i = 0; i < arr.length(); i++) {
+                        causesList.add(new Cause(arr.getJSONObject(i)));
 
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject o = arr.getJSONObject(i);
+                        HashMap<String, String> temp = new HashMap<>();
 
-                    HashMap<String, String> temp = new HashMap<>();
-
-                    //TODO adicionar imagem da causa ?
-                    temp.put(Constants.NAME_COLUMN, "Nome: " + o.getString("name"));
-                    temp.put(Constants.DESCRIPTION_COLUMN, o.getString("description"));
-                    temp.put(Constants.MONEY_COLUMN, "Valor da causa: " + i + "€");
-                    list.add(temp);
+                        //TODO adicionar imagem da causa ?
+                        temp.put(Constants.NAME_COLUMN, "Nome: " + causesList.get(i).getTitle());
+                        temp.put(Constants.DESCRIPTION_COLUMN, causesList.get(i).getDescription());
+                        temp.put(Constants.MONEY_COLUMN, "Valor da causa: " + causesList.get(i).getMoney() + "€");
+                        list.add(temp);
+                    }
                 }
 
             } catch (JSONException e) {
-                // Log.d("causes", "JSONException: " + e.getMessage());
+                e.printStackTrace();
+                Log.e("causes", "JSONException: " + e.getMessage());
             } catch (Exception e) {
                 // Log.d("causes", "Exception: " + e.getMessage());
-
                 try {
                     Looper.prepare();
                     result.put("error", true);
                     result.put("errorMessage", e.getMessage());
-
                 } catch (Exception b) {
-                    // Log.d("causes", "Exception: " +  b.getMessage());
+                    b.printStackTrace();
+                    Log.e("causes", "Exception: " +  b.getMessage());
                 }
             }
-            // int code = response.getCode();
-            // Map<String, String> headers = response.getHeaders();
-            //InputStream rawBody = response.getRawBody();
 
             return result;
         }
@@ -190,9 +143,9 @@ public class VotingCausesFragment extends Fragment {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
-                // Log.d("causes", e.getMessage());
+                Log.e("causes", e.getMessage());
             } catch (Exception b) {
-                // Log.d("causes", b.getMessage());
+                Log.e("causes", b.getMessage());
             }
             notifyChanges();
         }
@@ -231,13 +184,6 @@ public class VotingCausesFragment extends Fragment {
         Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -266,7 +212,6 @@ public class VotingCausesFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

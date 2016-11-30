@@ -1,6 +1,5 @@
 package com.artisans.code.movimento1euro.menus;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -18,13 +17,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.ViewLastCausesFragment;
+import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
 import com.facebook.login.LoginManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.artisans.code.movimento1euro.VotingCausesFragment;
+import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
