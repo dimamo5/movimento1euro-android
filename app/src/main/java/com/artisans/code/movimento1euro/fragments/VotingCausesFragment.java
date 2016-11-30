@@ -181,7 +181,7 @@ public class VotingCausesFragment extends Fragment {
     }
 
     public void cardClick(View view) {
-        Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
