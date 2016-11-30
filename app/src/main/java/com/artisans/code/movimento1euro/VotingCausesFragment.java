@@ -152,7 +152,7 @@ public class VotingCausesFragment extends Fragment {
                     HashMap<String, String> temp = new HashMap<>();
 
                     //TODO adicionar imagem da causa ?
-                    temp.put(Constants.NAME_COLUMN, "Nome: " + o.getString("name"));
+                    temp.put(Constants.NAME_COLUMN, o.getString("name"));
                     temp.put(Constants.DESCRIPTION_COLUMN, o.getString("description"));
                     temp.put(Constants.MONEY_COLUMN, "Valor da causa: " + i + "€");
                     list.add(temp);
