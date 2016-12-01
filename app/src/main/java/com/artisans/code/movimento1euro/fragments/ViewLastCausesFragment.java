@@ -1,4 +1,4 @@
-package com.artisans.code.movimento1euro;
+package com.artisans.code.movimento1euro.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,6 +17,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.artisans.code.movimento1euro.R;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -32,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.artisans.code.movimento1euro.ViewLastCausesFragment.Constants.YEAR_COLUMN;
+import static com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment.Constants.YEAR_COLUMN;
 
 
 /**
@@ -245,7 +246,7 @@ public class ViewLastCausesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_previous_winners, container, false);
 
-        listView = (ListView) view.findViewById(R.id.last_causes_list);
+        listView = (ListView) view.findViewById(R.id.causes_list);
 
         new CausesTask().execute();
         // Log.d("causes", "executed new CausesTask()");
@@ -281,7 +282,8 @@ public class ViewLastCausesFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), yearsList.get(i) + " Clicked", Toast.LENGTH_SHORT).show();
+                //TODO spinner click
+                //Toast.makeText(getActivity(), yearsList.get(i) + " Clicked", Toast.LENGTH_SHORT).show();
                 updateFromSpinner(yearsList.get(i));
             }
 
@@ -295,7 +297,8 @@ public class ViewLastCausesFragment extends Fragment {
     }
 
     public void cardClick(View view) {
-        Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
+        //TODO card click
+        //Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

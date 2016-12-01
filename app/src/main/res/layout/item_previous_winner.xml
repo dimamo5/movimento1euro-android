@@ -19,7 +19,7 @@
         android:layout_marginBottom="7dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:onClick="cardClick">
+        android:onClick="cardClickLastCauses">
 
         <LinearLayout
             android:orientation="horizontal"

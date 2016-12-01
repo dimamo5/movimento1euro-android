@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,21 +14,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.ViewLastCausesFragment;
+import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
 import com.facebook.login.LoginManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.artisans.code.movimento1euro.ViewCausesFragment;
+import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
-        ViewCausesFragment.OnFragmentInteractionListener {
+        VotingCausesFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainMenu.class.getSimpleName();
 
@@ -40,7 +38,7 @@ public class MainMenu extends AppCompatActivity
     TextView username;
     TextView expDate;
     ViewLastCausesFragment viewLastCausesFragment;
-    ViewCausesFragment viewCausesFragment;
+    VotingCausesFragment viewVotingCausesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +49,8 @@ public class MainMenu extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        viewCausesFragment = new ViewCausesFragment();
-        transaction.replace(R.id.menu_fragment, viewCausesFragment);
+        viewVotingCausesFragment = new VotingCausesFragment();
+        transaction.replace(R.id.menu_fragment, viewVotingCausesFragment);
         transaction.commit();
 
         NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
@@ -72,9 +70,14 @@ public class MainMenu extends AppCompatActivity
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
     }
 
-    public void cardClick(View view) {
+    public void cardClickLastCauses(View view) {
         viewLastCausesFragment.cardClick(view);
     }
+
+    public void cardClickVotingCauses(View view) {
+        viewVotingCausesFragment.cardClick(view);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -148,8 +151,8 @@ public class MainMenu extends AppCompatActivity
         } else if (id == R.id.nav_causes) {
             getSupportActionBar().setTitle("Causas em votação");
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            viewCausesFragment = new ViewCausesFragment();
-            transaction.replace(R.id.menu_fragment, viewCausesFragment);
+            viewVotingCausesFragment = new VotingCausesFragment();
+            transaction.replace(R.id.menu_fragment, viewVotingCausesFragment);
             transaction.commit();
         }
 
