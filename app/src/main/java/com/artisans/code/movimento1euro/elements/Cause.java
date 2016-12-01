@@ -1,11 +1,14 @@
 package com.artisans.code.movimento1euro.elements;
 
 import android.util.Log;
+import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -18,32 +21,42 @@ public class Cause {
     private String description;
     private String money;
     private String votes;
-    private ArrayList<String> documents = new ArrayList<String>();
-    private ArrayList<String> videos = new ArrayList<String>();
+    private ArrayList<Pair<URL, String>> documents = new ArrayList<Pair<URL, String>>();
+    private ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
     private boolean user_vote;
     private Association association;
 
-    public Cause (JSONObject json) {
+    private Cause () {
+    }
+
+    public static Cause parseVotingCause(JSONObject json) {
+        Cause cause = new Cause();
+
         try {
-            id = json.getInt("id");
-            title = json.getString("titulo");
-            description = json.getString("descricao");
-            money = json.getString("verba");
-            votes = json.getString("votos");
-            parseArray(getDocuments(), json.getJSONArray("documentos"));
-            parseArray(getVideos(), json.getJSONArray("videos"));
-            user_vote = json.getBoolean("voto_utilizador");
-            association = new Association(json.getJSONObject("associacao"));
-        } catch (JSONException e) {
+            cause.id = json.getInt("id");
+            cause.title = json.getString("titulo");
+            cause.description = json.getString("descricao");
+            cause.money = json.getString("verba");
+            cause.votes = json.getString("votos");
+            cause.documents = parseArray(json.getJSONArray("documentos"));
+            cause.videos = parseArray(json.getJSONArray("videos"));
+            cause.user_vote = json.getBoolean("voto_utilizador");
+            cause.association = new Association(json.getJSONObject("associacao"));
+        } catch (JSONException | MalformedURLException e) {
             e.printStackTrace();
             Log.e("Cause exception", "Error parsing JSON");
         }
+
+        return cause;
     }
 
-    private void parseArray(ArrayList<String> stringArray, JSONArray jsonArray) throws JSONException {
+    private static ArrayList<Pair<URL, String>> parseArray(JSONArray jsonArray) throws JSONException, MalformedURLException {
+        ArrayList<Pair<URL, String>> ret = new ArrayList<Pair<URL, String>>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            stringArray.add(jsonArray.getString(i));
+            JSONObject obj = jsonArray.getJSONObject(i);
+            ret.add(new Pair(new URL(obj.getString("url")), obj.getString("descricao")));
         }
+        return ret;
     }
 
     public int getId() {
@@ -66,11 +79,11 @@ public class Cause {
         return votes;
     }
 
-    public ArrayList<String> getDocuments() {
+    public ArrayList<Pair<URL, String>> getDocuments() {
         return documents;
     }
 
-    public ArrayList<String> getVideos() {
+    public ArrayList<Pair<URL, String>> getVideos() {
         return videos;
     }
 

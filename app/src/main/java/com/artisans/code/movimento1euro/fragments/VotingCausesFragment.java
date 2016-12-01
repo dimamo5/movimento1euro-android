@@ -89,20 +89,20 @@ public class VotingCausesFragment extends Fragment {
 
             try {
                 if (response == null)
-                    throw new Exception(getResources().getString(R.string.api_success_response));
+                    throw new Exception(getResources().getString(R.string.user_connection_error));
 
                 JSONObject obj = new JSONObject(response.getBody());
-                if (obj.getString("result") != getResources().getString(R.string.user_connection_error))
+                if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
                     throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
                 JSONArray votingCauses = obj.getJSONArray("causes");
 
                 list.clear();
                 causesList.clear();
                 for (int j = 0; j < votingCauses.length(); j++) {
-                    //TODO discards useful information?
+                    //TODO discarded useful information?
                     JSONArray arr = votingCauses.getJSONObject(j).getJSONArray("causas");
                     for (int i = 0; i < arr.length(); i++) {
-                        causesList.add(new Cause(arr.getJSONObject(i)));
+                        causesList.add(Cause.parseVotingCause(arr.getJSONObject(i)));
 
                         HashMap<String, String> temp = new HashMap<>();
 
