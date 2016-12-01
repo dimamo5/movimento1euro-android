@@ -18,7 +18,7 @@ public class Cause {
     private String description;
     private String money;
     private String votes;
-    private ArrayList<String> documents;
+    private ArrayList<String> documents = new ArrayList<String>();
     private ArrayList<String> videos = new ArrayList<String>();
     private boolean user_vote;
     private Association association;
