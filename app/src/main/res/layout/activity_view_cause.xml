@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:ems="10"
+            android:id="@+id/causeName" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:inputType="textPersonName"
+            android:text="Slogan"
+            android:ems="10"
+            android:id="@+id/causeSlogan" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="108dp"
+            android:inputType="textPersonName"
+            android:text="Description"
+            android:ems="10"
+            android:id="@+id/causeDescription" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="126dp"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            app:srcCompat="@drawable/com_facebook_auth_dialog_cancel_background"
+            android:id="@+id/causeImageView" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="226dp"
+        android:weightSum="1"
+        android:layout_weight="1.22">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Information"
+            android:ems="10"
+            android:id="@+id/detailedInformation"
+            android:layout_weight="0.71" />
+
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="129dp"
+            android:id="@+id/causeVideoView" />
+
+        <Button
+            android:text="Vote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/voteButton" />
+
+    </LinearLayout>
+
+</LinearLayout>
