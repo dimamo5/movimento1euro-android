@@ -27,6 +27,7 @@
     <!--API-->
     <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
+    <string name="logout_path">/logout</string>
     <string name="fb_login_path">/loginFB</string>
     <string name="winner_causes_path">/winnerCauses</string>
     <string name="voting_causes_path">/votingCauses</string>
