@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,20 +16,23 @@ import java.util.ArrayList;
  * Created by Antonio on 30-11-2016.
  */
 
-public class Cause {
+public class Cause implements Serializable {
     private int id;
     private String title;
     private String description;
     private String money;
     private String votes;
+    private String slogan;
+    private String introduction;
+    private String imgLink;
+    private String videoLink;
     private ArrayList<Pair<URL, String>> documents = new ArrayList<Pair<URL, String>>();
     private ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
     private boolean user_vote;
     private Association association;
 
-    private Cause () {
+    public Cause () {
     }
-
     public static Cause parseVotingCause(JSONObject json) {
         Cause cause = new Cause();
 
@@ -42,6 +46,8 @@ public class Cause {
             cause.videos = parseArray(json.getJSONArray("videos"));
             cause.user_vote = json.getBoolean("voto_utilizador");
             cause.association = new Association(json.getJSONObject("associacao"));
+           // cause.slogan=json.getString("slogan");
+            cause.introduction=json.getString("descricao_breve");
         } catch (JSONException | MalformedURLException e) {
             e.printStackTrace();
             Log.e("Cause exception", "Error parsing JSON");
@@ -93,5 +99,73 @@ public class Cause {
 
     public Association getAssociation() {
         return association;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public void setVotes(String votes) {
+        this.votes = votes;
+    }
+
+    public void setDocuments(ArrayList<Pair<URL, String>> documents) {
+        this.documents = documents;
+    }
+
+    public void setVideos(ArrayList<Pair<URL, String>> videos) {
+        this.videos = videos;
+    }
+
+    public void setUser_vote(boolean user_vote) {
+        this.user_vote = user_vote;
+    }
+
+    public void setAssociation(Association association) {
+        this.association = association;
+    }
+
+    public void setSlogan(String slogan) {
+        this.slogan = slogan;
+    }
+
+    public void setImgLink(String imgLink) {
+        this.imgLink = imgLink;
+    }
+
+    public void setVideoLink(String videoLink) {
+        this.videoLink = videoLink;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getSlogan() {
+        return slogan;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public String getImgLink() {
+        return imgLink;
+    }
+
+    public String getVideoLink() {
+        return videoLink;
     }
 }

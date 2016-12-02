@@ -57,26 +57,34 @@
         android:layout_height="226dp"
         android:weightSum="1"
         android:layout_weight="1.22">
+        <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:layout_weight="1.22">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Information"
-            android:ems="10"
-            android:id="@+id/detailedInformation"
-            android:layout_weight="0.71" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Information"
+        android:maxLines="2"
+        android:id="@+id/causeDetailedInformation"
+        />
+        </RelativeLayout>
 
         <VideoView
             android:layout_width="match_parent"
             android:layout_height="129dp"
-            android:id="@+id/causeVideoView" />
+            android:id="@+id/causeVideoView"
+            android:layout_marginBottom="36dp" />
 
         <Button
             android:text="Vote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/voteButton" />
+            android:id="@+id/voteButton"
+            android:layout_marginBottom="11dp" />
 
     </LinearLayout>
 
