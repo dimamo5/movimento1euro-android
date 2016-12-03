@@ -21,22 +21,24 @@ public class Cause {
     private String title;
     private String description;
     private String money;
-    private String votationMoney;
     private String votes;
     private ArrayList<Pair<URL, String>> documents = new ArrayList<Pair<URL, String>>();
     private ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
     private boolean user_vote;
     private Association association;
+    private Election election;
 
     public Cause () {
     }
 
     public class Constants {
+        public static final String ELECTION_TITLE_COLUMN = "Election_Title";
         public static final String TITLE_COLUMN = "Title";
+        public static final String NAME_COLUMN = "Name";
         public static final String DESCRIPTION_COLUMN = "Description";
         public static final String MONEY_COLUMN = "Money";
         public static final String VOTES_COLUMN = "Votes";
-        public static final String VERBA_COLUMN = "Verba";
+        public static final String ELECTION_MONEY_COLUMN = "Election_Money";
     }
 
     public static Cause parseVotingCause(JSONObject json) {
@@ -65,10 +67,9 @@ public class Cause {
 
         try {
             cause.id = json.getInt("id");
-            cause.title = json.getString("titulo");
+            cause.title = json.getString("nome");
             cause.description = json.getString("descricao");
             cause.money = json.getString("verba");
-            cause.votationMoney = json.getString("montante_disponivel");
             cause.votes = json.getString("votos");
             cause.association = new Association(json.getJSONObject("associacao"));
         } catch (JSONException e) {
@@ -89,20 +90,24 @@ public class Cause {
         return ret;
     }
 
+    // HashMap with pertinent info for the list appearance
     public HashMap<String, String> toHashMap(){
         HashMap<String, String> hashMap = new HashMap<String,String>();
 
+        hashMap.put(Constants.ELECTION_TITLE_COLUMN, election.getTitle());
         hashMap.put(Constants.TITLE_COLUMN, title);
         hashMap.put(Constants.DESCRIPTION_COLUMN, description);
-        hashMap.put(Constants.MONEY_COLUMN, votationMoney + " €");
-        hashMap.put(Constants.VOTES_COLUMN, votes+ " votes");
-        hashMap.put(Constants.VERBA_COLUMN, money + " €");
+        hashMap.put(Constants.VOTES_COLUMN, votes+ " votos");
+        hashMap.put(Constants.MONEY_COLUMN, "Verba: " + money + " € requirido");
+
+        if(election != null)
+            hashMap.put(Constants.NAME_COLUMN, election.getTitle());
 
         return hashMap;
     }
 
     public String toString(){
-        return "ID: " + id + ", Title: " + title + ", Description: " + description + ", Votes: " + votes + ", Money: " + money + ", Votation Money: " + votationMoney;
+        return "ID: " + id + ", Title: " + title + ", Description: " + description + ", Votes: " + votes + ", Money: " ;
     }
 
     public int getId() {
@@ -120,10 +125,6 @@ public class Cause {
     public String getMoney() {
         return money;
     }
-
-    public String getVotationMoney() { return votationMoney; }
-
-    public void setVotationMoney(String votationMoney) { this.votationMoney = votationMoney; }
 
     public String getVotes() {
         return votes;
@@ -144,4 +145,8 @@ public class Cause {
     public Association getAssociation() {
         return association;
     }
+
+    public Election getElection() { return election; }
+
+    public void setElection(Election election) { this.election = election; }
 }

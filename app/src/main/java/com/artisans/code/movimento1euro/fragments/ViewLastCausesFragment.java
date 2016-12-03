@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.elements.Cause;
+import com.artisans.code.movimento1euro.elements.Election;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -121,10 +122,11 @@ public class ViewLastCausesFragment extends Fragment {
         public static final String MONTH_COLUMN = "Month";
         public static final String YEAR_COLUMN = "Year";
         public static final String TITLE_COLUMN = "Title";
+        public static final String ELECTION_TITLE_COLUMN = "Election_Title";
         public static final String MONEY_COLUMN = "Money";
         public static final String DESCRIPTION_COLUMN = "Description";
         public static final String VOTES_COLUMN = "Votes";
-        public static final String VERBA_COLUMN = "Verba";
+        public static final String ELECTION_MONEY_COLUMN = "Election_Money";
     }
 
 
@@ -182,18 +184,22 @@ public class ViewLastCausesFragment extends Fragment {
                 for (int electionNr = 0; electionNr < totalElectionNr; electionNr++) {
 
                     // Get each election's winning causes and add them
-                    JSONObject election = yearlyElections.getJSONObject(electionNr);
-                    JSONArray winningCauses = election.getJSONArray("causas");
+                    JSONObject electionObject = yearlyElections.getJSONObject(electionNr);
+                    JSONArray winningCauses = electionObject.getJSONArray("causas");
                     int totalCausesNr = winningCauses.length();
+
+                    Election election = new Election(electionObject);
+
                     for(int causeNr = 0; causeNr < totalCausesNr; causeNr++) {
 
                         JSONObject cause = winningCauses.getJSONObject(causeNr);
 
                         //HashMap<String, String> tempCause = new HashMap<String, String>();
                         //add titulo and montante to the cause object
-                        cause.put("titulo", election.getString("titulo"));
-                        cause.put("montante_disponivel", election.getString("montante_disponivel"));
+                        cause.put("titulo", electionObject.getString("titulo"));
+                        cause.put("montante_disponivel", electionObject.getString("montante_disponivel"));
                         Cause tempCause = Cause.parsePastCause(cause);
+                        tempCause.setElection(election);
 
                         /*
                         HashMap<String, String> tempCause = new HashMap<String, String>();
@@ -252,7 +258,7 @@ public class ViewLastCausesFragment extends Fragment {
             // Deprecated
             if(updateAfterRequest) {
                 spinnerAdapter.notifyDataSetChanged();
-                Log.d("past", "I am on post execute updating: " + year);
+               // Log.d("past", "I am on post execute updating: " + year);
                 updateFromSpinner(year);
             }
 
@@ -261,13 +267,12 @@ public class ViewLastCausesFragment extends Fragment {
 
     public void updateFromSpinner(String year) {
 
-        Log.d("past", "Spinner: year = " + year);
         if(allCausesByYear.get(year) != null) {
 
             shownCauseslist = allCausesByYear.get(year);
 
-            Log.d("past", allCausesByYear.toString());
-            Log.d("past", shownCauseslist.toString());
+            Log.d("past", "All Causes loaded: " + allCausesByYear.toString());
+            Log.d("past", "Causes shown: " + shownCauseslist.toString());
 
             causeList_to_hashmapList(shownCauseslist, list);
 
@@ -341,8 +346,8 @@ public class ViewLastCausesFragment extends Fragment {
                 this.getContext(),
                 list,
                 R.layout.item_previous_winner,
-                new String[]{Constants.VOTES_COLUMN, Constants.MONEY_COLUMN, Constants.DESCRIPTION_COLUMN, Constants.TITLE_COLUMN, Constants.VERBA_COLUMN},
-                new int[]{R.id.last_causes_item_votes, R.id.last_causes_item_money, R.id.last_causes_item_description, R.id.last_causes_item_title, R.id.last_causes_item_verba}
+                new String[]{Constants.ELECTION_TITLE_COLUMN, Constants.TITLE_COLUMN, Constants.MONEY_COLUMN},
+                new int[]{R.id.last_causes_item_main_title, R.id.last_causes_item_sub_title, R.id.last_causes_item_money}
         );
         listView.setAdapter(listAdapter);
 
