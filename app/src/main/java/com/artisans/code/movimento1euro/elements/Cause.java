@@ -1,5 +1,7 @@
 package com.artisans.code.movimento1euro.elements;
 
+import android.os.Build;
+import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
 
@@ -36,6 +38,11 @@ public class Cause {
             cause.id = json.getInt("id");
             cause.title = json.getString("titulo");
             cause.description = json.getString("descricao");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                cause.description = Html.fromHtml(cause.description, Html.FROM_HTML_MODE_LEGACY).toString();
+            } else {
+                cause.description = Html.fromHtml(cause.description).toString();
+            }
             cause.money = json.getString("verba");
             cause.votes = json.getString("votos");
             cause.documents = parseArray(json.getJSONArray("documentos"));

@@ -94,7 +94,7 @@ public class VotingCausesFragment extends Fragment {
                 JSONObject obj = new JSONObject(response.getBody());
                 if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
                     throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
-                JSONArray votingCauses = obj.getJSONArray("causes");
+                JSONArray votingCauses = obj.getJSONArray("votacao");
 
                 list.clear();
                 causesList.clear();
