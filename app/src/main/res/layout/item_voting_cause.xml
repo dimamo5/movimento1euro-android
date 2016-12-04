@@ -26,8 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.4"
-            android:orientation="vertical"
-            android:paddingLeft="10dp">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/voting_causes_item_image"
@@ -61,14 +60,15 @@
                 android:paddingBottom="10dp" />
 
             <Button
-                android:layout_width="373dp"
-                android:layout_height="40dp"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:text="@string/voting_button" />
 
         </LinearLayout>
 
 
     </android.support.v7.widget.CardView>
+
+
 
 </LinearLayout>
