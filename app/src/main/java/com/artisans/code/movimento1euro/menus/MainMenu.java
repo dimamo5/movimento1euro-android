@@ -3,6 +3,7 @@ package com.artisans.code.movimento1euro.menus;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -24,6 +25,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
+import org.json.JSONObject;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
@@ -138,10 +144,7 @@ public class MainMenu extends AppCompatActivity
             intent.putExtra("label", "Contactos");
             startActivity(intent);
         }else if(id == R.id.nav_logout){
-            logout();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            new LogoutTask().execute();
         } else if (id == R.id.nav_prev_winners) {
             getSupportActionBar().setTitle("Vencedores Passados");
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -161,6 +164,36 @@ public class MainMenu extends AppCompatActivity
         return true;
     }
 
+    private class LogoutTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            HttpResponse<String> response = null;
+
+            SharedPreferences userDetails = getSharedPreferences("userInfo", MODE_PRIVATE);
+            String token = userDetails.getString("token", "");
+
+            try {
+                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.logout_path))
+                        .header("accept", "application/json")
+                        .header("content-type", "application/json")
+                        .header("Authorization", token)
+                        .asString();
+                if (response == null)
+                    throw new Exception("Não foi possível carregar as causas passadas. Verifique a sua conexão.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            logout();
+        }
+    }
+
     protected void logout(){
         SharedPreferences sharedPreferences = getSharedPreferences("userInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -168,6 +201,9 @@ public class MainMenu extends AppCompatActivity
 
         LoginManager.getInstance().logOut();
 
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

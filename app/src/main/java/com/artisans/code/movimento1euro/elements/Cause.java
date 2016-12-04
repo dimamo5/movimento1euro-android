@@ -1,5 +1,7 @@
 package com.artisans.code.movimento1euro.elements;
 
+import android.os.Build;
+import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
 
@@ -11,6 +13,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Antonio on 30-11-2016.
@@ -30,9 +33,21 @@ public class Cause implements Serializable {
     private ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
     private boolean user_vote;
     private Association association;
+    private Election election;
 
     public Cause () {
     }
+
+    public class Constants {
+        public static final String ELECTION_TITLE_COLUMN = "Election_Title";
+        public static final String TITLE_COLUMN = "Title";
+        public static final String NAME_COLUMN = "Name";
+        public static final String DESCRIPTION_COLUMN = "Description";
+        public static final String MONEY_COLUMN = "Money";
+        public static final String VOTES_COLUMN = "Votes";
+        public static final String ELECTION_MONEY_COLUMN = "Election_Money";
+    }
+
     public static Cause parseVotingCause(JSONObject json) {
         Cause cause = new Cause();
 
@@ -40,6 +55,11 @@ public class Cause implements Serializable {
             cause.id = json.getInt("id");
             cause.title = json.getString("titulo");
             cause.description = json.getString("descricao");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                cause.description = Html.fromHtml(cause.description, Html.FROM_HTML_MODE_LEGACY).toString();
+            } else {
+                cause.description = Html.fromHtml(cause.description).toString();
+            }
             cause.money = json.getString("verba");
             cause.votes = json.getString("votos");
             cause.documents = parseArray(json.getJSONArray("documentos"));
@@ -56,6 +76,25 @@ public class Cause implements Serializable {
         return cause;
     }
 
+    public static Cause parsePastCause(JSONObject json) {
+        Cause cause = new Cause();
+
+        try {
+            cause.id = json.getInt("id");
+            cause.title = json.getString("nome");
+            cause.description = json.getString("descricao");
+            cause.money = json.getString("verba");
+            cause.votes = json.getString("votos");
+            cause.association = new Association(json.getJSONObject("associacao"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("Cause exception", "Error parsing JSON");
+            Log.d("past", "Error: "  + e.getMessage());
+        }
+
+        return cause;
+    }
+
     private static ArrayList<Pair<URL, String>> parseArray(JSONArray jsonArray) throws JSONException, MalformedURLException {
         ArrayList<Pair<URL, String>> ret = new ArrayList<Pair<URL, String>>();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -63,6 +102,26 @@ public class Cause implements Serializable {
             ret.add(new Pair(new URL(obj.getString("url")), obj.getString("descricao")));
         }
         return ret;
+    }
+
+    // HashMap with pertinent info for the list appearance
+    public HashMap<String, String> toHashMap(){
+        HashMap<String, String> hashMap = new HashMap<String,String>();
+
+        hashMap.put(Constants.ELECTION_TITLE_COLUMN, election.getTitle());
+        hashMap.put(Constants.TITLE_COLUMN, title);
+        hashMap.put(Constants.DESCRIPTION_COLUMN, description);
+        hashMap.put(Constants.VOTES_COLUMN, votes+ " votos");
+        hashMap.put(Constants.MONEY_COLUMN, "Verba: " + money + " € requirido");
+
+        if(election != null)
+            hashMap.put(Constants.NAME_COLUMN, election.getTitle());
+
+        return hashMap;
+    }
+
+    public String toString(){
+        return "ID: " + id + ", Title: " + title + ", Description: " + description + ", Votes: " + votes + ", Money: " ;
     }
 
     public int getId() {
@@ -100,6 +159,10 @@ public class Cause implements Serializable {
     public Association getAssociation() {
         return association;
     }
+
+    public Election getElection() { return election; }
+
+    public void setElection(Election election) { this.election = election; }
 
     public void setId(int id) {
         this.id = id;
