@@ -1,91 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:weightSum="1">
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="33dp"
-            android:inputType="textPersonName"
-            android:text="Name"
             android:ems="10"
+            android:text="Name"
             android:id="@+id/causeName" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="38dp"
-            android:inputType="textPersonName"
-            android:text="Slogan"
             android:ems="10"
-            android:id="@+id/causeSlogan" />
+            android:id="@+id/causeSlogan"
+            android:text="Slogan"
+            android:layout_below="@+id/causeName"/>
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="108dp"
-            android:inputType="textPersonName"
-            android:text="Description"
             android:ems="10"
-            android:id="@+id/causeDescription" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="126dp"
-        android:weightSum="1">
+            android:id="@+id/causeInformation"
+            android:text="Brief Intro"
+            android:layout_below="@+id/causeSlogan"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="125dp"
             app:srcCompat="@drawable/com_facebook_auth_dialog_cancel_background"
-            android:id="@+id/causeImageView" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="226dp"
-        android:weightSum="1"
-        android:layout_weight="1.22">
-        <RelativeLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:weightSum="1"
-        android:layout_weight="1.22">
+            android:id="@+id/causeImageView"
+            android:layout_below="@+id/causeInformation"/>
 
         <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Information"
-        android:maxLines="2"
-        android:id="@+id/causeDetailedInformation"
-        />
-        </RelativeLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:id="@+id/causeDetailedInformation"
+            android:layout_below="@+id/causeImageView"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:id="@+id/moreInformation"
+            android:layout_below="@+id/causeDetailedInformation"/>
+        <Button
+            android:text="Vote"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignRight="@+id/causeVideoView"
+            android:id="@+id/voteButton"
+            android:layout_below="@+id/causeVideoView"/>
 
         <VideoView
             android:layout_width="match_parent"
             android:layout_height="129dp"
             android:id="@+id/causeVideoView"
-            android:layout_marginBottom="36dp" />
-
-        <Button
-            android:text="Vote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/voteButton"
-            android:layout_marginBottom="11dp" />
-
-    </LinearLayout>
-
-</LinearLayout>
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/moreInformation"
+            />
+    </RelativeLayout>
+</ScrollView>

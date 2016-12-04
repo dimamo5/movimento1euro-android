@@ -48,6 +48,10 @@
     <!-- voting button -->
     <string name="voting_button">Votar</string>
 
+    <!-- constantes -->
+    <string name="seeMoreInfo"><u> Ver Mais </u><br/></string>
+    <string name="seeLessInfo"><u> Ver Menos </u><br/></string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
