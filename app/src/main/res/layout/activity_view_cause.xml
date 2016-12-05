@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.artisans.code.movimento1euro.menus.ViewActivity">
+
+
+    <include layout="@layout/toolbar_back_layout"></include>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/voteButton"
+        app:backgroundTint="@color/colorPrimary"
+        android:src="@android:drawable/checkbox_on_background"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/fab_margin"/>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--   <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="33dp"
+                   android:ems="10"
+                   android:text="Name"
+                   android:id="@+id/causeName" />*/ -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:ems="25"
+                android:id="@+id/causeSlogan"
+                android:layout_margin="@dimen/text_margin"
+                android:textStyle="normal|bold|italic" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="16"
+                android:id="@+id/causeInformation"
+                android:layout_below="@+id/causeSlogan"
+                android:layout_margin="@dimen/text_margin"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                app:srcCompat="@drawable/com_facebook_auth_dialog_cancel_background"
+                android:id="@+id/causeImageView"
+                android:layout_below="@+id/causeInformation"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="129dp"
+                android:id="@+id/causeVideoView"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/moreInformation"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:id="@+id/moreInformation"
+                android:layout_marginLeft="@dimen/text_margin"
+                android:layout_marginRight="@dimen/text_margin"
+                android:layout_marginTop="32dp"
+                android:layout_below="@+id/causeDetailedInformationBox"
+                android:layout_alignStart="@+id/causeDetailedInformationBox" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/causeDetailedInformationBox"
+                android:layout_below="@+id/causeImageView"
+                android:layout_alignStart="@+id/causeInformation">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/causeDetailedInformation"
+                    android:layout_marginLeft="@dimen/text_margin"
+                    android:layout_marginRight="@dimen/text_margin"
+                    android:layout_marginTop="15dp"
+                     />
+            </LinearLayout>
+
+
+
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+
+</RelativeLayout>

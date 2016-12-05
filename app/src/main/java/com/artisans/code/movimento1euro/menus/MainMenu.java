@@ -3,6 +3,7 @@ package com.artisans.code.movimento1euro.menus;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -15,21 +16,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.ViewLastCausesFragment;
+import com.artisans.code.movimento1euro.elements.Cause;
+import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
 import com.facebook.login.LoginManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.artisans.code.movimento1euro.ViewCausesFragment;
+import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
+import org.json.JSONObject;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
-        ViewCausesFragment.OnFragmentInteractionListener {
+        VotingCausesFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainMenu.class.getSimpleName();
 
@@ -40,7 +46,8 @@ public class MainMenu extends AppCompatActivity
     TextView username;
     TextView expDate;
     ViewLastCausesFragment viewLastCausesFragment;
-    ViewCausesFragment viewCausesFragment;
+    VotingCausesFragment viewVotingCausesFragment;
+    ViewActivity viewCauses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +58,8 @@ public class MainMenu extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        viewCausesFragment = new ViewCausesFragment();
-        transaction.replace(R.id.menu_fragment, viewCausesFragment);
+        viewVotingCausesFragment = new VotingCausesFragment();
+        transaction.replace(R.id.menu_fragment, viewVotingCausesFragment);
         transaction.commit();
 
         NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
@@ -72,9 +79,14 @@ public class MainMenu extends AppCompatActivity
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
     }
 
-    public void cardClick(View view) {
+    public void cardClickLastCauses(View view) {
         viewLastCausesFragment.cardClick(view);
     }
+
+    public void cardClickVotingCauses(View view) {
+        viewVotingCausesFragment.cardClick(view);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -135,10 +147,7 @@ public class MainMenu extends AppCompatActivity
             intent.putExtra("label", "Contactos");
             startActivity(intent);
         }else if(id == R.id.nav_logout){
-            logout();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            new LogoutTask().execute();
         } else if (id == R.id.nav_prev_winners) {
             getSupportActionBar().setTitle("Vencedores Passados");
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -148,14 +157,44 @@ public class MainMenu extends AppCompatActivity
         } else if (id == R.id.nav_causes) {
             getSupportActionBar().setTitle("Causas em votação");
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            viewCausesFragment = new ViewCausesFragment();
-            transaction.replace(R.id.menu_fragment, viewCausesFragment);
+            viewVotingCausesFragment = new VotingCausesFragment();
+            transaction.replace(R.id.menu_fragment, viewVotingCausesFragment);
             transaction.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class LogoutTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            HttpResponse<String> response = null;
+
+            SharedPreferences userDetails = getSharedPreferences("userInfo", MODE_PRIVATE);
+            String token = userDetails.getString("token", "");
+
+            try {
+                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.logout_path))
+                        .header("accept", "application/json")
+                        .header("content-type", "application/json")
+                        .header("Authorization", token)
+                        .asString();
+                if (response == null)
+                    throw new Exception("Não foi possível carregar as causas passadas. Verifique a sua conexão.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            logout();
+        }
     }
 
     protected void logout(){
@@ -165,6 +204,9 @@ public class MainMenu extends AppCompatActivity
 
         LoginManager.getInstance().logOut();
 
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
