@@ -7,12 +7,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.elements.Cause;
@@ -58,7 +61,7 @@ public class VotingCausesFragment extends Fragment {
         public static final String NAME_COLUMN = "Name";
         public static final String MONEY_COLUMN = "Money";
         public static final String DESCRIPTION_COLUMN = "Description";
-        //public static final String IMAGE_COLUMN = "Image";
+        public static final String IMAGE_COLUMN = "Image";
     }
 
 
@@ -107,7 +110,7 @@ public class VotingCausesFragment extends Fragment {
                         HashMap<String, String> temp = new HashMap<>();
 
                         //TODO adicionar imagem da causa ?
-                        temp.put(Constants.NAME_COLUMN, "Nome: " + causesList.get(i).getTitle());
+                        temp.put(Constants.NAME_COLUMN, causesList.get(i).getTitle());
                         temp.put(Constants.DESCRIPTION_COLUMN, causesList.get(i).getDescription());
                         temp.put(Constants.MONEY_COLUMN, "Valor da causa: " + causesList.get(i).getMoney() + "€");
                         list.add(temp);
@@ -125,7 +128,7 @@ public class VotingCausesFragment extends Fragment {
                     result.put("errorMessage", e.getMessage());
                 } catch (Exception b) {
                     b.printStackTrace();
-                    Log.e("causes", "Exception: " +  b.getMessage());
+                    Log.e("causes", "Exception: " + b.getMessage());
                 }
             }
 
@@ -151,7 +154,7 @@ public class VotingCausesFragment extends Fragment {
         }
     }
 
-    public void notifyChanges(){
+    public void notifyChanges() {
         listAdapter.notifyDataSetChanged();
     }
 
