@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -62,8 +63,9 @@ public class ViewActivity extends AppCompatActivity {
             imgTask.execute();
 
         } else {
-            imgTask.setFields(getString(R.string.imageLinkDefault), (ImageView) findViewById(R.id.causeImageView));
-            imgTask.execute();
+
+            imgTask.setFields("",(ImageView) findViewById(R.id.causeImageView));
+            imgTask.getImageView().setImageResource(R.drawable.logo);
         }
 
 
@@ -110,6 +112,8 @@ public class ViewActivity extends AppCompatActivity {
                 }
             });
         }
+        videoTask.setFields("https://www.saris.com/images/img-youtube-play.png", (ImageView) findViewById(R.id.causeVideoView));
+        videoTask.execute();
             if(cause.getVideos() != null && cause.getVideos().size() >0){
 
                 final String videoLink=cause.getVideos().get(0).second;
@@ -123,8 +127,16 @@ public class ViewActivity extends AppCompatActivity {
                     }
                 });
             }else{
-                videoTask.setFields(getString(R.string.videoLinkDefault), (ImageView) findViewById(R.id.causeVideoView));
-                videoTask.execute();
+                final String videoLink="https://www.youtube.com/watch?v=LTvFsTbyILg";
+                findViewById(R.id.causeVideoView).setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v){
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                        intent.setData(Uri.parse(videoLink));
+                        startActivity(intent);
+                    }
+                });
             }
     }
 
@@ -145,7 +157,9 @@ public class ViewActivity extends AppCompatActivity {
             this.url = url;
             this.imageView = imageView;
         }
-
+        public ImageView getImageView(){
+            return imageView;
+        }
         @Override
         protected Bitmap doInBackground(Void... params) {
             try {

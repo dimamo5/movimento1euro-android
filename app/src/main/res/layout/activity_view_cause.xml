@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="1">
+    android:layout_height="match_parent">
+   >
 
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:layout_height="match_parent"
+       >
 
      <!--   <TextView
             android:layout_width="match_parent"
@@ -51,13 +51,6 @@
             android:maxLines="1"
             android:id="@+id/moreInformation"
             android:layout_below="@+id/causeDetailedInformation"/>
-        <Button
-            android:text="Vote"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_alignRight="@+id/causeVideoView"
-            android:id="@+id/voteButton"
-            android:layout_below="@+id/causeVideoView"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -66,5 +59,16 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/moreInformation"
             />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/voteButton"
+            app:backgroundTint="@color/btn"
+            android:src="@android:drawable/checkbox_on_background"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="end"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"/>
     </RelativeLayout>
 </ScrollView>

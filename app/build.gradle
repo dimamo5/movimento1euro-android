@@ -50,6 +50,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.google.firebase:firebase-messaging:9.8.0'
     compile 'com.mashape.unirest:unirest-android:1.0+'
+    compile 'com.google.apis:google-api-services-youtube:v3-rev176-1.22.0'
 
     testCompile 'junit:junit:4.12'
     androidTestCompile("com.android.support.test.espresso:espresso-intents:2.2.2")
