@@ -8,10 +8,13 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -50,7 +53,19 @@ public class ViewActivity extends AppCompatActivity {
         cause = (Cause) getIntent().getSerializableExtra("Cause");
         setContentView(R.layout.activity_view_cause);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        }
+        // TODO: 05/12/2016 Destrolhar isto - CC xD
+        this.setTitle("Causa");
+
         fillFields(cause);
+
+
 
 
     }
@@ -69,11 +84,11 @@ public class ViewActivity extends AppCompatActivity {
         }
 
 
-        if (cause.getAssociation() != null) {
+        /*if (cause.getAssociation() != null) {
             if (cause.getAssociation().getName() != null) {
                 getSupportActionBar().setTitle(cause.getAssociation().getName());
             }
-        }
+        }*/
         if (cause.getTitle() != null) {
             textBox = (TextView) findViewById(R.id.causeSlogan);
             SpannableString spanString = new SpannableString(cause.getTitle());

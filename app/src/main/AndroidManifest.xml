@@ -58,7 +58,9 @@
         <activity
             android:name=".menus.ViewActivity"
             android:label="Causa"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:parentActivityName=".menus.MainMenu"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name="com.facebook.CustomTabActivity"
