@@ -112,7 +112,7 @@ public class ViewActivity extends AppCompatActivity {
                 }
             });
         }
-        videoTask.setFields("https://www.saris.com/images/img-youtube-play.png", (ImageView) findViewById(R.id.causeVideoView));
+        videoTask.setFields(getString(R.string.youtubeImg), (ImageView) findViewById(R.id.causeVideoView));
         videoTask.execute();
             if(cause.getVideos() != null && cause.getVideos().size() >0){
 
@@ -127,7 +127,7 @@ public class ViewActivity extends AppCompatActivity {
                     }
                 });
             }else{
-                final String videoLink="https://www.youtube.com/watch?v=LTvFsTbyILg";
+                final String videoLink=getString(R.string.testVideoLink);
                 findViewById(R.id.causeVideoView).setOnClickListener(new View.OnClickListener(){
                     public void onClick(View v){
                         Intent intent = new Intent();
