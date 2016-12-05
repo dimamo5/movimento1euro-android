@@ -1,6 +1,7 @@
 package com.artisans.code.movimento1euro.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.elements.Cause;
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.menus.ViewActivity;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -181,7 +183,13 @@ public class VotingCausesFragment extends Fragment {
     }
 
     public void cardClick(View view) {
-        //Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
+        int index=listView.getPositionForView(view);
+       Cause c= causesList.get(index);
+       // Log.e("Cause",c.toString());
+        Intent intent = new Intent(this.getActivity(), ViewActivity.class);
+        intent.putExtra("Cause",causesList.get(index));
+        startActivity(intent);
+
     }
 
     @Override

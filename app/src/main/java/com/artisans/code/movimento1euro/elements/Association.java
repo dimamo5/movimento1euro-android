@@ -7,11 +7,13 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by Antonio on 30-11-2016.
  */
 
-public class Association {
+public class Association  implements Serializable{
     private String name;
     private String presentation;
     private String address;

@@ -11,20 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1">
-        <TextView
+     <!--   <TextView
             android:layout_width="match_parent"
             android:layout_height="33dp"
             android:ems="10"
             android:text="Name"
-            android:id="@+id/causeName" />
+            android:id="@+id/causeName" />*/ -->
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="38dp"
             android:ems="10"
-            android:id="@+id/causeSlogan"
-            android:text="Slogan"
-            android:layout_below="@+id/causeName"/>
+            android:id="@+id/causeSlogan"/>
 
 
         <TextView
@@ -32,7 +30,6 @@
             android:layout_height="108dp"
             android:ems="10"
             android:id="@+id/causeInformation"
-            android:text="Brief Intro"
             android:layout_below="@+id/causeSlogan"/>
 
         <ImageView
@@ -45,7 +42,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description"
             android:id="@+id/causeDetailedInformation"
             android:layout_below="@+id/causeImageView"/>
         <TextView

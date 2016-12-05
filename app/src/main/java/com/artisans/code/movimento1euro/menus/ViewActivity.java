@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.elements.Cause;
+
+import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -26,53 +30,87 @@ public class ViewActivity extends AppCompatActivity {
 
     Cause cause;
     private final int lineLimit = 5;
+    ImageLoadTask imgTask = new ImageLoadTask();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
+
         cause = (Cause) getIntent().getSerializableExtra("Cause");
         setContentView(R.layout.activity_view_cause);
 
-        TextView textBox = (TextView) findViewById(R.id.causeName);
-        textBox.setText(cause.getTitle());
+        fillFields(cause);
 
-        textBox = (TextView) findViewById(R.id.causeInformation);
-        textBox.setText(cause.getDescription());
 
-        final TextView descriptionText = (TextView) findViewById(R.id.causeDetailedInformation);
-        descriptionText.setText(cause.getIntroduction());
-        descriptionText.setMaxLines(lineLimit);
+    }
 
-        final TextView readMore = (TextView) findViewById(R.id.moreInformation);
-        readMore.setText(Html.fromHtml(getString(R.string.seeMoreInfo)));
-        readMore.setTextColor(Color.BLUE);
+    private void fillFields(Cause cause) {
+        TextView textBox;
 
-        readMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (descriptionText.getMaxLines() != Integer.MAX_VALUE) {
-                    descriptionText.setMaxLines(Integer.MAX_VALUE);
-                    readMore.setText(Html.fromHtml(getString(R.string.seeLessInfo)));
+        if (cause.getImgLink() != null) {
+            imgTask.setFields(cause.getImgLink(), (ImageView) findViewById(R.id.causeImageView));
+            imgTask.execute();
 
-                } else {
-                    descriptionText.setMaxLines(lineLimit);
-                    readMore.setText(Html.fromHtml(getString(R.string.seeMoreInfo)));
-                }
+        } else {
+            imgTask.setFields(getString(R.string.imageLinkDefault), (ImageView) findViewById(R.id.causeImageView));
+            imgTask.execute();
+        }
+
+
+        if (cause.getAssociation() != null) {
+            if (cause.getAssociation().getName() != null) {
+                getSupportActionBar().setTitle(cause.getAssociation().getName());
             }
-        });
+        }
+        if (cause.getTitle() != null) {
+            textBox = (TextView) findViewById(R.id.causeSlogan);
+            textBox.setText(cause.getTitle());
+        }
 
-       /* VideoView video = (VideoView) findViewById(R.id.causeVideoView);
+        if (cause.getIntroduction() != null) {
+            textBox = (TextView) findViewById(R.id.causeInformation);
+            textBox.setText(cause.getIntroduction());
+        }else{
+            textBox = (TextView) findViewById(R.id.causeInformation);
+            textBox.setText("No Introduction available");
+        }
+
+        if (cause.getDescription() != null) {
+            final TextView descriptionText = (TextView) findViewById(R.id.causeDetailedInformation);
+            descriptionText.setText(cause.getDescription());
+            descriptionText.setMaxLines(lineLimit);
+
+            final TextView readMore = (TextView) findViewById(R.id.moreInformation);
+            readMore.setText(Html.fromHtml(getString(R.string.seeMoreInfo)));
+            readMore.setTextColor(Color.BLUE);
+
+            readMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (descriptionText.getMaxLines() != Integer.MAX_VALUE) {
+                        descriptionText.setMaxLines(Integer.MAX_VALUE);
+                        readMore.setText(Html.fromHtml(getString(R.string.seeLessInfo)));
+
+                    } else {
+                        descriptionText.setMaxLines(lineLimit);
+                        readMore.setText(Html.fromHtml(getString(R.string.seeMoreInfo)));
+                    }
+                }
+            });
+        }
+        if (cause.getVideos() != null && cause.getVideos().size() > 0) {
+
+
+            /* VideoView video = (VideoView) findViewById(R.id.causeVideoView);
         Uri uri=Uri.parse(cause.getVideoLink());
         video.setVideoURI(uri);
         mediaController.setAnchorView(video);
         video.setMediaController(mediaController);
         video.setVideoURI(uri);
         video.start();*/
-
-        new ImageLoadTask(cause.getImgLink(), (ImageView) findViewById(R.id.causeImageView)).execute();
-
+        }
 
     }
 
@@ -81,7 +119,15 @@ public class ViewActivity extends AppCompatActivity {
         private String url;
         private ImageView imageView;
 
+        public ImageLoadTask() {
+        }
+
         public ImageLoadTask(String url, ImageView imageView) {
+            this.url = url;
+            this.imageView = imageView;
+        }
+
+        public void setFields(String url, ImageView imageView) {
             this.url = url;
             this.imageView = imageView;
         }
@@ -108,6 +154,12 @@ public class ViewActivity extends AppCompatActivity {
             super.onPostExecute(result);
             imageView.setImageBitmap(result);
         }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        imgTask.imageView.destroyDrawingCache();
 
     }
 }
