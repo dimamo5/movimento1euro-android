@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1">
+
      <!--   <TextView
             android:layout_width="match_parent"
             android:layout_height="33dp"
@@ -58,7 +59,7 @@
             android:id="@+id/voteButton"
             android:layout_below="@+id/causeVideoView"/>
 
-        <VideoView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="129dp"
             android:id="@+id/causeVideoView"

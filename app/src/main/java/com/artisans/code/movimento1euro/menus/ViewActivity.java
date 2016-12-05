@@ -1,14 +1,19 @@
 package com.artisans.code.movimento1euro.menus;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,7 +25,9 @@ import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by Filipe on 02/12/2016.
@@ -31,6 +38,7 @@ public class ViewActivity extends AppCompatActivity {
     Cause cause;
     private final int lineLimit = 5;
     ImageLoadTask imgTask = new ImageLoadTask();
+    ImageLoadTask videoTask = new ImageLoadTask();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +74,9 @@ public class ViewActivity extends AppCompatActivity {
         }
         if (cause.getTitle() != null) {
             textBox = (TextView) findViewById(R.id.causeSlogan);
-            textBox.setText(cause.getTitle());
+            SpannableString spanString = new SpannableString(cause.getTitle());
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            textBox.setText(spanString);
         }
 
         if (cause.getIntroduction() != null) {
@@ -100,18 +110,22 @@ public class ViewActivity extends AppCompatActivity {
                 }
             });
         }
-        if (cause.getVideos() != null && cause.getVideos().size() > 0) {
+            if(cause.getVideos() != null && cause.getVideos().size() >0){
 
-
-            /* VideoView video = (VideoView) findViewById(R.id.causeVideoView);
-        Uri uri=Uri.parse(cause.getVideoLink());
-        video.setVideoURI(uri);
-        mediaController.setAnchorView(video);
-        video.setMediaController(mediaController);
-        video.setVideoURI(uri);
-        video.start();*/
-        }
-
+                final String videoLink=cause.getVideos().get(0).second;
+                findViewById(R.id.causeVideoView).setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v){
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                        intent.setData(Uri.parse(videoLink));
+                        startActivity(intent);
+                    }
+                });
+            }else{
+                videoTask.setFields(getString(R.string.videoLinkDefault), (ImageView) findViewById(R.id.causeVideoView));
+                videoTask.execute();
+            }
     }
 
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
@@ -156,10 +170,9 @@ public class ViewActivity extends AppCompatActivity {
         }
 
     }
-
-    @Override
+    /*@Override
     public void onBackPressed() {
         imgTask.imageView.destroyDrawingCache();
+    }*/
 
-    }
 }
