@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.elements.Cause;
 import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
 import com.facebook.login.LoginManager;
 
@@ -45,6 +47,7 @@ public class MainMenu extends AppCompatActivity
     TextView expDate;
     ViewLastCausesFragment viewLastCausesFragment;
     VotingCausesFragment viewVotingCausesFragment;
+    ViewActivity viewCauses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,12 +19,14 @@ import java.util.HashMap;
  * Created by Antonio on 30-11-2016.
  */
 
-public class Cause {
+public class Cause implements Serializable {
     private int id;
-    private String title;
     private String description;
     private String money;
     private String votes;
+    private String title;
+    private String introduction;
+    private String imgLink;
     private ArrayList<Pair<URL, String>> documents = new ArrayList<Pair<URL, String>>();
     private ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
     private boolean user_vote;
@@ -61,6 +64,7 @@ public class Cause {
             cause.videos = parseArray(json.getJSONArray("videos"));
             cause.user_vote = json.getBoolean("voto_utilizador");
             cause.association = new Association(json.getJSONObject("associacao"));
+
         } catch (JSONException | MalformedURLException e) {
             e.printStackTrace();
             Log.e("Cause exception", "Error parsing JSON");
@@ -113,8 +117,26 @@ public class Cause {
         return hashMap;
     }
 
-    public String toString(){
-        return "ID: " + id + ", Title: " + title + ", Description: " + description + ", Votes: " + votes + ", Money: " ;
+   /* public String toString(){
+        return "ID: " + id + ", Title: " + title + ", Description: " + description + ",\n Votes: " + votes + ", Money: " ;
+    }*/
+
+    @Override
+    public String toString() {
+        return "Cause{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", money='" + money + '\'' +
+                ", votes='" + votes + '\'' +
+                ", title='" + title + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", imgLink='" + imgLink + '\'' +
+                ", documents=" + documents +
+                ", videos=" + videos +
+                ", user_vote=" + user_vote +
+                ", association=" + association +
+                ", election=" + election +
+                '}';
     }
 
     public int getId() {
@@ -156,4 +178,61 @@ public class Cause {
     public Election getElection() { return election; }
 
     public void setElection(Election election) { this.election = election; }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public void setVotes(String votes) {
+        this.votes = votes;
+    }
+
+    public void setDocuments(ArrayList<Pair<URL, String>> documents) {
+        this.documents = documents;
+    }
+
+    public void setVideos(ArrayList<Pair<URL, String>> videos) {
+        this.videos = videos;
+    }
+
+    public void setUser_vote(boolean user_vote) {
+        this.user_vote = user_vote;
+    }
+
+    public void setAssociation(Association association) {
+        this.association = association;
+    }
+
+
+    public void setImgLink(String imgLink) {
+        this.imgLink = imgLink;
+    }
+
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public String getImgLink() {
+        return imgLink;
+    }
+
+
 }

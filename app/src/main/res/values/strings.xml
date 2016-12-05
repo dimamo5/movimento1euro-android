@@ -49,6 +49,13 @@
     <!-- voting button -->
     <string name="voting_button">Votar</string>
 
+    <!-- constantes -->
+    <string name="seeMoreInfo"><u> Ver Mais </u><br/></string>
+    <string name="seeLessInfo"><u> Ver Menos </u><br/></string>
+    <string name="imageLinkDefault">http://www.venuscomputers.pk/wp-content/uploads/2014/12/image-not-available.jpg</string>
+    <string name="videoLinkDefault">https://i.ytimg.com/vi/6aZdGvOZSSs/maxresdefault.jpg</string>
+    <string name="youtubeImg">"https://www.saris.com/images/img-youtube-play.png"</string>
+    <string name="testVideoLink">"https://www.youtube.com/watch?v=LTvFsTbyILg"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
