@@ -1,5 +1,6 @@
 package com.artisans.code.movimento1euro.firebase.notifications;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.res.Resources;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.BigTextStyle;
 import android.util.Log;
 
 import com.artisans.code.movimento1euro.R;
@@ -47,13 +49,15 @@ public class MessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+        Notification.Builder notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setContentText(body);
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setSound(notificationSound);
         notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setStyle(new Notification.BigTextStyle()
+                .bigText(body));
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0,notificationBuilder.build());
