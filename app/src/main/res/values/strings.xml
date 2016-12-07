@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Movimento1Euro</string>
     <string name="versionCode">1</string>
-    <string name="versionName">1.0</string>
+    <string name="versionName">0.3</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -15,21 +15,30 @@
     <string name="action_about">Sobre</string>
 
     <!--MENSAGENS DE ERRO-->
-        <!--LOGIN-->
-        <string name="failed_connection">Ligação Falhou</string>
-        <string name="failed_login">Falha a iniciar sessão</string>
-        <string name="wrong_parameters">Pârametros Errados</string>
+    <!--LOGIN-->
+    <string name="failed_connection">Ligação Falhou</string>
+    <string name="failed_login">Falha a iniciar sessão</string>
+    <string name="wrong_parameters">Pârametros Errados</string>
 
     <!--FACEBOOK API-->
     <string name="facebook_app_id">208375452933152</string>
     <string name="fb_login_protocol_scheme">fb208375452933152</string>
 
     <!--API-->
-    <string name="api_server_url">http://staging.diogomoura.me/api</string>
+    <string name="api_server_url">http://ldso.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
+    <string name="logout_path">/logout</string>
     <string name="fb_login_path">/loginFB</string>
     <string name="winner_causes_path">/winnerCauses</string>
+    <string name="voting_causes_path">/votingCauses</string>
     <string name="upd_firebase_token_path">/firebaseToken</string>
+
+    <!--API responses-->
+    <string name="api_success_response">success</string>
+
+    <!--User errors-->
+    <string name="user_connection_error">Não foi possível carregar as causas em votação. Verifique a sua conexão.</string>
+    <string name="user_loading_authetication_error">Não foi possível carregar as causas em votação. Verifique a sua autenticação.</string>
 
     <!--WEBSITE URLS-->
     <string name="website_url">http://movimento1euro.com</string>
@@ -37,6 +46,16 @@
     <string name="news_path">/sobre-nos/noticias</string>
     <string name="contacts_path">/contactos</string>
 
+    <!-- voting button -->
+    <string name="voting_button">Votar</string>
+
+    <!-- constantes -->
+    <string name="seeMoreInfo"><u> Ver Mais </u><br/></string>
+    <string name="seeLessInfo"><u> Ver Menos </u><br/></string>
+    <string name="imageLinkDefault">http://www.venuscomputers.pk/wp-content/uploads/2014/12/image-not-available.jpg</string>
+    <string name="videoLinkDefault">https://i.ytimg.com/vi/6aZdGvOZSSs/maxresdefault.jpg</string>
+    <string name="youtubeImg">"https://www.saris.com/images/img-youtube-play.png"</string>
+    <string name="testVideoLink">"https://www.youtube.com/watch?v=LTvFsTbyILg"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
