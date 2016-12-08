@@ -5,14 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -25,13 +22,9 @@ import android.widget.TextView;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.elements.Cause;
 
-import org.w3c.dom.Text;
-
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 /**
  * Created by Filipe on 02/12/2016.
@@ -90,7 +83,7 @@ public class ViewActivity extends AppCompatActivity {
             }
         }*/
         if (cause.getTitle() != null) {
-            textBox = (TextView) findViewById(R.id.causeSlogan);
+            textBox = (TextView) findViewById(R.id.causeDestiny);
             SpannableString spanString = new SpannableString(cause.getTitle());
             spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
             textBox.setText(spanString);
@@ -111,7 +104,6 @@ public class ViewActivity extends AppCompatActivity {
 
             final TextView readMore = (TextView) findViewById(R.id.moreInformation);
             readMore.setText(Html.fromHtml(getString(R.string.seeMoreInfo)));
-            readMore.setTextColor(Color.BLUE);
 
             readMore.setOnClickListener(new View.OnClickListener() {
                 @Override
