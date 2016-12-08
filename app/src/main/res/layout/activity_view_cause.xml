@@ -6,10 +6,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.artisans.code.movimento1euro.menus.ViewActivity">
+    tools:context="com.artisans.code.movimento1euro.menus.CausesDetailsActivity">
 
 
-    <include layout="@layout/toolbar_back_layout"></include>
+    <include layout="@layout/toolbar_back_layout"
+        android:id="@+id/include"></include>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -26,7 +27,8 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_below="@+id/include"
+        android:layout_alignParentStart="true">
 
 
         <RelativeLayout
@@ -45,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:ems="25"
-                android:id="@+id/causeDestiny"
+                android:id="@+id/cause_name"
                 android:layout_margin="@dimen/text_margin"
                 android:textStyle="normal|bold|italic"
                 android:textSize="25dp"/>
@@ -54,25 +56,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="16"
-                android:id="@+id/causeInformation"
-                android:layout_below="@+id/causeDestiny"
+                android:id="@+id/cause_destiny"
+                android:layout_below="@+id/cause_name"
                 android:layout_margin="@dimen/text_margin"
                 android:textSize="20dp"/>
 
-            <ImageView
+            <fragment
+                android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                android:id="@+id/youtube_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="125dp"
-                app:srcCompat="@drawable/com_facebook_auth_dialog_cancel_background"
-                android:id="@+id/causeImageView"
-                android:layout_below="@+id/causeInformation"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cause_destiny"/>
 
-            <ImageView
+            <!--<ImageView
                 android:layout_width="match_parent"
                 android:layout_height="129dp"
                 android:id="@+id/causeVideoView"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/causeDetailedInformationBox"
-                />
+                />-->
 
 
 
@@ -80,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/causeDetailedInformationBox"
-                android:layout_below="@+id/causeImageView"
+                android:layout_below="@+id/youtube_fragment"
                 android:orientation="vertical"
                 android:layout_alignParentStart="true"
                 android:background="@color/colorSecundary"

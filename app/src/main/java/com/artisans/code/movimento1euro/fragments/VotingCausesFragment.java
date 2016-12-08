@@ -8,20 +8,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.artisans.code.movimento1euro.elements.Cause;
+import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.menus.ViewActivity;
+import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -189,7 +186,7 @@ public class VotingCausesFragment extends Fragment {
         int index=listView.getPositionForView(view);
        Cause c= causesList.get(index);
        // Log.e("Cause",c.toString());
-        Intent intent = new Intent(this.getActivity(), ViewActivity.class);
+        Intent intent = new Intent(this.getActivity(), CausesDetailsActivity.class);
         intent.putExtra("Cause",causesList.get(index));
         startActivity(intent);
 

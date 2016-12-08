@@ -1,4 +1,4 @@
-package com.artisans.code.movimento1euro.elements;
+package com.artisans.code.movimento1euro.models;
 
 import android.util.Log;
 

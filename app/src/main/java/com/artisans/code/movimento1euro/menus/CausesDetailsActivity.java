@@ -1,16 +1,12 @@
 package com.artisans.code.movimento1euro.menus;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
@@ -20,7 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.elements.Cause;
+import com.artisans.code.movimento1euro.models.Cause;
+import com.artisans.code.movimento1euro.youtube.DeveloperKey;
+import com.artisans.code.movimento1euro.youtube.YouTubeFailureRecoveryActivity;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -30,12 +30,10 @@ import java.net.URL;
  * Created by Filipe on 02/12/2016.
  */
 
-public class ViewActivity extends AppCompatActivity {
+public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     Cause cause;
     private final int lineLimit = 5;
-    ImageLoadTask imgTask = new ImageLoadTask();
-    ImageLoadTask videoTask = new ImageLoadTask();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +44,22 @@ public class ViewActivity extends AppCompatActivity {
         cause = (Cause) getIntent().getSerializableExtra("Cause");
         setContentView(R.layout.activity_view_cause);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        android.support.v7.widget.Toolbar tb2 = (Toolbar) findViewById(R.id.toolbar);
+        tb2.setVisibility(View.GONE);
+
+        android.widget.Toolbar toolbar = (android.widget.Toolbar) findViewById(R.id.toolbar_normal);
+        toolbar.setVisibility(View.VISIBLE);
+        setActionBar(toolbar);
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
-        // TODO: 05/12/2016 Destrolhar isto - CC xD
+        YouTubePlayerFragment youTubePlayerFragment =
+                (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtube_fragment);
+        youTubePlayerFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
+
         this.setTitle("Causa");
 
         fillFields(cause);
@@ -66,34 +72,18 @@ public class ViewActivity extends AppCompatActivity {
     private void fillFields(Cause cause) {
         TextView textBox;
 
-        if (cause.getImgLink() != null) {
-            imgTask.setFields(cause.getImgLink(), (ImageView) findViewById(R.id.causeImageView));
-            imgTask.execute();
-
-        } else {
-
-            imgTask.setFields("",(ImageView) findViewById(R.id.causeImageView));
-            imgTask.getImageView().setImageResource(R.drawable.logo);
-        }
-
-
-        /*if (cause.getAssociation() != null) {
-            if (cause.getAssociation().getName() != null) {
-                getSupportActionBar().setTitle(cause.getAssociation().getName());
-            }
-        }*/
         if (cause.getTitle() != null) {
-            textBox = (TextView) findViewById(R.id.causeDestiny);
+            textBox = (TextView) findViewById(R.id.cause_name);
             SpannableString spanString = new SpannableString(cause.getTitle());
             spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
             textBox.setText(spanString);
         }
 
         if (cause.getIntroduction() != null) {
-            textBox = (TextView) findViewById(R.id.causeInformation);
+            textBox = (TextView) findViewById(R.id.cause_destiny);
             textBox.setText(cause.getIntroduction());
         }else{
-            textBox = (TextView) findViewById(R.id.causeInformation);
+            textBox = (TextView) findViewById(R.id.cause_destiny);
             textBox.setText("No Introduction available");
         }
 
@@ -119,32 +109,19 @@ public class ViewActivity extends AppCompatActivity {
                 }
             });
         }
-        videoTask.setFields(getString(R.string.youtubeImg), (ImageView) findViewById(R.id.causeVideoView));
-        videoTask.execute();
-            if(cause.getVideos() != null && cause.getVideos().size() >0){
 
-                final String videoLink=cause.getVideos().get(0).second;
-                findViewById(R.id.causeVideoView).setOnClickListener(new View.OnClickListener(){
-                    public void onClick(View v){
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse(videoLink));
-                        startActivity(intent);
-                    }
-                });
-            }else{
-                final String videoLink=getString(R.string.testVideoLink);
-                findViewById(R.id.causeVideoView).setOnClickListener(new View.OnClickListener(){
-                    public void onClick(View v){
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse(videoLink));
-                        startActivity(intent);
-                    }
-                });
-            }
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+        if(!b){
+            youTubePlayer.cueVideo("nCgQDjiotG0");
+        }
+    }
+
+    @Override
+    protected YouTubePlayer.Provider getYouTubePlayerProvider() {
+        return (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtube_fragment);
     }
 
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.elements.Cause;
 import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
 import com.facebook.login.LoginManager;
 
@@ -29,9 +27,6 @@ import java.util.Date;
 import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
-import org.json.JSONObject;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
@@ -47,7 +42,7 @@ public class MainMenu extends AppCompatActivity
     TextView expDate;
     ViewLastCausesFragment viewLastCausesFragment;
     VotingCausesFragment viewVotingCausesFragment;
-    ViewActivity viewCauses;
+    CausesDetailsActivity viewCauses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
