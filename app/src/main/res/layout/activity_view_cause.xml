@@ -46,8 +46,9 @@
                 android:layout_height="38dp"
                 android:ems="25"
                 android:id="@+id/causeDestiny"
-                android:layout_marginLeft="@dimen/text_margin"
-                android:textStyle="normal|bold|italic" />
+                android:layout_margin="@dimen/text_margin"
+                android:textStyle="normal|bold|italic"
+                android:textSize="25dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -55,7 +56,8 @@
                 android:ems="16"
                 android:id="@+id/causeInformation"
                 android:layout_below="@+id/causeDestiny"
-                android:layout_marginLeft="@dimen/text_margin"/>
+                android:layout_margin="@dimen/text_margin"
+                android:textSize="20dp"/>
 
             <ImageView
                 android:layout_width="match_parent"
