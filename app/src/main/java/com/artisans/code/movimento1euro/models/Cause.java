@@ -26,7 +26,6 @@ public class Cause implements Serializable {
     private String votes;
     private String title;
     private String introduction;
-    private String imgLink;
     private ArrayList<Pair<URL, String>> documents = new ArrayList<Pair<URL, String>>();
     private ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
     private boolean user_vote;
@@ -96,7 +95,7 @@ public class Cause implements Serializable {
         ArrayList<Pair<URL, String>> ret = new ArrayList<Pair<URL, String>>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = jsonArray.getJSONObject(i);
-            ret.add(new Pair(new URL(obj.getString("url")), obj.getString("descricao")));
+            ret.add(new Pair<>(new URL(obj.getString("url")), obj.getString("descricao")));
         }
         return ret;
     }
@@ -130,7 +129,7 @@ public class Cause implements Serializable {
                 ", votes='" + votes + '\'' +
                 ", title='" + title + '\'' +
                 ", introduction='" + introduction + '\'' +
-                ", imgLink='" + imgLink + '\'' +
+                ", ytbLink='" + association.getYoutube() + '\'' +
                 ", documents=" + documents +
                 ", videos=" + videos +
                 ", user_vote=" + user_vote +
@@ -215,23 +214,12 @@ public class Cause implements Serializable {
         this.association = association;
     }
 
-
-    public void setImgLink(String imgLink) {
-        this.imgLink = imgLink;
-    }
-
-
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
     }
 
-
     public String getIntroduction() {
         return introduction;
-    }
-
-    public String getImgLink() {
-        return imgLink;
     }
 
 

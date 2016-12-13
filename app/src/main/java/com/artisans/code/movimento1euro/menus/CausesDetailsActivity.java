@@ -84,7 +84,7 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             textBox.setText(cause.getIntroduction());
         }else{
             textBox = (TextView) findViewById(R.id.cause_destiny);
-            textBox.setText("No Introduction available");
+            textBox.setText("Não existe uma descrição disponível.");
         }
 
         if (cause.getDescription() != null) {
@@ -114,9 +114,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if(!b){
-            youTubePlayer.cueVideo("nCgQDjiotG0");
+        if(!b && !cause.getAssociation().getYoutube().equals("")){
+            youTubePlayer.cueVideo(cause.getAssociation().getYoutube());
         }
+
     }
 
     @Override
