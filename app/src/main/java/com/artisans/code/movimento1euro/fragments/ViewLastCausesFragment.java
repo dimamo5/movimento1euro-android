@@ -19,8 +19,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.elements.Cause;
-import com.artisans.code.movimento1euro.elements.Election;
+import com.artisans.code.movimento1euro.models.Cause;
+import com.artisans.code.movimento1euro.models.Election;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;

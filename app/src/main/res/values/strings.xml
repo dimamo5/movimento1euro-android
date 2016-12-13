@@ -11,7 +11,7 @@
     <string name="content_description_logo">Logo</string>
     <string name="btn_sign_in">Iniciar sessão</string>
     <string name="btn_sign_up">Registar</string>
-
+    <string name="activity_cause">Causa</string>
     <string name="action_about">Sobre</string>
 
     <!--MENSAGENS DE ERRO-->
@@ -58,4 +58,7 @@
     <string name="testVideoLink">"https://www.youtube.com/watch?v=LTvFsTbyILg"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--YOUTUBE-->
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
 </resources>
