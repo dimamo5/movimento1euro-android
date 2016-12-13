@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -54,6 +53,8 @@ public class MessagingService extends FirebaseMessagingService {
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setSound(notificationSound);
         notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(body));
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0,notificationBuilder.build());
