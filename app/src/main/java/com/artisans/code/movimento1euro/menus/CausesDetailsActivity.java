@@ -72,9 +72,9 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     private void fillFields(Cause cause) {
         TextView textBox;
 
-        if (cause.getTitle() != null) {
+        if (cause.getName() != null) {
             textBox = (TextView) findViewById(R.id.cause_name);
-            SpannableString spanString = new SpannableString(cause.getTitle());
+            SpannableString spanString = new SpannableString(cause.getName());
             spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
             textBox.setText(spanString);
         }

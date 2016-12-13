@@ -4,21 +4,21 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_causes"
-            android:title="Causas" />
+            android:name="Causas" />
         <item
             android:id="@+id/nav_prev_winners"
-            android:title="Vencedores Passados" />
+            android:name="Vencedores Passados" />
         <item
             android:id="@+id/nav_news"
-            android:title="Noticias" />
+            android:name="Noticias" />
         <item
             android:id="@+id/nav_about_us"
-            android:title="Sobre nós" />
+            android:name="Sobre nós" />
         <item
             android:id="@+id/nav_contacts"
-            android:title="Contactos" />
+            android:name="Contactos" />
         <item
             android:id="@+id/nav_logout"
-            android:title="Terminar Sessão"/>
+            android:name="Terminar Sessão"/>
     </group>
 </menu>

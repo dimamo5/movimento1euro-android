@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.Election;
+import com.artisans.code.movimento1euro.models.PastCause;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -198,7 +199,7 @@ public class ViewLastCausesFragment extends Fragment {
                         //add titulo and montante to the cause object
                         cause.put("titulo", electionObject.getString("titulo"));
                         cause.put("montante_disponivel", electionObject.getString("montante_disponivel"));
-                        Cause tempCause = Cause.parsePastCause(cause);
+                        Cause tempCause = PastCause.parseCause(cause);
                         tempCause.setElection(election);
 
                         /*
