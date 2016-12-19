@@ -2,7 +2,6 @@ package com.artisans.code.movimento1euro.models;
 
 import android.os.Build;
 import android.text.Html;
-import android.util.Log;
 import android.util.Pair;
 
 import org.json.JSONArray;
@@ -15,83 +14,65 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.artisans.code.movimento1euro.models.JSONFields.ASSOCIATION_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.DESCRIPTION_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.INTRODUCTION_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.MONEY_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.NAME_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.VOTES_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.NAME_COLUMN;
+
 /**
  * Created by Antonio on 30-11-2016.
  */
 
 public class Cause implements Serializable {
-    private int id;
-    private String description;
-    private String money;
-    private String votes;
-    private String title;
-    private String introduction;
-    private ArrayList<Pair<URL, String>> documents = new ArrayList<Pair<URL, String>>();
-    private ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
-    private boolean user_vote;
-    private Association association;
-    private Election election;
+    protected int id;
+    protected String description;
+    protected String money;
+    protected String votes;
+    protected String name;
+    protected String introduction;
+    protected String imgLink;
+    protected ArrayList<Pair<URL, String>> documents = new ArrayList<Pair<URL, String>>();
+    protected ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
+    protected Association association;
+    protected Election election;
 
     public Cause () {
     }
 
-    public class Constants {
-        public static final String ELECTION_TITLE_COLUMN = "Election_Title";
-        public static final String TITLE_COLUMN = "Title";
-        public static final String NAME_COLUMN = "Name";
-        public static final String DESCRIPTION_COLUMN = "Description";
-        public static final String MONEY_COLUMN = "Money";
-        public static final String VOTES_COLUMN = "Votes";
-        public static final String ELECTION_MONEY_COLUMN = "Election_Money";
-    }
+    // TODO: 13/12/2016 Remover isto para uma classe fora
 
-    public static Cause parseVotingCause(JSONObject json) {
-        Cause cause = new Cause();
+    public Cause(JSONObject json) {
+
 
         try {
-            cause.id = json.getInt("id");
-            cause.title = json.getString("titulo");
-            cause.description = json.getString("descricao");
+            this.id = json.getInt(ID_COLUMN);
+            this.name = json.getString(NAME_COLUMN);
+            this.introduction = json.getString(INTRODUCTION_COLUMN);
+            this.description = json.getString(DESCRIPTION_COLUMN);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                cause.description = Html.fromHtml(cause.description, Html.FROM_HTML_MODE_LEGACY).toString();
+                this.description = Html.fromHtml(this.description, Html.FROM_HTML_MODE_LEGACY).toString();
             } else {
-                cause.description = Html.fromHtml(cause.description).toString();
+                this.description = Html.fromHtml(this.description).toString();
             }
-            cause.money = json.getString("verba");
-            cause.votes = json.getString("votos");
-            cause.documents = parseArray(json.getJSONArray("documentos"));
-            cause.videos = parseArray(json.getJSONArray("videos"));
-            cause.user_vote = json.getBoolean("voto_utilizador");
-            cause.association = new Association(json.getJSONObject("associacao"));
+            this.money = json.getString(MONEY_COLUMN);
+            this.votes = json.getString(VOTES_COLUMN);
 
-        } catch (JSONException | MalformedURLException e) {
-            e.printStackTrace();
-            Log.e("Cause exception", "Error parsing JSON");
-        }
+            this.association = new Association(json.getJSONObject(ASSOCIATION_COLUMN));
 
-        return cause;
-    }
-
-    public static Cause parsePastCause(JSONObject json) {
-        Cause cause = new Cause();
-
-        try {
-            cause.id = json.getInt("id");
-            cause.title = json.getString("nome");
-            cause.description = json.getString("descricao");
-            cause.money = json.getString("verba");
-            cause.votes = json.getString("votos");
-            cause.association = new Association(json.getJSONObject("associacao"));
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("Cause exception", "Error parsing JSON");
-            Log.d("past", "Error: "  + e.getMessage());
         }
 
-        return cause;
     }
 
-    private static ArrayList<Pair<URL, String>> parseArray(JSONArray jsonArray) throws JSONException, MalformedURLException {
+
+
+    protected static ArrayList<Pair<URL, String>> parseUrlArray(JSONArray jsonArray) throws JSONException, MalformedURLException {
         ArrayList<Pair<URL, String>> ret = new ArrayList<Pair<URL, String>>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = jsonArray.getJSONObject(i);
@@ -104,20 +85,20 @@ public class Cause implements Serializable {
     public HashMap<String, String> toHashMap(){
         HashMap<String, String> hashMap = new HashMap<String,String>();
 
-        hashMap.put(Constants.ELECTION_TITLE_COLUMN, election.getTitle());
-        hashMap.put(Constants.TITLE_COLUMN, title);
-        hashMap.put(Constants.DESCRIPTION_COLUMN, description);
-        hashMap.put(Constants.VOTES_COLUMN, votes+ " votos");
-        hashMap.put(Constants.MONEY_COLUMN, "Verba: " + money + " € requirido");
+        hashMap.put(JSONFields.ELECTION_TITLE_COLUMN, election.getTitle());
+        hashMap.put(NAME_COLUMN, name);
+        hashMap.put(JSONFields.DESCRIPTION_COLUMN, description);
+        hashMap.put(JSONFields.VOTES_COLUMN, votes+ " votos");
+        hashMap.put(JSONFields.MONEY_COLUMN, "Verba: " + money + " € requirido");
 
         if(election != null)
-            hashMap.put(Constants.NAME_COLUMN, election.getTitle());
+            hashMap.put(NAME_COLUMN, election.getTitle());
 
         return hashMap;
     }
 
    /* public String toString(){
-        return "ID: " + id + ", Title: " + title + ", Description: " + description + ",\n Votes: " + votes + ", Money: " ;
+        return "ID: " + id + ", Title: " + name + ", Description: " + description + ",\n Votes: " + votes + ", Money: " ;
     }*/
 
     @Override
@@ -127,12 +108,11 @@ public class Cause implements Serializable {
                 ", description='" + description + '\'' +
                 ", money='" + money + '\'' +
                 ", votes='" + votes + '\'' +
-                ", title='" + title + '\'' +
+                ", name='" + name + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", ytbLink='" + association.getYoutube() + '\'' +
                 ", documents=" + documents +
                 ", videos=" + videos +
-                ", user_vote=" + user_vote +
                 ", association=" + association +
                 ", election=" + election +
                 '}';
@@ -142,8 +122,8 @@ public class Cause implements Serializable {
         return id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     public String getDescription() {
@@ -166,9 +146,6 @@ public class Cause implements Serializable {
         return videos;
     }
 
-    public boolean isUser_vote() {
-        return user_vote;
-    }
 
     public Association getAssociation() {
         return association;
@@ -182,8 +159,8 @@ public class Cause implements Serializable {
         this.id = id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setDescription(String description) {
@@ -206,9 +183,6 @@ public class Cause implements Serializable {
         this.videos = videos;
     }
 
-    public void setUser_vote(boolean user_vote) {
-        this.user_vote = user_vote;
-    }
 
     public void setAssociation(Association association) {
         this.association = association;

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
+import com.artisans.code.movimento1euro.models.VotingCause;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -104,12 +105,12 @@ public class VotingCausesFragment extends Fragment {
                     //TODO discarded useful information?
                     JSONArray arr = votingCauses.getJSONObject(j).getJSONArray("causas");
                     for (int i = 0; i < arr.length(); i++) {
-                        causesList.add(Cause.parseVotingCause(arr.getJSONObject(i)));
+                        causesList.add(new VotingCause(arr.getJSONObject(i)));
 
                         HashMap<String, String> temp = new HashMap<>();
 
                         //TODO adicionar imagem da causa ?
-                        temp.put(Constants.NAME_COLUMN, causesList.get(i).getTitle());
+                        temp.put(Constants.NAME_COLUMN, causesList.get(i).getName());
                         temp.put(Constants.DESCRIPTION_COLUMN, causesList.get(i).getDescription());
                         temp.put(Constants.MONEY_COLUMN, "Valor da causa: " + causesList.get(i).getMoney() + "€");
                         list.add(temp);
