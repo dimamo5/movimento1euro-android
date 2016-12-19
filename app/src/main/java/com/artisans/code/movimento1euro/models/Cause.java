@@ -2,7 +2,6 @@ package com.artisans.code.movimento1euro.models;
 
 import android.os.Build;
 import android.text.Html;
-import android.util.Log;
 import android.util.Pair;
 
 import org.json.JSONArray;
@@ -15,13 +14,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.artisans.code.movimento1euro.models.Cause.Constants.ASSOCIATION_COLUMN;
-import static com.artisans.code.movimento1euro.models.Cause.Constants.DESCRIPTION_COLUMN;
-import static com.artisans.code.movimento1euro.models.Cause.Constants.ID_COLUMN;
-import static com.artisans.code.movimento1euro.models.Cause.Constants.INTRODUCTION_COLUMN;
-import static com.artisans.code.movimento1euro.models.Cause.Constants.MONEY_COLUMN;
-import static com.artisans.code.movimento1euro.models.Cause.Constants.NAME_COLUMN;
-import static com.artisans.code.movimento1euro.models.Cause.Constants.VOTES_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.ASSOCIATION_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.DESCRIPTION_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.INTRODUCTION_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.MONEY_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.NAME_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.VOTES_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.NAME_COLUMN;
 
 /**
  * Created by Antonio on 30-11-2016.
@@ -44,23 +45,6 @@ public class Cause implements Serializable {
     }
 
     // TODO: 13/12/2016 Remover isto para uma classe fora
-    public class Constants {
-        public static final String ELECTION_TITLE_COLUMN = "titulo";
-        public static final String ELECTION_MONEY_COLUMN = "montante_disponivel";
-        public static final String ID_COLUMN = "id";
-        public static final String NAME_COLUMN = "nome";
-        public static final String INTRODUCTION_COLUMN="descricao_breve";
-        public static final String DESCRIPTION_COLUMN = "descricao";
-        public static final String MONEY_COLUMN = "verba";
-        public static final String VOTES_COLUMN = "votos";
-        public static final String ASSOCIATION_COLUMN = "associacao";
-
-        /*PastCause*/
-        public static final String DOCUMENTS_ARRAY_COLUMN = "documentos";
-        public static final String DOCUMENTS_DESCRIPTION_COLUMN = "descricao";
-        public static final String DOCUMENTS_URL_COLUMN = "url";
-
-    }
 
     public Cause(JSONObject json) {
 
@@ -101,11 +85,11 @@ public class Cause implements Serializable {
     public HashMap<String, String> toHashMap(){
         HashMap<String, String> hashMap = new HashMap<String,String>();
 
-        hashMap.put(Constants.ELECTION_TITLE_COLUMN, election.getTitle());
-        hashMap.put(Constants.NAME_COLUMN, name);
-        hashMap.put(Constants.DESCRIPTION_COLUMN, description);
-        hashMap.put(Constants.VOTES_COLUMN, votes+ " votos");
-        hashMap.put(Constants.MONEY_COLUMN, "Verba: " + money + " € requirido");
+        hashMap.put(JSONFields.ELECTION_TITLE_COLUMN, election.getTitle());
+        hashMap.put(NAME_COLUMN, name);
+        hashMap.put(JSONFields.DESCRIPTION_COLUMN, description);
+        hashMap.put(JSONFields.VOTES_COLUMN, votes+ " votos");
+        hashMap.put(JSONFields.MONEY_COLUMN, "Verba: " + money + " € requirido");
 
         if(election != null)
             hashMap.put(NAME_COLUMN, election.getTitle());

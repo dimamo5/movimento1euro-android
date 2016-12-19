@@ -199,18 +199,18 @@ public class ViewLastCausesFragment extends Fragment {
                         //add titulo and montante to the cause object
                         cause.put("titulo", electionObject.getString("titulo"));
                         cause.put("montante_disponivel", electionObject.getString("montante_disponivel"));
-                        Cause tempCause = PastCause.parseCause(cause);
+                        Cause tempCause = new PastCause(cause);
                         tempCause.setElection(election);
 
                         /*
                         HashMap<String, String> tempCause = new HashMap<String, String>();
 
-                        tempCause.put(Constants.MONTH_COLUMN, election.getString("titulo"));
-                        tempCause.put(Constants.NAME_COLUMN, "Nome: " + cause.getString("nome"));
-                        tempCause.put(Constants.YEAR_COLUMN, election.getString("data_de_fim"));
-                        tempCause.put(Constants.MONEY_COLUMN, election.getString("montante_disponivel") + "€");
-                        tempCause.put(Constants.VERBA_COLUMN, "Verba: " + cause.getString("verba") + "€");
-                        tempCause.put(Constants.VOTES_COLUMN, "Votos: " + cause.getString("votos") + "€");
+                        tempCause.put(JSONFields.MONTH_COLUMN, election.getString("titulo"));
+                        tempCause.put(JSONFields.NAME_COLUMN, "Nome: " + cause.getString("nome"));
+                        tempCause.put(JSONFields.YEAR_COLUMN, election.getString("data_de_fim"));
+                        tempCause.put(JSONFields.MONEY_COLUMN, election.getString("montante_disponivel") + "€");
+                        tempCause.put(JSONFields.VERBA_COLUMN, "Verba: " + cause.getString("verba") + "€");
+                        tempCause.put(JSONFields.VOTES_COLUMN, "Votos: " + cause.getString("votos") + "€");
                         */
                         requestedCauses.add(tempCause);
                     }
@@ -279,11 +279,11 @@ public class ViewLastCausesFragment extends Fragment {
 
 
             /*
-            Log.d("past", list.get(0).get(Constants.VOTES_COLUMN));
-            Log.d("past", list.get(0).get(Constants.MONEY_COLUMN));
-            Log.d("past", list.get(0).get(Constants.DESCRIPTION_COLUMN));
-            Log.d("past", list.get(0).get(Constants.TITLE_COLUMN));
-            Log.d("past", list.get(0).get(Constants.VERBA_COLUMN));
+            Log.d("past", list.get(0).get(JSONFields.VOTES_COLUMN));
+            Log.d("past", list.get(0).get(JSONFields.MONEY_COLUMN));
+            Log.d("past", list.get(0).get(JSONFields.DESCRIPTION_COLUMN));
+            Log.d("past", list.get(0).get(JSONFields.TITLE_COLUMN));
+            Log.d("past", list.get(0).get(JSONFields.VERBA_COLUMN));
             */
         }else{
             // Mostrar no ecrã que não há causas para este período(ano)
