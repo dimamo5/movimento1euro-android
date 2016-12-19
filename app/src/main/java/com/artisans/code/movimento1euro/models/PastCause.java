@@ -10,6 +10,9 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static com.artisans.code.movimento1euro.models.JSONFields.INTRODUCTION_COLUMN;
 
 /**
  * Created by Duart on 13/12/2016.
@@ -22,6 +25,8 @@ public class PastCause extends Cause {
         super(json);
 
         try {
+            this.name = json.getString(JSONFields.PAST_NAME_COLUMN);
+            this.introduction = json.getString(INTRODUCTION_COLUMN);
             this.documents = parseDocuments(json.getJSONArray(JSONFields.DOCUMENTS_ARRAY_COLUMN));
         } catch (JSONException e) {
             e.printStackTrace();

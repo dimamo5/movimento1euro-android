@@ -4,6 +4,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
+
+import static com.artisans.code.movimento1euro.models.JSONFields.INTRODUCTION_COLUMN;
 
 /**
  * Created by Duart on 13/12/2016.
@@ -16,6 +19,7 @@ public class VotingCause extends Cause {
         super(json);
 
         try {
+            this.name = json.getString(JSONFields.VOTING_NAME_COLUMN);
             this.userVoted = json.getBoolean("voto_utilizador");
             this.videos = parseUrlArray(json.getJSONArray("videos"));
         } catch (JSONException e) {

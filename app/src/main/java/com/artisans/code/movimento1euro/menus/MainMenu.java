@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.fragments.CauseListFragment;
 import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
 import com.facebook.login.LoginManager;
 
@@ -29,8 +30,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 
 public class MainMenu extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
-        VotingCausesFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        CauseListFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainMenu.class.getSimpleName();
 

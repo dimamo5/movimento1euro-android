@@ -16,13 +16,12 @@ import java.util.HashMap;
 
 import static com.artisans.code.movimento1euro.models.JSONFields.ASSOCIATION_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.DESCRIPTION_COLUMN;
+import static com.artisans.code.movimento1euro.models.JSONFields.ELECTION_TITLE_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.INTRODUCTION_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.MONEY_COLUMN;
-import static com.artisans.code.movimento1euro.models.JSONFields.NAME_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.VOTES_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
-import static com.artisans.code.movimento1euro.models.JSONFields.NAME_COLUMN;
 
 /**
  * Created by Antonio on 30-11-2016.
@@ -51,8 +50,6 @@ public class Cause implements Serializable {
 
         try {
             this.id = json.getInt(ID_COLUMN);
-            this.name = json.getString(NAME_COLUMN);
-            this.introduction = json.getString(INTRODUCTION_COLUMN);
             this.description = json.getString(DESCRIPTION_COLUMN);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 this.description = Html.fromHtml(this.description, Html.FROM_HTML_MODE_LEGACY).toString();
@@ -81,21 +78,7 @@ public class Cause implements Serializable {
         return ret;
     }
 
-    // HashMap with pertinent info for the list appearance
-    public HashMap<String, String> toHashMap(){
-        HashMap<String, String> hashMap = new HashMap<String,String>();
 
-        hashMap.put(JSONFields.ELECTION_TITLE_COLUMN, election.getTitle());
-        hashMap.put(NAME_COLUMN, name);
-        hashMap.put(JSONFields.DESCRIPTION_COLUMN, description);
-        hashMap.put(JSONFields.VOTES_COLUMN, votes+ " votos");
-        hashMap.put(JSONFields.MONEY_COLUMN, "Verba: " + money + " € requirido");
-
-        if(election != null)
-            hashMap.put(NAME_COLUMN, election.getTitle());
-
-        return hashMap;
-    }
 
    /* public String toString(){
         return "ID: " + id + ", Title: " + name + ", Description: " + description + ",\n Votes: " + votes + ", Money: " ;
