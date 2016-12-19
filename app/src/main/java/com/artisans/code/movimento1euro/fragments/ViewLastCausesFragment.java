@@ -19,8 +19,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.firebase.notifications.IdService;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.Election;
+import com.artisans.code.movimento1euro.models.JSONFields;
 import com.artisans.code.movimento1euro.models.PastCause;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -37,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.artisans.code.movimento1euro.models.JSONFields.ELECTION_TITLE_COLUMN;
 
 
 /**
@@ -47,7 +50,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Use the {@link ViewLastCausesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewLastCausesFragment extends Fragment {
+public class ViewLastCausesFragment extends CauseListFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     /*
@@ -55,6 +58,7 @@ public class ViewLastCausesFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     */
 
+    public final static String TAG = ViewLastCausesFragment.class.getCanonicalName();
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
     public static final int START_YEAR = 2011;
     // TODO: Rename and change types of parameters
@@ -63,21 +67,10 @@ public class ViewLastCausesFragment extends Fragment {
     private String mParam2;
     */
 
-    private OnFragmentInteractionListener mListener;
 
+    HashMap<String, ArrayList<PastCause>> allCausesByYear = new HashMap<>();
     ArrayList<String> yearsList = new ArrayList<String>();
-
-    // List of Cause objects. Cause objects are hashmaps
-    ArrayList<Cause> shownCauseslist = new ArrayList<Cause>();
-    ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-
-    HashMap<String, ArrayList<Cause>> allCausesByYear = new HashMap<String, ArrayList<Cause>>();
-
-    ArrayAdapter<String> spinnerAdapter; // Spinner year list adapter
-    Spinner spinner;
-    SimpleAdapter listAdapter; // Main causes list adapter
-    ListView listView;
-
+    ArrayList<Cause> shownCauseslist = new ArrayList<>();
 
 
 
@@ -120,16 +113,134 @@ public class ViewLastCausesFragment extends Fragment {
     }
 
     public class Constants {
-        public static final String MONTH_COLUMN = "Month";
-        public static final String YEAR_COLUMN = "Year";
         public static final String TITLE_COLUMN = "Title";
         public static final String ELECTION_TITLE_COLUMN = "Election_Title";
         public static final String MONEY_COLUMN = "Money";
-        public static final String DESCRIPTION_COLUMN = "Description";
-        public static final String VOTES_COLUMN = "Votes";
-        public static final String ELECTION_MONEY_COLUMN = "Election_Money";
+
     }
 
+
+
+
+    public void updateFromSpinner(String year) {
+
+        if(allCausesByYear.get(year) != null) {
+
+            shownCauseslist.clear();
+            shownCauseslist.addAll(allCausesByYear.get(year));
+
+            updateAdapterList(shownCauseslist,list);
+            Log.d(TAG, "size-list: "+list.size());
+
+        }else{
+            // Mostrar no ecrã que não há causas para este período(ano)
+        }
+        Log.d("past", list.toString());
+        notifyChanges();
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_previous_winners, container, false);
+
+        fillYearsList();
+        createSpinnerOnActivityBar();
+        initializeListAdapter(view);
+
+        // API request -> with the first year in the list, which should currently be selected
+        // Maybe execute all already, to store them
+        new CausesTask(true).execute(yearsList.get(0));
+        Log.d("past", "Year to be executed: " + yearsList.get(0));
+        for(int i = 1; i< yearsList.size(); i++) {
+            new CausesTask(false).execute(yearsList.get(i));
+        }
+        return view;
+    }
+
+    protected void fillYearsList() {
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        if(currentYear >= START_YEAR) {
+            for (int year = currentYear; year >= START_YEAR; year--) {
+                yearsList.add(Integer.toString(year));
+            }
+        }else{
+            Log.d("past", Integer.toString(currentYear) + "is  <  than " + Integer.toString(START_YEAR));
+            yearsList.add(Integer.toString(START_YEAR));
+        }
+    }
+
+    // SPINNER - Create Spinner on ACTIVITY BAR + define adapter, functions and spinner items
+    protected void createSpinnerOnActivityBar() {
+        spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
+        spinner.setVisibility(View.VISIBLE);
+
+        spinnerAdapter = new ArrayAdapter<String>(this.getContext(),
+                R.layout.spinner_previous_winners_selected_year, yearsList);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_previous_winners_year);
+        spinner.setAdapter(spinnerAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                //TODO spinner click
+
+                // Old version: got values for the year when clicking. New version will have them already stored in cache
+                // on item selected only updates spinner with values
+                Log.d("past",  "I am on item selected updating: " + yearsList.get(i));
+               //new CausesTask().execute(yearsList.get(i), "true");
+                updateFromSpinner(yearsList.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    @Override
+    protected HashMap<String,String> causeToHashMap(Cause cause){
+        HashMap<String, String> hashMap = new HashMap<String,String>();
+
+
+        hashMap.put(Constants.ELECTION_TITLE_COLUMN, cause.getElection().getTitle());
+        hashMap.put(Constants.TITLE_COLUMN, cause.getName());
+        hashMap.put(Constants.MONEY_COLUMN, cause.getMoney() + "€");
+
+
+        return hashMap;
+    }
+
+    @Override
+    protected void initializeListAdapter(View view) {
+        listView = (ListView) view.findViewById(R.id.causes_list);
+
+        listAdapter = new SimpleAdapter(
+                this.getContext(),
+                list,
+                R.layout.item_previous_winner,
+                new String[]{Constants.ELECTION_TITLE_COLUMN, Constants.TITLE_COLUMN, Constants.MONEY_COLUMN},
+                new int[]{R.id.last_causes_item_main_title, R.id.last_causes_item_sub_title, R.id.last_causes_item_money}
+        );
+        listView.setAdapter(listAdapter);
+    }
+
+    @Override
+    public void cardClick(View view) {
+        //TODO card click
+        //Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
 
     private class CausesTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -180,7 +291,7 @@ public class ViewLastCausesFragment extends Fragment {
                 int totalElectionNr = yearlyElections.length();
 
 
-                ArrayList<Cause> requestedCauses = new ArrayList<Cause>();
+                ArrayList<PastCause> requestedCauses = new ArrayList<PastCause>();
 
                 for (int electionNr = 0; electionNr < totalElectionNr; electionNr++) {
 
@@ -199,19 +310,10 @@ public class ViewLastCausesFragment extends Fragment {
                         //add titulo and montante to the cause object
                         cause.put("titulo", electionObject.getString("titulo"));
                         cause.put("montante_disponivel", electionObject.getString("montante_disponivel"));
-                        Cause tempCause = new PastCause(cause);
+                        PastCause tempCause = new PastCause(cause);
                         tempCause.setElection(election);
 
-                        /*
-                        HashMap<String, String> tempCause = new HashMap<String, String>();
 
-                        tempCause.put(JSONFields.MONTH_COLUMN, election.getString("titulo"));
-                        tempCause.put(JSONFields.NAME_COLUMN, "Nome: " + cause.getString("nome"));
-                        tempCause.put(JSONFields.YEAR_COLUMN, election.getString("data_de_fim"));
-                        tempCause.put(JSONFields.MONEY_COLUMN, election.getString("montante_disponivel") + "€");
-                        tempCause.put(JSONFields.VERBA_COLUMN, "Verba: " + cause.getString("verba") + "€");
-                        tempCause.put(JSONFields.VOTES_COLUMN, "Votos: " + cause.getString("votos") + "€");
-                        */
                         requestedCauses.add(tempCause);
                     }
                 }
@@ -259,162 +361,11 @@ public class ViewLastCausesFragment extends Fragment {
             // Deprecated
             if(updateAfterRequest) {
                 spinnerAdapter.notifyDataSetChanged();
-               // Log.d("past", "I am on post execute updating: " + year);
+                // Log.d("past", "I am on post execute updating: " + year);
                 updateFromSpinner(year);
             }
 
         }
-    }
-
-    public void updateFromSpinner(String year) {
-
-        if(allCausesByYear.get(year) != null) {
-
-            shownCauseslist = allCausesByYear.get(year);
-
-            Log.d("past", "All Causes loaded: " + allCausesByYear.toString());
-            Log.d("past", "Causes shown: " + shownCauseslist.toString());
-
-            causeList_to_hashmapList(shownCauseslist, list);
-
-
-            /*
-            Log.d("past", list.get(0).get(JSONFields.VOTES_COLUMN));
-            Log.d("past", list.get(0).get(JSONFields.MONEY_COLUMN));
-            Log.d("past", list.get(0).get(JSONFields.DESCRIPTION_COLUMN));
-            Log.d("past", list.get(0).get(JSONFields.TITLE_COLUMN));
-            Log.d("past", list.get(0).get(JSONFields.VERBA_COLUMN));
-            */
-        }else{
-            // Mostrar no ecrã que não há causas para este período(ano)
-        }
-        Log.d("past", list.toString());
-        listAdapter.notifyDataSetChanged();
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_previous_winners, container, false);
-
-        // HARDCODED: GET THE YEARS WHERE THERE WERE CAUSES
-        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        if(currentYear >= START_YEAR) {
-            for (int year = currentYear; year >= START_YEAR; year--) {
-                yearsList.add(Integer.toString(year));
-            }
-        }else{
-            Log.d("past", Integer.toString(currentYear) + "is  <  than " + Integer.toString(START_YEAR));
-            yearsList.add(Integer.toString(START_YEAR));
-        }
-
-
-        // SPINNER - Create Spinner on ACTIVITY BAR + define adapter, functions and spinner items
-        spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
-        spinner.setVisibility(View.VISIBLE);
-
-        spinnerAdapter = new ArrayAdapter<String>(this.getContext(),
-                R.layout.spinner_previous_winners_selected_year, yearsList);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_previous_winners_year);
-        spinner.setAdapter(spinnerAdapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //TODO spinner click
-
-                // Old version: got values for the year when clicking. New version will have them already stored in cache
-                // on item selected only updates spinner with values
-                Log.d("past",  "I am on item selected updating: " + yearsList.get(i));
-               //new CausesTask().execute(yearsList.get(i), "true");
-                updateFromSpinner(yearsList.get(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-
-        // LIST - Create List adapter
-        listView = (ListView) view.findViewById(R.id.causes_list);
-
-        listAdapter = new SimpleAdapter(
-                this.getContext(),
-                list,
-                R.layout.item_previous_winner,
-                new String[]{Constants.ELECTION_TITLE_COLUMN, Constants.TITLE_COLUMN, Constants.MONEY_COLUMN},
-                new int[]{R.id.last_causes_item_main_title, R.id.last_causes_item_sub_title, R.id.last_causes_item_money}
-        );
-        listView.setAdapter(listAdapter);
-
-        // API request -> with the first year in the list, which should currently be selected
-        // Maybe execute all already, to store them
-        new CausesTask(true).execute(yearsList.get(0));
-        Log.d("past", "Year to be executed: " + yearsList.get(0));
-        for(int i = 1; i< yearsList.size(); i++) {
-            new CausesTask(false).execute(yearsList.get(i));
-        }
-        return view;
-    }
-
-    public void cardClick(View view) {
-        //TODO card click
-        //Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-
-    public ArrayList<HashMap<String, String>> causeList_to_hashmapList(ArrayList<Cause> causeList, ArrayList<HashMap<String,String>> hashmapList){
-        hashmapList.clear();
-
-        if(causeList != null)
-        for(int i = 0; i < causeList.size(); i++){
-            hashmapList.add(causeList.get(i).toHashMap());
-        }
-        return hashmapList;
     }
 
 }
