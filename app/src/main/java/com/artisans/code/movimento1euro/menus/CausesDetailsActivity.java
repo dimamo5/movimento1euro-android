@@ -114,9 +114,14 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if(!b && !cause.getAssociation().getYoutube().equals("")){
+        if(!(b || cause.getAssociation().getYoutube().equals(""))){
             youTubePlayer.cueVideo(cause.getAssociation().getYoutube());
+
+        }else { //no video or error
+            //release all resources related to youtubePlayer
+            youTubePlayer.release();
         }
+
 
     }
 
