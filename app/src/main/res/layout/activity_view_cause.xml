@@ -59,7 +59,8 @@
                 android:id="@+id/cause_destiny"
                 android:layout_below="@+id/cause_name"
                 android:layout_margin="@dimen/text_margin"
-                android:textSize="20dp"/>
+                android:textSize="20sp"
+                android:visibility="invisible"/>
 
             <fragment
                 android:name="com.google.android.youtube.player.YouTubePlayerFragment"

@@ -72,9 +72,9 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     private void fillFields(Cause cause) {
         TextView textBox;
 
-        if (cause.getTitle() != null) {
+        if (cause.getName() != null) {
             textBox = (TextView) findViewById(R.id.cause_name);
-            SpannableString spanString = new SpannableString(cause.getTitle());
+            SpannableString spanString = new SpannableString(cause.getName());
             spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
             textBox.setText(spanString);
         }
@@ -84,7 +84,7 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             textBox.setText(cause.getIntroduction());
         }else{
             textBox = (TextView) findViewById(R.id.cause_destiny);
-            textBox.setText("No Introduction available");
+            textBox.setText("Não existe uma descrição disponível.");
         }
 
         if (cause.getDescription() != null) {
@@ -114,9 +114,15 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if(!b){
-            youTubePlayer.cueVideo("nCgQDjiotG0");
+        if(!(b || cause.getAssociation().getYoutube().equals(""))){
+            youTubePlayer.cueVideo(cause.getAssociation().getYoutube());
+
+        }else { //no video or error
+            //release all resources related to youtubePlayer
+            youTubePlayer.release();
         }
+
+
     }
 
     @Override

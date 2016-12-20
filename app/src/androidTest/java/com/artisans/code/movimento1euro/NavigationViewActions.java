@@ -85,7 +85,7 @@ public final class NavigationViewActions {
                     if (menuItem != null) {
                         CharSequence itemTitle = menuItem.getTitle();
                         if (itemTitle != null) {
-                            errorMessage.append(", title=")
+                            errorMessage.append(", name=")
                                     .append(itemTitle);
                         }
                         if (view.getResources() != null) {
