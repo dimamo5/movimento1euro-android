@@ -1,8 +1,10 @@
 package com.artisans.code.movimento1euro.menus;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +37,8 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     Cause cause;
     private final int lineLimit = 5;
+    private String facebookUrl;
+    private String webUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +69,14 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
         fillFields(cause);
 
-
-
-
     }
 
     private void fillFields(Cause cause) {
         TextView textBox;
 
-        if (cause.getTitle() != null) {
+        if (cause.getName() != null) {
             textBox = (TextView) findViewById(R.id.cause_name);
-            SpannableString spanString = new SpannableString(cause.getTitle());
+            SpannableString spanString = new SpannableString(cause.getName());
             spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
             textBox.setText(spanString);
         }
@@ -84,11 +86,11 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             textBox.setText(cause.getIntroduction());
         }else{
             textBox = (TextView) findViewById(R.id.cause_destiny);
-            textBox.setText("No Introduction available");
+            textBox.setText("Não existe uma descrição disponível.");
         }
 
         if (cause.getDescription() != null) {
-            final TextView descriptionText = (TextView) findViewById(R.id.causeDetailedInformation);
+            final TextView descriptionText = (TextView) findViewById(R.id.cause_detail_info);
             descriptionText.setText(cause.getDescription());
             descriptionText.setMaxLines(lineLimit);
 
@@ -110,13 +112,58 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             });
         }
 
+
+        final ImageButton facebookButton = (ImageButton) findViewById(R.id.facebook_url_button);
+        facebookUrl = cause.getAssociation().getFacebook();
+        if (facebookUrl == null || facebookUrl.equals("")){
+        //f(false){
+            facebookButton.setVisibility(View.GONE);
+        }else {
+
+            facebookButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(facebookUrl));
+                    startActivity(i);
+                }
+            });
+
+        }
+        ImageButton webButton = (ImageButton) findViewById(R.id.web_url_button);
+        webUrl = cause.getAssociation().getWebsite();
+        if(webUrl == null || webUrl.equals("")){
+            webButton.setVisibility(View.GONE);
+        }else{
+            webButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(webUrl));
+                    startActivity(i);
+                }
+            });
+        }
+
+        // TODO: 20/12/2016 Adicionar suport para o instagram
+        findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
+
+
+
     }
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if(!b){
-            youTubePlayer.cueVideo("nCgQDjiotG0");
+        if(!(b || cause.getAssociation().getYoutube().equals(""))){
+            youTubePlayer.cueVideo(cause.getAssociation().getYoutube());
+
+        }else { //no video or error
+            //release all resources related to youtubePlayer
+            youTubePlayer.release();
         }
+
+
     }
 
     @Override

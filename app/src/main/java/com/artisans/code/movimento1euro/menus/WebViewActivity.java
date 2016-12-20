@@ -57,7 +57,7 @@ public class WebViewActivity extends AppCompatActivity {
 
 
         final Activity activity = this;
-        // Let's display the progress in the activity title bar, like the
+        // Let's display the progress in the activity name bar, like the
         // browser app does.
         webview.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
