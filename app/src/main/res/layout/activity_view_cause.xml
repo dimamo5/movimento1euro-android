@@ -95,11 +95,23 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/external_icons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/documents_layout"
+                android:layout_below="@+id/cause_detail_info_box"
+                android:orientation="vertical"
+                android:paddingTop="5sp"
+                android:paddingBottom="10sp"
+                >
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/social_media_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_below="@+id/cause_detail_info_box"
+                android:layout_below="@+id/documents_layout"
                 android:gravity="center"
                 android:paddingTop="15sp"
                 android:paddingBottom="15sp"
