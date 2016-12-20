@@ -65,10 +65,12 @@
                 android:paddingBottom="20dp" />
 
             <Button
+                android:id="@+id/voting_causes_item_vote"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/voting_button"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:onClick="vote"/>
 
         </LinearLayout>
 

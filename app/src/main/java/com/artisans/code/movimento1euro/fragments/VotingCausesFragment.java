@@ -202,7 +202,4 @@ public class VotingCausesFragment extends CauseListFragment {
 
     }
 
-
-
-
 }

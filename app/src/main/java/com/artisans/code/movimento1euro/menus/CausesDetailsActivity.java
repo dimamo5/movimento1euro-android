@@ -12,8 +12,10 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.models.Cause;
@@ -63,11 +65,12 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         this.setTitle("Causa");
 
         fillFields(cause);
-
-
-
-
     }
+
+    public void vote(View view){
+        Toast.makeText(this, "teste", Toast.LENGTH_SHORT).show();
+    }
+
 
     private void fillFields(Cause cause) {
         TextView textBox;
