@@ -62,12 +62,7 @@
                 android:textSize="20sp"
                 android:visibility="invisible"/>
 
-            <fragment
-                android:name="com.google.android.youtube.player.YouTubePlayerFragment"
-                android:id="@+id/youtube_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/cause_destiny"/>
+
 
             <!--<ImageView
                 android:layout_width="match_parent"
@@ -83,7 +78,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/causeDetailedInformationBox"
-                android:layout_below="@+id/youtube_fragment"
                 android:orientation="vertical"
                 android:layout_alignParentStart="true"
                 android:background="@color/colorSecundary"
@@ -109,8 +103,16 @@
                     android:layout_below="@+id/causeDetailedInformation"
                     android:textColor="@color/colorPrimary"
                     />
-            </LinearLayout>
 
+
+                <fragment
+                    android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                    android:id="@+id/youtube_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cause_destiny"/>
+
+            </LinearLayout>
 
 
         </RelativeLayout>
