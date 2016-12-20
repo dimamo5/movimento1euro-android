@@ -149,6 +149,8 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         // TODO: 20/12/2016 Adicionar suport para o instagram
         findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
 
+
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.artisans.code.movimento1euro.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.firebase.notifications.IdService;
+import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
+import com.artisans.code.movimento1euro.menus.PastCauseDetailsActivity;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.Election;
 import com.artisans.code.movimento1euro.models.JSONFields;
@@ -231,8 +234,12 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
     @Override
     public void cardClick(View view) {
-        //TODO card click
-        //Toast.makeText(getActivity(), listView.getPositionForView(view) + " Clicked", Toast.LENGTH_SHORT).show();
+        int index=listView.getPositionForView(view);
+        Cause c= shownCauseslist.get(index);
+        // Log.e("Cause",c.toString());
+        Intent intent = new Intent(this.getActivity(), PastCauseDetailsActivity.class);
+        intent.putExtra("Cause",c);
+        startActivity(intent);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

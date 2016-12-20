@@ -35,8 +35,8 @@ public class Cause implements Serializable {
     protected String name;
     protected String introduction;
     protected String imgLink;
-    protected ArrayList<Pair<URL, String>> documents = new ArrayList<Pair<URL, String>>();
-    protected ArrayList<Pair<URL, String>> videos = new ArrayList<Pair<URL, String>>();
+    protected ArrayList<UrlResource> documents = new ArrayList<>();
+    protected ArrayList<UrlResource> videos = new ArrayList<>();
     protected Association association;
     protected Election election;
 
@@ -69,11 +69,11 @@ public class Cause implements Serializable {
 
 
 
-    protected static ArrayList<Pair<URL, String>> parseUrlArray(JSONArray jsonArray) throws JSONException, MalformedURLException {
-        ArrayList<Pair<URL, String>> ret = new ArrayList<Pair<URL, String>>();
+    protected static ArrayList<UrlResource> parseUrlArray(JSONArray jsonArray) throws JSONException, MalformedURLException {
+        ArrayList<UrlResource> ret = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = jsonArray.getJSONObject(i);
-            ret.add(new Pair<>(new URL(obj.getString("url")), obj.getString("descricao")));
+            ret.add(new UrlResource(new URL(obj.getString("url")), obj.getString("descricao")));
         }
         return ret;
     }
@@ -121,11 +121,11 @@ public class Cause implements Serializable {
         return votes;
     }
 
-    public ArrayList<Pair<URL, String>> getDocuments() {
+    public ArrayList<UrlResource> getDocuments() {
         return documents;
     }
 
-    public ArrayList<Pair<URL, String>> getVideos() {
+    public ArrayList<UrlResource> getVideos() {
         return videos;
     }
 
@@ -158,11 +158,11 @@ public class Cause implements Serializable {
         this.votes = votes;
     }
 
-    public void setDocuments(ArrayList<Pair<URL, String>> documents) {
+    public void setDocuments(ArrayList<UrlResource> documents) {
         this.documents = documents;
     }
 
-    public void setVideos(ArrayList<Pair<URL, String>> videos) {
+    public void setVideos(ArrayList<UrlResource> videos) {
         this.videos = videos;
     }
 

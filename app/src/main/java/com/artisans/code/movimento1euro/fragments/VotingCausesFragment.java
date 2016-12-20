@@ -194,7 +194,7 @@ public class VotingCausesFragment extends CauseListFragment {
     @Override
     public void cardClick(View view) {
         int index=listView.getPositionForView(view);
-       Cause c= causesList.get(index);
+        Cause c= causesList.get(index);
        // Log.e("Cause",c.toString());
         Intent intent = new Intent(this.getActivity(), CausesDetailsActivity.class);
         intent.putExtra("Cause",causesList.get(index));
