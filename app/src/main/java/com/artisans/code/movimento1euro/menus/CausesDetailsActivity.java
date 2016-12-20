@@ -1,8 +1,10 @@
 package com.artisans.code.movimento1euro.menus;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +37,8 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     Cause cause;
     private final int lineLimit = 5;
+    private String facebookUrl;
+    private String webUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,27 +67,7 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
         this.setTitle("Causa");
 
-        if (cause.getAssociation().getFacebook() == null || cause.getAssociation().getFacebook().toString().equals("")){
-            findViewById(R.id.facebook_url_button).setVisibility(View.GONE);
-        }else {
-            // TODO: 20/12/2016 Adicionar url ao botão e lançar intent
-        }
-
-        if(cause.getAssociation().getWebsite() == null || cause.getAssociation().getFacebook().toString().equals("")){
-            findViewById(R.id.web_url_button).setVisibility(View.GONE);
-        }else{
-            // TODO: 20/12/2016 Lançar intent
-        }
-
-        // TODO: 20/12/2016 Adicionar suport para o instagram
-        findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
-
-
-
         fillFields(cause);
-
-
-
 
     }
 
@@ -126,6 +111,43 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
                 }
             });
         }
+
+
+        final ImageButton facebookButton = (ImageButton) findViewById(R.id.facebook_url_button);
+        facebookUrl = cause.getAssociation().getFacebook();
+        if (facebookUrl == null || facebookUrl.equals("")){
+        //f(false){
+            facebookButton.setVisibility(View.GONE);
+        }else {
+
+            facebookButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(facebookUrl));
+                    startActivity(i);
+                }
+            });
+
+        }
+        ImageButton webButton = (ImageButton) findViewById(R.id.web_url_button);
+        webUrl = cause.getAssociation().getWebsite();
+        if(webUrl == null || webUrl.equals("")){
+            webButton.setVisibility(View.GONE);
+        }else{
+            webButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(webUrl));
+                    startActivity(i);
+                }
+            });
+        }
+
+        // TODO: 20/12/2016 Adicionar suport para o instagram
+        findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
 
     }
 
