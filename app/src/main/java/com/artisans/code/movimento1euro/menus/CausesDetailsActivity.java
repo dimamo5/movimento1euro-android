@@ -62,6 +62,23 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
         this.setTitle("Causa");
 
+        if (cause.getAssociation().getFacebook() == null || cause.getAssociation().getFacebook().toString().equals("")){
+            findViewById(R.id.facebook_url_button).setVisibility(View.GONE);
+        }else {
+            // TODO: 20/12/2016 Adicionar url ao botão e lançar intent
+        }
+
+        if(cause.getAssociation().getWebsite() == null || cause.getAssociation().getFacebook().toString().equals("")){
+            findViewById(R.id.web_url_button).setVisibility(View.GONE);
+        }else{
+            // TODO: 20/12/2016 Lançar intent
+        }
+
+        // TODO: 20/12/2016 Adicionar suport para o instagram
+        findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
+
+
+
         fillFields(cause);
 
 
@@ -88,7 +105,7 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         }
 
         if (cause.getDescription() != null) {
-            final TextView descriptionText = (TextView) findViewById(R.id.causeDetailedInformation);
+            final TextView descriptionText = (TextView) findViewById(R.id.cause_detail_info);
             descriptionText.setText(cause.getDescription());
             descriptionText.setMaxLines(lineLimit);
 
