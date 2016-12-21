@@ -211,7 +211,6 @@ public class VotingCausesFragment extends CauseListFragment  {
 
 
     public void vote(final View view) {
-        Toast.makeText(getActivity(), "teste", Toast.LENGTH_SHORT).show();
         int index = listView.getPositionForView(view);
         Cause cause = causesList.get(index);
 

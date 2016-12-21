@@ -133,9 +133,7 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     }
 
     public void vote(final View view) {
-        Toast.makeText(this, "teste", Toast.LENGTH_SHORT).show();
-
-        (new VoteDialog(this, (VotingCause) cause)).create().show();
+        new VoteDialog(this, (VotingCause) cause).create().show();
     }
 
 
