@@ -31,13 +31,14 @@ public class VotingTask extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected JSONObject doInBackground(String... parameters) {
-        String idCause = null, idVote = null;
+        String idCause,idVote;
 
         if (parameters != null && parameters.length == 2) {
-            idCause = parameters[0];
-            idVote = parameters[1];
+            idVote = parameters[0];
+            idCause = parameters[1];
         } else {
             Log.e("Voting", "Exception: " + "No idCause provided.");
+            return null;
         }
 
         // Preparation of variables for the request and response handling

@@ -26,8 +26,6 @@ public class VoteDialog extends AlertDialog.Builder {
 
         setPositiveButton(R.string.pop_up_voting_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
-                String idCause = Integer.toString(cause.getId());
                 ApiManager.getInstance().vote(context,cause);
             }
         });
