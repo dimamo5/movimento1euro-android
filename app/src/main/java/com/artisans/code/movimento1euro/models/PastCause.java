@@ -27,26 +27,29 @@ public class PastCause extends Cause {
         try {
             this.name = json.getString(JSONFields.PAST_NAME_COLUMN);
             this.introduction = json.getString(INTRODUCTION_COLUMN);
-            this.documents = parseDocuments(json.getJSONArray(JSONFields.DOCUMENTS_ARRAY_COLUMN));
+            this.documents = parseUrlArray(json.getJSONArray(JSONFields.DOCUMENTS_ARRAY_COLUMN));
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
-    protected static ArrayList<Pair<URL,String>> parseDocuments(JSONArray array){
-        ArrayList<Pair<URL,String>> documents = new ArrayList<>();
+    @Deprecated
+    protected static ArrayList<UrlResource> parseDocuments(JSONArray array){
+        ArrayList<UrlResource> documents = new ArrayList<>();
 
         JSONObject docObject;
         URL url;
         String description;
-        Pair<URL, String> doc;
+        UrlResource doc;
 
         try{
             for (int i = 0; i< array.length(); i++) {
                 docObject = array.getJSONObject(i);
                 url = new URL(docObject.getString(JSONFields.DOCUMENTS_URL_COLUMN));
                 description = docObject.getString(JSONFields.DOCUMENTS_DESCRIPTION_COLUMN);
-                doc = new Pair<>(url,description);
+                doc = new UrlResource(url,description);
                 documents.add(doc);
             }
 

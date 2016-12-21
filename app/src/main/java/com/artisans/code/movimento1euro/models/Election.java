@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.Calendar;
  * Created by PedroCosta on 03/12/2016.
  */
 
-public class Election {
+public class Election implements Serializable{
 
     private final String dateFormat = "dd-MM-yyy HH:mm:ss";
     private SimpleDateFormat readingFormat = new SimpleDateFormat(dateFormat);
