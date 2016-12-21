@@ -44,10 +44,17 @@ public class VotingTask extends AsyncTask<String, Void, JSONObject> {
         // Preparation of variables for the request and response handling
         HttpResponse<String> response = null;
         JSONObject result = null;
+        SharedPreferences userDetails;
+        String token;
 
-        SharedPreferences userDetails = context.getSharedPreferences("userInfo", MODE_PRIVATE);
-        String token = userDetails.getString("token", "");
+        try {
+            userDetails = context.getSharedPreferences("userInfo", MODE_PRIVATE);
+        }
+        catch(Exception e){
+            return null;
+        }
 
+        token = userDetails.getString("token", "");
         // API Request
         try {
             String url = context.getResources().getString(R.string.api_server_url) + context.getResources().getString(R.string.vote_in_cause_path) + "/" + idVote + "/" + idCause;
