@@ -19,6 +19,7 @@ import com.artisans.code.movimento1euro.menus.LoginActivity;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
+import com.artisans.code.movimento1euro.models.Election;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.artisans.code.movimento1euro.network.VotingTask;
 import com.mashape.unirest.http.HttpResponse;
@@ -99,13 +100,16 @@ public class VotingCausesFragment extends CauseListFragment  {
                 if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
                     throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
                 JSONArray votingCauses = obj.getJSONArray("votacao");
-
+                Election election = new Election(obj);
+                VotingCause cause;
                 causesList.clear();
                 for (int j = 0; j < votingCauses.length(); j++) {
                     //TODO discarded useful information?
                     JSONArray arr = votingCauses.getJSONObject(j).getJSONArray("causas");
                     for (int i = 0; i < arr.length(); i++) {
-                        causesList.add(new VotingCause(arr.getJSONObject(i)));
+                        cause = new VotingCause(arr.getJSONObject(i));
+                        cause.setElection(election);
+                        causesList.add(cause);
                     }
                 }
 
@@ -137,13 +141,6 @@ public class VotingCausesFragment extends CauseListFragment  {
 
             try {
                 if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
-                    /*Log.d(TAG, "setOnClickListener");
-                    fragment.getView().findViewById(R.id.voting_causes_item_vote).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            vote(view);
-                        }
-                    });*/
 
                     String message = result.getString("errorMessage");
                     if (result.getBoolean("error"))
