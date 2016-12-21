@@ -1,29 +1,26 @@
 package com.artisans.code.movimento1euro.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.artisans.code.movimento1euro.menus.LoginActivity;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
-import com.artisans.code.movimento1euro.models.PastCause;
 import com.artisans.code.movimento1euro.models.VotingCause;
+import com.artisans.code.movimento1euro.network.VotingTask;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -41,9 +38,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class VotingCausesFragment extends CauseListFragment  {
 
+    private static final String TAG = VotingCausesFragment.class.getSimpleName();
+
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
-
-
     private OnFragmentInteractionListener mListener;
 
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
@@ -114,11 +111,6 @@ public class VotingCausesFragment extends CauseListFragment  {
 
                 updateAdapterList(causesList, list);
 
-
-                if (obj.getString("id") != null)
-                    idVote = obj.getString("id");
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e("causes", "JSONException: " + e.getMessage());
@@ -142,11 +134,22 @@ public class VotingCausesFragment extends CauseListFragment  {
         @Override
         protected void onPostExecute(JSONObject result) {
 
+
             try {
                 if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
+                    /*Log.d(TAG, "setOnClickListener");
+                    fragment.getView().findViewById(R.id.voting_causes_item_vote).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            vote(view);
+                        }
+                    });*/
+
                     String message = result.getString("errorMessage");
                     if (result.getBoolean("error"))
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+
                 }
             } catch (Exception b) {
                 b.printStackTrace();
@@ -165,12 +168,7 @@ public class VotingCausesFragment extends CauseListFragment  {
         initializeListAdapter(view);
         new CausesTask().execute();
 
-        view.findViewById(R.id.voteButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               vote(view);
-            }
-        });
+
 
         return view;
     }
@@ -184,7 +182,6 @@ public class VotingCausesFragment extends CauseListFragment  {
                 list,
                 R.layout.item_voting_cause,
                 new String[]{Constants.NAME_COLUMN, Constants.DESCRIPTION_COLUMN, Constants.MONEY_COLUMN},
-                //TODO ADICIONAR COLUNA DA IMAGEM? -- R.id.voting_causes_item_image
                 new int[]{R.id.voting_causes_item_name, R.id.voting_causes_item_description, R.id.voting_causes_item_money}
         );
 
@@ -211,7 +208,6 @@ public class VotingCausesFragment extends CauseListFragment  {
         // Log.e("Cause",c.toString());
         Intent intent = new Intent(this.getActivity(), CausesDetailsActivity.class);
         intent.putExtra("Cause", causesList.get(index));
-        intent.putExtra("idVote", idVote);
         startActivity(intent);
     }
 
@@ -219,26 +215,10 @@ public class VotingCausesFragment extends CauseListFragment  {
 
     public void vote(final View view) {
         Toast.makeText(getActivity(), "teste", Toast.LENGTH_SHORT).show();
+        int index = listView.getPositionForView(view);
+        Cause cause = causesList.get(index);
 
-        new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.pop_up_voting_message)
-                .setMessage("TODO ADICIONAR CONTEUDO VER MOCKUP")
-                .setPositiveButton(R.string.pop_up_voting_positive, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        int index = listView.getPositionForView(view);
-                        String idCause = Integer.toString(causesList.get(index).getId());
-
-                        new VotingTask(getActivity()).execute(idVote,idCause);
-                    }
-                })
-                .setNegativeButton(R.string.pop_up_voting_negative, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+        new VoteDialog(getContext(), (VotingCause) cause).create().show();
     }
 
 }

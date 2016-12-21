@@ -1,6 +1,6 @@
-package com.artisans.code.movimento1euro.fragments;
+package com.artisans.code.movimento1euro.network;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -22,11 +22,11 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class VotingTask extends AsyncTask<String, Void, JSONObject> {
 
-    private Activity activity;
+    private Context context;
 
-    public VotingTask(Activity activity) {
+    public VotingTask(Context context) {
         super();
-        this.activity = activity;
+        this.context = context;
     }
 
     @Override
@@ -44,12 +44,12 @@ public class VotingTask extends AsyncTask<String, Void, JSONObject> {
         HttpResponse<String> response = null;
         JSONObject result = null;
 
-        SharedPreferences userDetails = activity.getSharedPreferences("userInfo", MODE_PRIVATE);
+        SharedPreferences userDetails = context.getSharedPreferences("userInfo", MODE_PRIVATE);
         String token = userDetails.getString("token", "");
 
         // API Request
         try {
-            String url = activity.getResources().getString(R.string.api_server_url) + activity.getResources().getString(R.string.vote_in_cause_path) + "/" + idVote + "/" + idCause;
+            String url = context.getResources().getString(R.string.api_server_url) + context.getResources().getString(R.string.vote_in_cause_path) + "/" + idVote + "/" + idCause;
             response = Unirest.post(url)
                     .header("accept", "application/json")
                     .header("content-type", "application/json")
@@ -76,9 +76,9 @@ public class VotingTask extends AsyncTask<String, Void, JSONObject> {
                 throw new Exception("Ocorreu um erro ao realizar o pedido de votação");
 
             if (result.get("result").equals(R.string.api_success_response)) {
-                Toast.makeText(activity, activity.getResources().getString(R.string.vote_cause_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.vote_cause_success), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(activity, activity.getResources().getString(R.string.user_vote_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, context.getResources().getString(R.string.user_vote_error), Toast.LENGTH_LONG).show();
             }
 
         } catch (Exception e) {

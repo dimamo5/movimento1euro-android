@@ -2,7 +2,6 @@ package com.artisans.code.movimento1euro.menus;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -15,24 +14,19 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
-import com.artisans.code.movimento1euro.fragments.VotingTask;
+import com.artisans.code.movimento1euro.fragments.VoteDialog;
+import com.artisans.code.movimento1euro.models.VotingCause;
+import com.artisans.code.movimento1euro.network.VotingTask;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.youtube.DeveloperKey;
 import com.artisans.code.movimento1euro.youtube.YouTubeFailureRecoveryActivity;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
-import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -46,14 +40,12 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     Cause cause;
     private final int lineLimit = 5;
-    private String idVote = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        idVote = getIntent().getStringExtra("idVote");
         cause = (Cause) getIntent().getSerializableExtra("Cause");
         setContentView(R.layout.activity_view_cause);
 
@@ -143,25 +135,7 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     public void vote(final View view) {
         Toast.makeText(this, "teste", Toast.LENGTH_SHORT).show();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("TODO ADICIONAR CONTEUDO VER MOCKUP")
-                .setTitle(R.string.pop_up_voting_message)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(R.string.pop_up_voting_positive, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        String idCause = Integer.toString(cause.getId());
-                        new VotingTask(CausesDetailsActivity.this).execute(idVote, idCause);
-                    }
-                })
-                .setNegativeButton(R.string.pop_up_voting_negative, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // dismiss
-                    }
-                })
-                .create()
-                .show();
+        (new VoteDialog(this, (VotingCause) cause)).create().show();
     }
 
 

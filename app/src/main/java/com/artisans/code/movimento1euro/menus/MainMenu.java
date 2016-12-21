@@ -83,6 +83,10 @@ public class MainMenu extends AppCompatActivity
         viewVotingCausesFragment.cardClick(view);
     }
 
+    public void voteClick(View view){
+        viewVotingCausesFragment.vote(view);
+    }
+
 
     @Override
     public void onBackPressed() {
