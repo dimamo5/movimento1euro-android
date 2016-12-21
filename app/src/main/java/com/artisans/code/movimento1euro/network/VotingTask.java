@@ -34,8 +34,8 @@ public class VotingTask extends AsyncTask<String, Void, JSONObject> {
         String idCause = null, idVote = null;
 
         if (parameters != null && parameters.length == 2) {
-            idCause = parameters[0];
-            idVote = parameters[1];
+            idVote = parameters[0];
+            idCause = parameters[1];
         } else {
             Log.e("Voting", "Exception: " + "No idCause provided.");
         }
