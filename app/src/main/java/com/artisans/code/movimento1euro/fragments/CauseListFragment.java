@@ -77,7 +77,4 @@ public abstract class CauseListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
-    public void vote(View view){}
-
 }

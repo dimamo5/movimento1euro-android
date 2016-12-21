@@ -1,6 +1,8 @@
 package com.artisans.code.movimento1euro.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -36,7 +39,7 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class VotingCausesFragment extends CauseListFragment {
+public class VotingCausesFragment extends CauseListFragment  {
 
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
 
@@ -44,6 +47,7 @@ public class VotingCausesFragment extends CauseListFragment {
     private OnFragmentInteractionListener mListener;
 
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    protected String idVote; //id da votacao (pode acontecer haver multiplas votacoes no mesmo mes)
     ArrayList<Cause> causesList = new ArrayList<>();
     CauseListFragment fragment = this;
 
@@ -110,6 +114,11 @@ public class VotingCausesFragment extends CauseListFragment {
 
                 updateAdapterList(causesList, list);
 
+
+                if (obj.getString("id") != null)
+                    idVote = obj.getString("id");
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e("causes", "JSONException: " + e.getMessage());
@@ -129,7 +138,6 @@ public class VotingCausesFragment extends CauseListFragment {
         }
 
 
-
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(JSONObject result) {
@@ -137,11 +145,9 @@ public class VotingCausesFragment extends CauseListFragment {
             try {
                 if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
                     String message = result.getString("errorMessage");
-                    if (result.getBoolean("error") == true)
+                    if (result.getBoolean("error"))
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             } catch (Exception b) {
                 b.printStackTrace();
             }
@@ -158,6 +164,13 @@ public class VotingCausesFragment extends CauseListFragment {
 
         initializeListAdapter(view);
         new CausesTask().execute();
+
+        view.findViewById(R.id.voteButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               vote(view);
+            }
+        });
 
         return view;
     }
@@ -179,8 +192,8 @@ public class VotingCausesFragment extends CauseListFragment {
     }
 
     @Override
-    protected HashMap<String,String> causeToHashMap(Cause cause){
-        HashMap<String, String> hashMap = new HashMap<String,String>();
+    protected HashMap<String, String> causeToHashMap(Cause cause) {
+        HashMap<String, String> hashMap = new HashMap<String, String>();
 
 
         hashMap.put(Constants.NAME_COLUMN, cause.getName());
@@ -193,13 +206,39 @@ public class VotingCausesFragment extends CauseListFragment {
 
     @Override
     public void cardClick(View view) {
-        int index=listView.getPositionForView(view);
-       Cause c= causesList.get(index);
-       // Log.e("Cause",c.toString());
+        int index = listView.getPositionForView(view);
+        Cause c = causesList.get(index);
+        // Log.e("Cause",c.toString());
         Intent intent = new Intent(this.getActivity(), CausesDetailsActivity.class);
-        intent.putExtra("Cause",causesList.get(index));
+        intent.putExtra("Cause", causesList.get(index));
+        intent.putExtra("idVote", idVote);
         startActivity(intent);
+    }
 
+
+
+    public void vote(final View view) {
+        Toast.makeText(getActivity(), "teste", Toast.LENGTH_SHORT).show();
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.pop_up_voting_message)
+                .setMessage("TODO ADICIONAR CONTEUDO VER MOCKUP")
+                .setPositiveButton(R.string.pop_up_voting_positive, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        int index = listView.getPositionForView(view);
+                        String idCause = Integer.toString(causesList.get(index).getId());
+
+                        new VotingTask(getActivity()).execute(idVote,idCause);
+                    }
+                })
+                .setNegativeButton(R.string.pop_up_voting_negative, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
 }
