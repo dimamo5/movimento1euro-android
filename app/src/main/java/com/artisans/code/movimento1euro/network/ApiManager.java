@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.models.VotingCause;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -28,6 +29,10 @@ public class ApiManager {
     public void updateFirebaseToken(Context context){
         String token = FirebaseInstanceId.getInstance().getToken();
         new UpdateFirebaseTokenTask(context).execute(token);
+    }
+
+    public void vote(Context context, VotingCause cause){
+        new VotingTask(context).execute(cause.getElection().getId()+"", cause.getId()+"");
     }
 
     private class UpdateFirebaseTokenTask extends ApiRequest{

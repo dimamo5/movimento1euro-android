@@ -21,7 +21,8 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="end"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/fab_margin"/>
+        android:layout_margin="@dimen/fab_margin"
+        android:onClick="vote"/>
 
 
     <android.support.v4.widget.NestedScrollView

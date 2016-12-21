@@ -1,6 +1,9 @@
 package com.artisans.code.movimento1euro.menus;
 
+
 import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
@@ -21,8 +24,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.fragments.VoteDialog;
+import com.artisans.code.movimento1euro.models.VotingCause;
+import com.artisans.code.movimento1euro.network.VotingTask;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.UrlResource;
 import com.artisans.code.movimento1euro.youtube.DeveloperKey;
@@ -51,7 +58,6 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
         super.onCreate(savedInstanceState);
 
-
         cause = (Cause) getIntent().getSerializableExtra("Cause");
         setContentView(R.layout.activity_view_cause);
 
@@ -74,8 +80,8 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         this.setTitle("Causa");
 
         fillFields(cause);
-
     }
+
 
     private void fillFields(Cause cause) {
         TextView textBox;
@@ -90,7 +96,7 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         if (cause.getIntroduction() != null) {
             textBox = (TextView) findViewById(R.id.cause_destiny);
             textBox.setText(cause.getIntroduction());
-        }else{
+        } else {
             textBox = (TextView) findViewById(R.id.cause_destiny);
             textBox.setText("Não existe uma descrição disponível.");
         }
@@ -211,10 +217,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if(!(b || cause.getAssociation().getYoutube().equals(""))){
+        if (!(b || cause.getAssociation().getYoutube().equals(""))) {
             youTubePlayer.cueVideo(cause.getAssociation().getYoutube());
 
-        }else { //no video or error
+        } else { //no video or error
             //release all resources related to youtubePlayer
             youTubePlayer.release();
         }
@@ -226,6 +232,11 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     protected YouTubePlayer.Provider getYouTubePlayerProvider() {
         return (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtube_fragment);
     }
+
+    public void vote(final View view) {
+        new VoteDialog(this, (VotingCause) cause).create().show();
+    }
+
 
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
@@ -244,9 +255,11 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             this.url = url;
             this.imageView = imageView;
         }
-        public ImageView getImageView(){
+
+        public ImageView getImageView() {
             return imageView;
         }
+
         @Override
         protected Bitmap doInBackground(Void... params) {
             try {
@@ -275,5 +288,6 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     public void onBackPressed() {
         imgTask.imageView.destroyDrawingCache();
     }*/
+
 
 }

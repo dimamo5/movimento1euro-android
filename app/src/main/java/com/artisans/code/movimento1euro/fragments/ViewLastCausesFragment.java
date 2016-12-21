@@ -73,7 +73,6 @@ public class ViewLastCausesFragment extends CauseListFragment {
     ArrayList<Cause> shownCauseslist = new ArrayList<>();
 
 
-
     public ViewLastCausesFragment() {
         // Required empty public constructor
     }
@@ -120,11 +119,9 @@ public class ViewLastCausesFragment extends CauseListFragment {
     }
 
 
-
-
     public void updateFromSpinner(String year) {
 
-        if(allCausesByYear.get(year) != null) {
+        if (allCausesByYear.get(year) != null) {
 
             shownCauseslist.clear();
             shownCauseslist.addAll(allCausesByYear.get(year));
@@ -132,7 +129,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
             updateAdapterList(shownCauseslist,list);
             //Log.d(TAG, "size-list: "+list.size());
 
-        }else{
+        } else {
             // Mostrar no ecrã que não há causas para este período(ano)
         }
         //Log.d("past", list.toString());
@@ -163,7 +160,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
     protected void fillYearsList() {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        if(currentYear >= START_YEAR) {
+        if (currentYear >= START_YEAR) {
             for (int year = currentYear; year >= START_YEAR; year--) {
                 yearsList.add(Integer.toString(year));
             }
@@ -203,8 +200,8 @@ public class ViewLastCausesFragment extends CauseListFragment {
     }
 
     @Override
-    protected HashMap<String,String> causeToHashMap(Cause cause){
-        HashMap<String, String> hashMap = new HashMap<String,String>();
+    protected HashMap<String, String> causeToHashMap(Cause cause) {
+        HashMap<String, String> hashMap = new HashMap<String, String>();
 
 
         hashMap.put(Constants.ELECTION_TITLE_COLUMN, cause.getElection().getTitle());
@@ -240,11 +237,11 @@ public class ViewLastCausesFragment extends CauseListFragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    /*public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
+    }*/
 
     private class CausesTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -255,7 +252,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
             super();
         }
 
-        public CausesTask(boolean updateAfterRequest){
+        public CausesTask(boolean updateAfterRequest) {
             this.updateAfterRequest = updateAfterRequest;
         }
 
@@ -280,7 +277,8 @@ public class ViewLastCausesFragment extends CauseListFragment {
             }
             // API Request
             try {
-                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.winner_causes_path)+ "?ano=" + year )
+                //// TODO: 21/12/2016 Remove hardcoded fields - use R.string(..)
+                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.winner_causes_path) + "?ano=" + year)
                         .header("accept", "application/json")
                         .header("content-type", "application/json")
                         .header("Authorization", token)
@@ -326,7 +324,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
                     Election election = new Election(electionObject);
 
-                    for(int causeNr = 0; causeNr < totalCausesNr; causeNr++) {
+                    for (int causeNr = 0; causeNr < totalCausesNr; causeNr++) {
 
                         JSONObject cause = winningCauses.getJSONObject(causeNr);
 
@@ -373,7 +371,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
         protected void onPostExecute(JSONObject result) {
 
             try {
-                if(result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
+                if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
                     String message = result.getString("errorMessage");
 
                     //only shows toast for the request which was to update screen, in case several requests are made
@@ -381,9 +379,9 @@ public class ViewLastCausesFragment extends CauseListFragment {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     }
                 }
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 // Log.d("causes", e.getMessage());
-            }catch(Exception b){
+            } catch (Exception b) {
                 // Log.d("causes", b.getMessage());
             }
 
@@ -395,5 +393,4 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
         }
     }
-
 }

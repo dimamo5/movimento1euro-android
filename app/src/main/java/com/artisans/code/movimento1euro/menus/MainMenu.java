@@ -58,6 +58,7 @@ public class MainMenu extends AppCompatActivity
         transaction.replace(R.id.menu_fragment, viewVotingCausesFragment);
         transaction.commit();
 
+        //// TODO: 21/12/2016 REMOVE HARDCODED FIELDS - USE R.string...
         NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
         ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
         CONTACTS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.contacts_path);
@@ -81,6 +82,10 @@ public class MainMenu extends AppCompatActivity
 
     public void cardClickVotingCauses(View view) {
         viewVotingCausesFragment.cardClick(view);
+    }
+
+    public void voteClick(View view){
+        viewVotingCausesFragment.vote(view);
     }
 
 
