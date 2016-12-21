@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,12 +130,12 @@ public class ViewLastCausesFragment extends CauseListFragment {
             shownCauseslist.addAll(allCausesByYear.get(year));
 
             updateAdapterList(shownCauseslist,list);
-            Log.d(TAG, "size-list: "+list.size());
+            //Log.d(TAG, "size-list: "+list.size());
 
         }else{
             // Mostrar no ecrã que não há causas para este período(ano)
         }
-        Log.d("past", list.toString());
+        //Log.d("past", list.toString());
         notifyChanges();
     }
 
@@ -155,7 +154,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
         // API request -> with the first year in the list, which should currently be selected
         // Maybe execute all already, to store them
         new CausesTask(true).execute(yearsList.get(0));
-        Log.d("past", "Year to be executed: " + yearsList.get(0));
+        //Log.d("past", "Year to be executed: " + yearsList.get(0));
         for(int i = 1; i< yearsList.size(); i++) {
             new CausesTask(false).execute(yearsList.get(i));
         }
@@ -169,7 +168,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
                 yearsList.add(Integer.toString(year));
             }
         }else{
-            Log.d("past", Integer.toString(currentYear) + "is  <  than " + Integer.toString(START_YEAR));
+            //Log.d("past", Integer.toString(currentYear) + "is  <  than " + Integer.toString(START_YEAR));
             yearsList.add(Integer.toString(START_YEAR));
         }
     }
@@ -191,7 +190,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
                 // Old version: got values for the year when clicking. New version will have them already stored in cache
                 // on item selected only updates spinner with values
-                Log.d("past",  "I am on item selected updating: " + yearsList.get(i));
+                //Log.d("past",  "I am on item selected updating: " + yearsList.get(i));
                //new CausesTask().execute(yearsList.get(i), "true");
                 updateFromSpinner(yearsList.get(i));
             }
@@ -302,7 +301,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
                     String connectionError = getResources().getString(R.string.user_connection_error);
                     String requestError = getResources().getString(R.string.causes_request_error);
 
-                    String error = isConnected ? requestError : requestError;
+                    String error = isConnected ? requestError : connectionError;
 
                     throw new Exception(error);
                 }
@@ -348,7 +347,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
             } catch (JSONException e) {
 
             } catch (Exception e) {
-                Log.d("past", "Exception Where we put result: " + e.getMessage());
+                //Log.d("past", "Exception Where we put result: " + e.getMessage());
 
                 // Handle error
                 try {
@@ -356,10 +355,10 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
                         result.put("error", true);
                         result.put("errorMessage", e.getMessage());
-                        Log.d("past", "Looper Successful");
+
                     }
                 }catch(Exception b){
-                    Log.d("past", "Looper Exception: " +  b.getMessage());
+
                 }
             }
             // int code = response.getCode();
@@ -377,10 +376,8 @@ public class ViewLastCausesFragment extends CauseListFragment {
                 if(result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
                     String message = result.getString("errorMessage");
 
-                    Log.d("past", "Now will display the error on a toast: " + result.getBoolean("error") + " | " + updateAfterRequest);
                     //only shows toast for the request which was to update screen, in case several requests are made
                     if (result.getBoolean("error") == true && updateAfterRequest) {
-                        Log.d("past", "Now displaying the error on a toast");
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     }
                 }

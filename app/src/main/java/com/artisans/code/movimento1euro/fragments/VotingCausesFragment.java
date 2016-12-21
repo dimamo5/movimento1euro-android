@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,7 +108,7 @@ public class VotingCausesFragment extends CauseListFragment {
                     String connectionError = getResources().getString(R.string.user_connection_error);
                     String requestError = getResources().getString(R.string.causes_request_error);
 
-                    String error = isConnected ? connectionError : connectionError;
+                    String error = isConnected ? requestError : connectionError;
 
                     throw new Exception(error);
                 }
