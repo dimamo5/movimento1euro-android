@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +18,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.elements.Cause;
+import com.artisans.code.movimento1euro.fragments.CauseListFragment;
 import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
 import com.facebook.login.LoginManager;
 
@@ -29,13 +28,10 @@ import java.util.Date;
 import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
-import org.json.JSONObject;
 
 public class MainMenu extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ViewLastCausesFragment.OnFragmentInteractionListener,
-        VotingCausesFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        CauseListFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainMenu.class.getSimpleName();
 
@@ -47,7 +43,7 @@ public class MainMenu extends AppCompatActivity
     TextView expDate;
     ViewLastCausesFragment viewLastCausesFragment;
     VotingCausesFragment viewVotingCausesFragment;
-    ViewActivity viewCauses;
+    CausesDetailsActivity viewCauses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +58,7 @@ public class MainMenu extends AppCompatActivity
         transaction.replace(R.id.menu_fragment, viewVotingCausesFragment);
         transaction.commit();
 
+        //// TODO: 21/12/2016 REMOVE HARDCODED FIELDS - USE R.string...
         NEWS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.news_path);
         ABOUT_US_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.about_us_path);
         CONTACTS_URL = getResources().getString(R.string.website_url) + getResources().getString(R.string.contacts_path);
@@ -85,6 +82,10 @@ public class MainMenu extends AppCompatActivity
 
     public void cardClickVotingCauses(View view) {
         viewVotingCausesFragment.cardClick(view);
+    }
+
+    public void voteClick(View view){
+        viewVotingCausesFragment.vote(view);
     }
 
 

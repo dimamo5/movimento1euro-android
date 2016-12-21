@@ -11,7 +11,7 @@
     <string name="content_description_logo">Logo</string>
     <string name="btn_sign_in">Iniciar sessão</string>
     <string name="btn_sign_up">Registar</string>
-
+    <string name="activity_cause">Causa</string>
     <string name="action_about">Sobre</string>
 
     <!--MENSAGENS DE ERRO-->
@@ -25,20 +25,23 @@
     <string name="fb_login_protocol_scheme">fb208375452933152</string>
 
     <!--API-->
-    <string name="api_server_url">http://ldso.diogomoura.me/api</string>
+    <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
     <string name="logout_path">/logout</string>
     <string name="fb_login_path">/loginFB</string>
     <string name="winner_causes_path">/winnerCauses</string>
     <string name="voting_causes_path">/votingCauses</string>
     <string name="upd_firebase_token_path">/firebaseToken</string>
+    <string name="vote_in_cause_path">/voteCause</string>
 
     <!--API responses-->
     <string name="api_success_response">success</string>
+    <string name="vote_cause_success">Voto registado com sucesso!</string>
 
     <!--User errors-->
     <string name="user_connection_error">Não foi possível carregar as causas em votação. Verifique a sua conexão.</string>
     <string name="user_loading_authetication_error">Não foi possível carregar as causas em votação. Verifique a sua autenticação.</string>
+    <string name="user_vote_error">Erro ao registar voto. Verifique se já votou este mês.</string>
 
     <!--WEBSITE URLS-->
     <string name="website_url">http://movimento1euro.com</string>
@@ -49,13 +52,16 @@
     <!-- voting button -->
     <string name="voting_button">Votar</string>
 
+    <!-- voting dialog -->
+    <string name="pop_up_voting_message">Confirmação</string>
+    <string name="pop_up_voting_positive">Votar</string>
+    <string name="pop_up_voting_negative">Cancelar</string>
+
     <!-- constantes -->
     <string name="seeMoreInfo"><u> Ver Mais </u><br/></string>
     <string name="seeLessInfo"><u> Ver Menos </u><br/></string>
     <string name="imageLinkDefault">http://www.venuscomputers.pk/wp-content/uploads/2014/12/image-not-available.jpg</string>
-    <string name="videoLinkDefault">https://i.ytimg.com/vi/6aZdGvOZSSs/maxresdefault.jpg</string>
-    <string name="youtubeImg">"https://www.saris.com/images/img-youtube-play.png"</string>
-    <string name="testVideoLink">"https://www.youtube.com/watch?v=LTvFsTbyILg"</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--YOUTUBE-->
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
 </resources>
