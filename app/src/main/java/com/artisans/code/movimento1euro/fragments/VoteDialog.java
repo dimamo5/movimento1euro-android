@@ -20,7 +20,7 @@ public class VoteDialog extends AlertDialog.Builder {
     public VoteDialog(final Context context, final VotingCause cause) {
         super(context);
 
-        setMessage("TODO ADICIONAR CONTEUDO VER MOCKUP");
+        setMessage("Tem a certeza que deseja votar nesta causa?");
         setTitle(context.getResources().getString(R.string.pop_up_voting_message));
         setIcon(android.R.drawable.ic_dialog_alert);
 

@@ -37,7 +37,7 @@ public class VotingTask extends AsyncTask<String, Void, JSONObject> {
             idVote = parameters[0];
             idCause = parameters[1];
         } else {
-            Log.e("Voting", "Exception: " + "No idCause provided.");
+            Log.e("Voting", "Exception: " + "Wrong params.");
             return null;
         }
 
