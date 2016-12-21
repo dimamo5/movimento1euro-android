@@ -3,11 +3,11 @@ package com.artisans.code.movimento1euro.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +16,9 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
-import com.artisans.code.movimento1euro.models.PastCause;
+import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -76,9 +75,17 @@ public class VotingCausesFragment extends CauseListFragment {
 
             HttpResponse<String> response = null;
             JSONObject result = new JSONObject();
+            String token = "";
 
-            SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
-            String token = userDetails.getString("token", "");
+            try {
+                SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
+                token = userDetails.getString("token", "");
+            }catch(Exception e){
+                Log.d("past", e.getMessage());
+            //To prevent conflicts between async tasks, if user clicks various times on the menu item
+            return result;
+
+            }
 
             try {
                 response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.voting_causes_path))
@@ -91,12 +98,26 @@ public class VotingCausesFragment extends CauseListFragment {
             }
 
             try {
-                if (response == null)
-                    throw new Exception(getResources().getString(R.string.user_connection_error));
+                if (response == null) {
+                    ConnectivityManager cm =
+                            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                    boolean isConnected = activeNetwork != null &&
+                            activeNetwork.isConnectedOrConnecting();
+
+                    String connectionError = getResources().getString(R.string.user_connection_error);
+                    String requestError = getResources().getString(R.string.causes_request_error);
+
+                    String error = isConnected ? connectionError : connectionError;
+
+                    throw new Exception(error);
+                }
 
                 JSONObject obj = new JSONObject(response.getBody());
                 if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
                     throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
+
                 JSONArray votingCauses = obj.getJSONArray("votacao");
 
                 causesList.clear();
@@ -116,7 +137,6 @@ public class VotingCausesFragment extends CauseListFragment {
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
-                    Looper.prepare();
                     result.put("error", true);
                     result.put("errorMessage", e.getMessage());
                 } catch (Exception b) {
