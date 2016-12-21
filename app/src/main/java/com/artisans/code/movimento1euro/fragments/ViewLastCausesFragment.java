@@ -3,12 +3,12 @@ package com.artisans.code.movimento1euro.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +20,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.firebase.notifications.IdService;
-import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
 import com.artisans.code.movimento1euro.menus.PastCauseDetailsActivity;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.Election;
-import com.artisans.code.movimento1euro.models.JSONFields;
 import com.artisans.code.movimento1euro.models.PastCause;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -42,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.artisans.code.movimento1euro.models.JSONFields.ELECTION_TITLE_COLUMN;
 
 
 /**
@@ -60,7 +56,8 @@ public class ViewLastCausesFragment extends CauseListFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     */
-
+    public final static String requestError = "";
+    public final static String connectionError = "";
     public final static String TAG = ViewLastCausesFragment.class.getCanonicalName();
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
     public static final int START_YEAR = 2011;
@@ -129,13 +126,13 @@ public class ViewLastCausesFragment extends CauseListFragment {
             shownCauseslist.clear();
             shownCauseslist.addAll(allCausesByYear.get(year));
 
-            updateAdapterList(shownCauseslist, list);
-            Log.d(TAG, "size-list: " + list.size());
+            updateAdapterList(shownCauseslist,list);
+            //Log.d(TAG, "size-list: "+list.size());
 
         } else {
             // Mostrar no ecrã que não há causas para este período(ano)
         }
-        Log.d("past", list.toString());
+        //Log.d("past", list.toString());
         notifyChanges();
     }
 
@@ -154,8 +151,8 @@ public class ViewLastCausesFragment extends CauseListFragment {
         // API request -> with the first year in the list, which should currently be selected
         // Maybe execute all already, to store them
         new CausesTask(true).execute(yearsList.get(0));
-        Log.d("past", "Year to be executed: " + yearsList.get(0));
-        for (int i = 1; i < yearsList.size(); i++) {
+        //Log.d("past", "Year to be executed: " + yearsList.get(0));
+        for(int i = 1; i< yearsList.size(); i++) {
             new CausesTask(false).execute(yearsList.get(i));
         }
         return view;
@@ -167,8 +164,8 @@ public class ViewLastCausesFragment extends CauseListFragment {
             for (int year = currentYear; year >= START_YEAR; year--) {
                 yearsList.add(Integer.toString(year));
             }
-        } else {
-            Log.d("past", Integer.toString(currentYear) + "is  <  than " + Integer.toString(START_YEAR));
+        }else{
+            //Log.d("past", Integer.toString(currentYear) + "is  <  than " + Integer.toString(START_YEAR));
             yearsList.add(Integer.toString(START_YEAR));
         }
     }
@@ -190,8 +187,8 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
                 // Old version: got values for the year when clicking. New version will have them already stored in cache
                 // on item selected only updates spinner with values
-                Log.d("past", "I am on item selected updating: " + yearsList.get(i));
-                //new CausesTask().execute(yearsList.get(i), "true");
+                //Log.d("past",  "I am on item selected updating: " + yearsList.get(i));
+               //new CausesTask().execute(yearsList.get(i), "true");
                 updateFromSpinner(yearsList.get(i));
             }
 
@@ -264,14 +261,20 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
             //TODO: check if null
             year = parameters[0];
-
             // Preparation of variables for the request and response handling
             HttpResponse<String> response = null;
             JSONObject result = new JSONObject();
+            String token = "";
 
-            SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
-            String token = userDetails.getString("token", "");
+            try {
+                SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
+                token = userDetails.getString("token", "");
+            }catch(Exception e){
 
+                //To prevent conflicts between async tasks, if user clicks various times on the menu item
+                return result;
+
+            }
             // API Request
             try {
                 //// TODO: 21/12/2016 Remove hardcoded fields - use R.string(..)
@@ -285,12 +288,26 @@ public class ViewLastCausesFragment extends CauseListFragment {
             }
 
             try {
+                if (response == null) {
+                    ConnectivityManager cm =
+                            (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                if (response == null)
-                    throw new Exception("Não foi possível carregar as causas passadas. Verifique a sua conexão.");
+                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                    boolean isConnected = activeNetwork != null &&
+                            activeNetwork.isConnectedOrConnecting();
 
-                //TODO ask if result != success
+                    String connectionError = getResources().getString(R.string.user_connection_error);
+                    String requestError = getResources().getString(R.string.causes_request_error);
+
+                    String error = isConnected ? requestError : connectionError;
+
+                    throw new Exception(error);
+                }
+
                 JSONObject obj = new JSONObject(response.getBody());
+                if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
+                    throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
+
                 // Get Yearly elections array from response
                 JSONArray yearlyElections = obj.getJSONArray("causes");
                 int totalElectionNr = yearlyElections.length();
@@ -326,18 +343,20 @@ public class ViewLastCausesFragment extends CauseListFragment {
                 allCausesByYear.put(year, requestedCauses);
 
             } catch (JSONException e) {
-                // Log.d("causes", "JSONException2: " + e.getMessage());
+
             } catch (Exception e) {
-                // Log.d("causes", "Exception: " + e.getMessage());
+                //Log.d("past", "Exception Where we put result: " + e.getMessage());
 
                 // Handle error
                 try {
-                    Looper.prepare();
-                    result.put("error", true);
-                    result.put("errorMessage", e.getMessage());
+                    if(updateAfterRequest) {
 
-                } catch (Exception b) {
-                    // Log.d("causes", "Exception: " +  b.getMessage());
+                        result.put("error", true);
+                        result.put("errorMessage", e.getMessage());
+
+                    }
+                }catch(Exception b){
+
                 }
             }
             // int code = response.getCode();
@@ -354,8 +373,11 @@ public class ViewLastCausesFragment extends CauseListFragment {
             try {
                 if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
                     String message = result.getString("errorMessage");
-                    if (result.getBoolean("error") == true && updateAfterRequest)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+                    //only shows toast for the request which was to update screen, in case several requests are made
+                    if (result.getBoolean("error") == true && updateAfterRequest) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
                 }
             } catch (JSONException e) {
                 // Log.d("causes", e.getMessage());
@@ -363,8 +385,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
                 // Log.d("causes", b.getMessage());
             }
 
-            // Deprecated
-            if (updateAfterRequest) {
+            if(updateAfterRequest) {
                 spinnerAdapter.notifyDataSetChanged();
                 // Log.d("past", "I am on post execute updating: " + year);
                 updateFromSpinner(year);

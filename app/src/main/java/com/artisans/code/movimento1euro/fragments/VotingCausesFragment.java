@@ -78,9 +78,17 @@ public class VotingCausesFragment extends CauseListFragment  {
 
             HttpResponse<String> response = null;
             JSONObject result = new JSONObject();
+            String token = "";
 
-            SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
-            String token = userDetails.getString("token", "");
+            try {
+                SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
+                token = userDetails.getString("token", "");
+            }catch(Exception e){
+                Log.d("past", e.getMessage());
+            //To prevent conflicts between async tasks, if user clicks various times on the menu item
+            return result;
+
+            }
 
             try {
                 response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.voting_causes_path))
@@ -93,12 +101,26 @@ public class VotingCausesFragment extends CauseListFragment  {
             }
 
             try {
-                if (response == null)
-                    throw new Exception(getResources().getString(R.string.user_connection_error));
+                if (response == null) {
+                    ConnectivityManager cm =
+                            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                    boolean isConnected = activeNetwork != null &&
+                            activeNetwork.isConnectedOrConnecting();
+
+                    String connectionError = getResources().getString(R.string.user_connection_error);
+                    String requestError = getResources().getString(R.string.causes_request_error);
+
+                    String error = isConnected ? requestError : connectionError;
+
+                    throw new Exception(error);
+                }
 
                 JSONObject obj = new JSONObject(response.getBody());
                 if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
                     throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
+
                 JSONArray votingCauses = obj.getJSONArray("votacao");
                 Election election = new Election(obj);
                 VotingCause cause;
@@ -121,7 +143,6 @@ public class VotingCausesFragment extends CauseListFragment  {
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
-                    Looper.prepare();
                     result.put("error", true);
                     result.put("errorMessage", e.getMessage());
                 } catch (Exception b) {
