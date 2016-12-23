@@ -56,7 +56,14 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".menus.ViewActivity"
+            android:name=".menus.CausesDetailsActivity"
+            android:label="Causa"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".menus.MainMenu"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".menus.PastCauseDetailsActivity"
             android:label="Causa"
             android:screenOrientation="portrait"
             android:parentActivityName=".menus.MainMenu"

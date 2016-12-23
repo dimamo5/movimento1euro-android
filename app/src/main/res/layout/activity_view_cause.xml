@@ -6,27 +6,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.artisans.code.movimento1euro.menus.ViewActivity">
+    tools:context="com.artisans.code.movimento1euro.menus.CausesDetailsActivity">
 
 
-    <include layout="@layout/toolbar_back_layout"></include>
+    <include layout="@layout/toolbar_back_layout"
+        android:id="@+id/include"></include>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/voteButton"
         app:backgroundTint="@color/colorPrimary"
-        android:src="@android:drawable/checkbox_on_background"
+        android:src="@drawable/ic_send_black_24dp"
         android:layout_alignParentRight="true"
         android:layout_gravity="end"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/fab_margin"/>
+        android:layout_margin="@dimen/fab_margin"
+        android:onClick="vote"/>
 
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_below="@+id/include"
+        android:layout_alignParentStart="true">
 
 
         <RelativeLayout
@@ -34,76 +37,119 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!--   <TextView
-                   android:layout_width="match_parent"
-                   android:layout_height="33dp"
-                   android:ems="10"
-                   android:text="Name"
-                   android:id="@+id/causeName" />*/ -->
-
             <TextView
+                android:id="@+id/cause_name"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:ems="25"
-                android:id="@+id/causeSlogan"
                 android:layout_margin="@dimen/text_margin"
-                android:textStyle="normal|bold|italic" />
+                android:textStyle="normal|bold|italic"
+                android:textSize="25dp"
+                android:text="Cause Name"/>
 
             <TextView
+                android:id="@+id/cause_destiny"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="16"
-                android:id="@+id/causeInformation"
-                android:layout_below="@+id/causeSlogan"
-                android:layout_margin="@dimen/text_margin"/>
+                android:layout_below="@+id/cause_name"
+                android:layout_margin="@dimen/text_margin"
+                android:textSize="20sp"
+                android:visibility="gone"/>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="125dp"
-                app:srcCompat="@drawable/com_facebook_auth_dialog_cancel_background"
-                android:id="@+id/causeImageView"
-                android:layout_below="@+id/causeInformation"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="129dp"
-                android:id="@+id/causeVideoView"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/moreInformation"
-                />
-
-            <TextView
+            <fragment
+                android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                android:id="@+id/youtube_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:id="@+id/moreInformation"
-                android:layout_marginLeft="@dimen/text_margin"
-                android:layout_marginRight="@dimen/text_margin"
-                android:layout_marginTop="32dp"
-                android:layout_below="@+id/causeDetailedInformationBox"
-                android:layout_alignStart="@+id/causeDetailedInformationBox" />
+                android:layout_below="@+id/cause_destiny"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/causeDetailedInformationBox"
-                android:layout_below="@+id/causeImageView"
-                android:layout_alignStart="@+id/causeInformation">
+                android:id="@+id/cause_detail_info_box"
+                android:layout_below="@+id/youtube_fragment"
+                android:orientation="vertical"
+                android:layout_alignParentStart="true"
+                android:background="@color/colorSecundary"
+                android:translationZ="1dp">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/causeDetailedInformation"
+                    android:id="@+id/cause_detail_info"
                     android:layout_marginLeft="@dimen/text_margin"
                     android:layout_marginRight="@dimen/text_margin"
                     android:layout_marginTop="15dp"
+                    android:textColor="#ffffff"
                      />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:id="@+id/moreInformation"
+                    android:layout_margin="@dimen/text_margin"
+                    android:layout_below="@+id/cause_detail_info"
+                    android:textColor="@color/colorPrimary"
+                    />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/documents_layout"
+                android:layout_below="@+id/cause_detail_info_box"
+                android:orientation="vertical"
+                android:paddingTop="5sp"
+                android:paddingBottom="10sp"
+                >
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/social_media_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/documents_layout"
+                android:gravity="center"
+                android:paddingTop="15sp"
+                android:paddingBottom="15sp"
+                >
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/facebook_url_button"
+                    android:src="@drawable/ic_facebook_black_36dp"
+                    android:background="@android:color/transparent"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp"
+                    />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/web_url_button"
+                    android:src="@drawable/ic_web_black_36dp"
+                    android:background="@android:color/transparent"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/instagram_url_button"
+                    android:src="@drawable/ic_instagram_black_36dp"
+                    android:background="@android:color/transparent"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp"/>
+            </LinearLayout>
 
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
-
 
 
 </RelativeLayout>

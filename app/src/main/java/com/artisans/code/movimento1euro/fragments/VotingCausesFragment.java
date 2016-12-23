@@ -1,27 +1,30 @@
 package com.artisans.code.movimento1euro.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.artisans.code.movimento1euro.elements.Cause;
+import com.artisans.code.movimento1euro.menus.LoginActivity;
+import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.menus.ViewActivity;
+import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
+import com.artisans.code.movimento1euro.models.Election;
+import com.artisans.code.movimento1euro.models.VotingCause;
+import com.artisans.code.movimento1euro.network.VotingTask;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -37,18 +40,18 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class VotingCausesFragment extends Fragment {
+public class VotingCausesFragment extends CauseListFragment  {
+
+    private static final String TAG = VotingCausesFragment.class.getSimpleName();
 
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
-
-
     private OnFragmentInteractionListener mListener;
 
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-    ArrayList<HashMap<String, String>> fullList = new ArrayList<HashMap<String, String>>();
+    protected String idVote; //id da votacao (pode acontecer haver multiplas votacoes no mesmo mes)
     ArrayList<Cause> causesList = new ArrayList<>();
-    ListView listView;
-    SimpleAdapter listAdapter;
+    CauseListFragment fragment = this;
+
 
     public VotingCausesFragment() {
         // Required empty public constructor
@@ -78,9 +81,17 @@ public class VotingCausesFragment extends Fragment {
 
             HttpResponse<String> response = null;
             JSONObject result = new JSONObject();
+            String token = "";
 
-            SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
-            String token = userDetails.getString("token", "");
+            try {
+                SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
+                token = userDetails.getString("token", "");
+            }catch(Exception e){
+                Log.d("past", e.getMessage());
+            //To prevent conflicts between async tasks, if user clicks various times on the menu item
+            return result;
+
+            }
 
             try {
                 response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.voting_causes_path))
@@ -93,39 +104,48 @@ public class VotingCausesFragment extends Fragment {
             }
 
             try {
-                if (response == null)
-                    throw new Exception(getResources().getString(R.string.user_connection_error));
+                if (response == null) {
+                    ConnectivityManager cm =
+                            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                    boolean isConnected = activeNetwork != null &&
+                            activeNetwork.isConnectedOrConnecting();
+
+                    String connectionError = getResources().getString(R.string.user_connection_error);
+                    String requestError = getResources().getString(R.string.causes_request_error);
+
+                    String error = isConnected ? requestError : connectionError;
+
+                    throw new Exception(error);
+                }
 
                 JSONObject obj = new JSONObject(response.getBody());
                 if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
                     throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
-                JSONArray votingCauses = obj.getJSONArray("votacao");
 
-                list.clear();
+                JSONArray votingCauses = obj.getJSONArray("votacao");
+                Election election = new Election(obj);
+                VotingCause cause;
                 causesList.clear();
                 for (int j = 0; j < votingCauses.length(); j++) {
                     //TODO discarded useful information?
                     JSONArray arr = votingCauses.getJSONObject(j).getJSONArray("causas");
                     for (int i = 0; i < arr.length(); i++) {
-                        causesList.add(Cause.parseVotingCause(arr.getJSONObject(i)));
-
-                        HashMap<String, String> temp = new HashMap<>();
-
-                        //TODO adicionar imagem da causa ?
-                        temp.put(Constants.NAME_COLUMN, causesList.get(i).getTitle());
-                        temp.put(Constants.DESCRIPTION_COLUMN, causesList.get(i).getDescription());
-                        temp.put(Constants.MONEY_COLUMN, "Valor da causa: " + causesList.get(i).getMoney() + "€");
-                        list.add(temp);
+                        cause = new VotingCause(arr.getJSONObject(i));
+                        cause.setElection(election);
+                        causesList.add(cause);
                     }
                 }
+
+                updateAdapterList(causesList, list);
 
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e("causes", "JSONException: " + e.getMessage());
             } catch (Exception e) {
-                // Log.d("causes", "Exception: " + e.getMessage());
+                e.printStackTrace();
                 try {
-                    Looper.prepare();
                     result.put("error", true);
                     result.put("errorMessage", e.getMessage());
                 } catch (Exception b) {
@@ -137,27 +157,26 @@ public class VotingCausesFragment extends Fragment {
             return result;
         }
 
+
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(JSONObject result) {
 
+
             try {
                 if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
+
                     String message = result.getString("errorMessage");
-                    if (result.getBoolean("error") == true)
+                    if (result.getBoolean("error"))
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+
                 }
-            } catch (JSONException e) {
-                Log.e("causes", e.getMessage());
             } catch (Exception b) {
-                Log.e("causes", b.getMessage());
+                b.printStackTrace();
             }
             notifyChanges();
         }
-    }
-
-    public void notifyChanges() {
-        listAdapter.notifyDataSetChanged();
     }
 
 
@@ -165,9 +184,18 @@ public class VotingCausesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_voting_causes, container, false);
 
+        initializeListAdapter(view);
+        new CausesTask().execute();
+
+
+
+        return view;
+    }
+
+    @Override
+    protected void initializeListAdapter(View view) {
         listView = (ListView) view.findViewById(R.id.causes_list);
 
         listAdapter = new SimpleAdapter(
@@ -175,54 +203,42 @@ public class VotingCausesFragment extends Fragment {
                 list,
                 R.layout.item_voting_cause,
                 new String[]{Constants.NAME_COLUMN, Constants.DESCRIPTION_COLUMN, Constants.MONEY_COLUMN},
-                //TODO ADICIONAR COLUNA DA IMAGEM? -- R.id.voting_causes_item_image
                 new int[]{R.id.voting_causes_item_name, R.id.voting_causes_item_description, R.id.voting_causes_item_money}
         );
 
-        new CausesTask().execute();
         listView.setAdapter(listAdapter);
-
-        return view;
     }
 
+    @Override
+    protected HashMap<String, String> causeToHashMap(Cause cause) {
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+
+        hashMap.put(Constants.NAME_COLUMN, cause.getName());
+        hashMap.put(Constants.DESCRIPTION_COLUMN, cause.getDescription());
+        hashMap.put(Constants.MONEY_COLUMN, "Valor da causa: " + cause.getMoney() + "€");
+
+
+        return hashMap;
+    }
+
+    @Override
     public void cardClick(View view) {
-        int index=listView.getPositionForView(view);
-       Cause c= causesList.get(index);
-       // Log.e("Cause",c.toString());
-        Intent intent = new Intent(this.getActivity(), ViewActivity.class);
-        intent.putExtra("Cause",causesList.get(index));
+        int index = listView.getPositionForView(view);
+        Cause c = causesList.get(index);
+        // Log.e("Cause",c.toString());
+        Intent intent = new Intent(this.getActivity(), CausesDetailsActivity.class);
+        intent.putExtra("Cause", causesList.get(index));
         startActivity(intent);
-
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
+
+    public void vote(final View view) {
+        int index = listView.getPositionForView(view);
+        Cause cause = causesList.get(index);
+
+        new VoteDialog(getContext(), (VotingCause) cause).create().show();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 }
