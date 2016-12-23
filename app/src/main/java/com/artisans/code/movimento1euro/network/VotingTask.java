@@ -86,7 +86,7 @@ public class VotingTask extends AsyncTask<String, Void, JSONObject> {
             if (result.get("result").equals(R.string.api_success_response)) {
                 Toast.makeText(context, context.getResources().getString(R.string.vote_cause_success), Toast.LENGTH_SHORT).show();
             } else {
-                //Toast.makeText(context, context.getResources().getString(R.string.user_vote_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, context.getResources().getString(R.string.user_vote_error), Toast.LENGTH_LONG).show();
             }
 
         } catch (Exception e) {
