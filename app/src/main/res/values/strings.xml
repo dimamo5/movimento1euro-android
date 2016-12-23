@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Movimento1Euro</string>
     <string name="versionCode">1</string>
-    <string name="versionName">0.3</string>
+    <string name="versionName">0.4</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -25,7 +25,7 @@
     <string name="fb_login_protocol_scheme">fb208375452933152</string>
 
     <!--API-->
-    <string name="api_server_url">http://staging.diogomoura.me/api</string>
+    <string name="api_server_url">http://ldso.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
     <string name="logout_path">/logout</string>
     <string name="fb_login_path">/loginFB</string>
