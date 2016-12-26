@@ -19,7 +19,8 @@
         android:layout_height="100dp"
         app:srcCompat="@drawable/ic_default_user"
         android:background="@android:color/white"
-        android:layout_weight="0.68" />
+        android:layout_weight="0.68"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/nav_username"
