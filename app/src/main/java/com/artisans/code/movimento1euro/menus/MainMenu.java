@@ -239,23 +239,17 @@ public class MainMenu extends AppCompatActivity
         long diffDays = TimeUnit.DAYS.convert(expDate.getTime() - currentDate.getTime(), TimeUnit.MILLISECONDS);
 
         if (diffDays > WARNING_DAYS_BEFORE_EXPIRATION) {
-
+            new AlertDialog.Builder(this)
+                    .setTitle("Aviso")
+                    .setMessage("Faltam " + diffDays + " dias para acabar o pagamento!")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
-        new AlertDialog.Builder(this)
-                .setTitle("Delete entry")
-                .setMessage("Are you sure you want to delete this entry?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
 
         this.username.setText(username);
         this.expDate.setText(expDateStr);
