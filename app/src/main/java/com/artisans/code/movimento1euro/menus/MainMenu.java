@@ -1,5 +1,7 @@
 package com.artisans.code.movimento1euro.menus;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -24,6 +26,7 @@ import com.facebook.login.LoginManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
 import com.mashape.unirest.http.HttpResponse;
@@ -34,6 +37,8 @@ public class MainMenu extends AppCompatActivity
         CauseListFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainMenu.class.getSimpleName();
+    //TODO get the official number for the warning
+    private static final int WARNING_DAYS_BEFORE_EXPIRATION = 5;
 
     protected String NEWS_URL;
     protected String ABOUT_US_URL;
@@ -229,6 +234,28 @@ public class MainMenu extends AppCompatActivity
         SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
         String expDateStr = sdf.format(expDate);
 
+        Date currentDate = new Date(System.currentTimeMillis());
+
+        long diffDays = TimeUnit.DAYS.convert(expDate.getTime() - currentDate.getTime(), TimeUnit.MILLISECONDS);
+
+        if (diffDays > WARNING_DAYS_BEFORE_EXPIRATION) {
+
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("Delete entry")
+                .setMessage("Are you sure you want to delete this entry?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
 
         this.username.setText(username);
         this.expDate.setText(expDateStr);
