@@ -134,13 +134,6 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             addDocument(doc);
         }
 
-        try {
-            addDocument(new UrlResource(new URL("http://google.com"), "Googlerino"));
-            addDocument(new UrlResource(new URL("http://google.com"), "Googlerino123"));
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     private void addDocument(final UrlResource doc) {
