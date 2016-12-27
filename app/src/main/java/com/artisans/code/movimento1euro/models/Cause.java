@@ -107,7 +107,7 @@ public class Cause implements Serializable {
         return ret;
     }
 
-    protected YoutubeUrlResource getFirstYoutubeResource(){
+    public YoutubeUrlResource getFirstYoutubeResource(){
         for(UrlResource resource : videos){
             if(YoutubeUrlResource.class.isInstance(resource)){
                 return (YoutubeUrlResource) resource;
