@@ -1,5 +1,8 @@
 package com.artisans.code.movimento1euro.models;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Build;
 import android.text.Html;
 import android.util.Pair;
@@ -13,6 +16,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.artisans.code.movimento1euro.models.JSONFields.ASSOCIATION_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.DESCRIPTION_COLUMN;
@@ -34,11 +39,11 @@ public class Cause implements Serializable {
     protected String votes;
     protected String name;
     protected String introduction;
-    protected String imgLink;
     protected ArrayList<UrlResource> documents = new ArrayList<>();
     protected ArrayList<UrlResource> videos = new ArrayList<>();
     protected Association association;
     protected Election election;
+    protected String youtubeThumbnailLink;
 
     public Cause () {
     }
@@ -60,29 +65,57 @@ public class Cause implements Serializable {
             this.votes = json.getString(VOTES_COLUMN);
 
             this.association = new Association(json.getJSONObject(ASSOCIATION_COLUMN));
-
+            initializeYouTubeThumbnailLink();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
 
+    private void initializeYouTubeThumbnailLink() {
+        YoutubeUrlResource ytResource = getFirstYoutubeResource();
+
+        if(ytResource == null){
+            this.youtubeThumbnailLink = "";
+//            this.youtubeThumbnailLink = "https://img.youtube.com/vi/GDFUdMvacI0/0.jpg";
+        }else{
+            this.youtubeThumbnailLink = ytResource.getThumbnailLink(0);
+        }
+    }
 
 
     protected static ArrayList<UrlResource> parseUrlArray(JSONArray jsonArray) throws JSONException, MalformedURLException {
         ArrayList<UrlResource> ret = new ArrayList<>();
+        String url;
+        String description;
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = jsonArray.getJSONObject(i);
-            ret.add(new UrlResource(new URL(obj.getString("url")), obj.getString("descricao")));
+            url=obj.getString("url");
+            description = obj.getString("descricao");
+            if(!YoutubeUrlResource.isValidYoutubeLink(url)){
+                ret.add(new UrlResource(new URL(url), description));
+            }else{
+                try {
+                    ret.add(new YoutubeUrlResource(new URL(url), description));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ret.add(new UrlResource(new URL(url), description));
+                }
+            }
+
         }
         return ret;
     }
 
+    public YoutubeUrlResource getFirstYoutubeResource(){
+        for(UrlResource resource : videos){
+            if(YoutubeUrlResource.class.isInstance(resource)){
+                return (YoutubeUrlResource) resource;
+            }
+        }
 
-
-   /* public String toString(){
-        return "ID: " + id + ", Title: " + name + ", Description: " + description + ",\n Votes: " + votes + ", Money: " ;
-    }*/
+        return null;
+    }
 
     @Override
     public String toString() {
@@ -179,5 +212,11 @@ public class Cause implements Serializable {
         return introduction;
     }
 
+    public String getYoutubeThumbnailLink() {
+        return youtubeThumbnailLink;
+    }
 
+    public void setYoutubeThumbnailLink(String youtubeThumbnailLink) {
+        this.youtubeThumbnailLink = youtubeThumbnailLink;
+    }
 }

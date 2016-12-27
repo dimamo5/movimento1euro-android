@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.VoteDialog;
 import com.artisans.code.movimento1euro.models.VotingCause;
+import com.artisans.code.movimento1euro.models.YoutubeUrlResource;
 import com.artisans.code.movimento1euro.network.VotingTask;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.UrlResource;
@@ -134,13 +135,6 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             addDocument(doc);
         }
 
-        try {
-            addDocument(new UrlResource(new URL("http://google.com"), "Googlerino"));
-            addDocument(new UrlResource(new URL("http://google.com"), "Googlerino123"));
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     private void addDocument(final UrlResource doc) {
@@ -220,8 +214,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if (!(b || cause.getAssociation().getYoutube().equals(""))) {
-            youTubePlayer.cueVideo(cause.getAssociation().getYoutube());
+        YoutubeUrlResource resource = cause.getFirstYoutubeResource();
+
+        if (resource != null) {
+            youTubePlayer.cueVideo(resource.getVideoId());
 
         } else { //no video or error
             //release all resources related to youtubePlayer
