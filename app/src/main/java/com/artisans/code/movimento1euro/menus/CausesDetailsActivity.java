@@ -174,10 +174,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     private void setupSocialMediaButtons(Cause cause) {
         final ImageButton facebookButton = (ImageButton) findViewById(R.id.facebook_url_button);
         facebookUrl = cause.getAssociation().getFacebook();
-        facebookUrl = "https://www.facebook.com/duarte.pinto.9";
+        //facebookUrl = "https://www.facebook.com/duarte.pinto.9";
 
-        //if (facebookUrl == null || facebookUrl.equals("")){
-        if(false){
+        if (facebookUrl == null || facebookUrl.equals("")){
+//        if(false){
             facebookButton.setVisibility(View.GONE);
         }else {
 
@@ -209,7 +209,7 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         }
 
         // TODO: 20/12/2016 Adicionar suport para o instagram
-        //findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
+        findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
     }
 
     @Override
