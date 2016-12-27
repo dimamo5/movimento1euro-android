@@ -37,7 +37,7 @@ public class VotingCausesAdapter extends SimpleAdapter {
 
         ImageView image=(ImageView)vi.findViewById(R.id.voting_causes_item_image);
         String imageUrl = (String) data.get(VotingCausesFragment.Constants.IMAGE_COLUMN);
-        if(imageUrl != ""){
+        if(!( imageUrl == null || imageUrl.equals(""))){
             Picasso.with(mContext).load(imageUrl).into(image);
         }
         return vi;
