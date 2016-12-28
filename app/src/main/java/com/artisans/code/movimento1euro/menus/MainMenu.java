@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.view.menu.MenuItemImpl;
+import android.support.v7.view.menu.MenuView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.CauseListFragment;
 import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
+import com.artisans.code.movimento1euro.network.ApiManager;
 import com.facebook.login.LoginManager;
 
 import java.text.SimpleDateFormat;
@@ -74,6 +77,16 @@ public class MainMenu extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         username = (TextView)hView.findViewById(R.id.nav_username);
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
+
+        if(!ApiManager.getInstance().isAuthenticated()){
+            initUnAuthenticatedMode(navigationView);
+        }
+    }
+
+    private void initUnAuthenticatedMode(NavigationView navigationView) {
+
+        MenuItemImpl item = (MenuItemImpl) navigationView.getMenu().findItem(R.id.nav_logout);
+        item.setTitle(getResources().getString(R.string.nav_logout_unauth));
     }
 
     public void cardClickLastCauses(View view) {

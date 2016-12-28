@@ -6,10 +6,8 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,14 +34,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import com.artisans.code.movimento1euro.network.ApiManager;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -58,14 +48,15 @@ public class LoginActivity extends AppCompatActivity {
 
     public enum LoginType {
         STANDARD,
-        FACEBOOK
+        FACEBOOK,
+        UNAUTHENTICATED
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppEventsLogger.activateApp(this);
-        setContentView(R.layout.login_screen);
+        setContentView(R.layout.activity_login_layout);
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
         findViewById(R.id.layout_login_screen).requestFocus();
@@ -153,6 +144,18 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    public void unauthenticatedLogin(View view){
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new LoginTask(getApplicationContext(), LoginType.UNAUTHENTICATED).execute();
+        } else {
+            Toast toast = Toast.makeText(this,activity.getString(R.string.failed_connection), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
     private class LoginTask extends ApiRequest{
         LoginType type;
 
@@ -174,6 +177,9 @@ public class LoginActivity extends AppCompatActivity {
                     urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.fb_login_path);
                     parametersMap.put("id", parameters[0]);
                     parametersMap.put("token",parameters[1]);
+                    break;
+                case UNAUTHENTICATED:
+                    urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.unauth_login_path);
                     break;
                 default:
                     try {

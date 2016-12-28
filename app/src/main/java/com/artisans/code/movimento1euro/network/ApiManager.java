@@ -35,6 +35,10 @@ public class ApiManager {
         new VotingTask(context).execute(cause.getElection().getId()+"", cause.getId()+"");
     }
 
+    public boolean isAuthenticated(){
+        return false;
+    }
+
     private class UpdateFirebaseTokenTask extends ApiRequest{
         public UpdateFirebaseTokenTask(Context context) {
             super(context);
