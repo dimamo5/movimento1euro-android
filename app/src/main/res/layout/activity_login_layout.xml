@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/unauthenticated_user_button"
-            android:textSize="15dp"
+            android:textSize="18sp"
             android:clickable="true"
             android:onClick="unauthenticatedLogin"/>
 
