@@ -78,7 +78,7 @@ public class MainMenu extends AppCompatActivity
         username = (TextView)hView.findViewById(R.id.nav_username);
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
 
-        if(!ApiManager.getInstance().isAuthenticated()){
+        if(!ApiManager.getInstance().isAuthenticated(getApplicationContext())){
             initUnAuthenticatedMode(navigationView);
         }
     }

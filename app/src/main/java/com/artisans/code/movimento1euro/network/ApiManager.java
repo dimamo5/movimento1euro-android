@@ -1,7 +1,6 @@
 package com.artisans.code.movimento1euro.network;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.artisans.code.movimento1euro.R;
@@ -10,6 +9,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by duarte on 16-11-2016.
@@ -35,41 +36,22 @@ public class ApiManager {
         new VotingTask(context).execute(cause.getElection().getId()+"", cause.getId()+"");
     }
 
-    public boolean isAuthenticated(){
-        return false;
-    }
-
-    private class UpdateFirebaseTokenTask extends ApiRequest{
-        public UpdateFirebaseTokenTask(Context context) {
-            super(context);
-            this.setMethod(ConnectionBuilder.Request.PUT);
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... parameters) {
-            urlString = context.getString(R.string.api_server_url) + context.getString(R.string.upd_firebase_token_path);
-            parametersMap.put("firebaseToken", parameters[0]);
-
-            JSONObject result = executeRequest();
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            try {
-                if(result == null || !result.getString("result").equals("success")) {
-                    if(result != null)
-                        Log.e(TAG, "Token update request failed. Result: " + result);
-                    else
-                        Log.e(TAG, "Token update request Failed");
-                }else {
-                    Log.d(TAG, "Token Update Request Successful");
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+    public boolean isAuthenticated(Context context){
+        if(getAppToken(context)==null){
+            return false;
+        }else{
+            return true;
         }
     }
+
+    public String getAppToken(Context context){
+        try {
+            return context.getApplicationContext().getSharedPreferences("userInfo",0).getString("token", "");
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
+
+
 }

@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.artisans.code.movimento1euro.R;
-import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.artisans.code.movimento1euro.network.ApiManager;
-import com.artisans.code.movimento1euro.network.ApiRequest;
-import com.artisans.code.movimento1euro.network.VotingTask;
 
 /**
  * Created by Duart on 21/12/2016.

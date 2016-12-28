@@ -24,6 +24,7 @@ import com.artisans.code.movimento1euro.menus.PastCauseDetailsActivity;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.Election;
 import com.artisans.code.movimento1euro.models.PastCause;
+import com.artisans.code.movimento1euro.network.LastCausesTask;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -50,24 +51,16 @@ import static android.content.Context.MODE_PRIVATE;
  * create an instance of this fragment.
  */
 public class ViewLastCausesFragment extends CauseListFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    /*
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    */
+
+
     public final static String requestError = "";
     public final static String connectionError = "";
     public final static String TAG = ViewLastCausesFragment.class.getCanonicalName();
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
     public static final int START_YEAR = 2011;
-    // TODO: Rename and change types of parameters
-    /*
-    private String mParam1;
-    private String mParam2;
-    */
 
 
+    ArrayAdapter<String> spinnerAdapter; // Spinner year list adapter
     HashMap<String, ArrayList<PastCause>> allCausesByYear = new HashMap<>();
     ArrayList<String> yearsList = new ArrayList<String>();
     ArrayList<Cause> shownCauseslist = new ArrayList<>();
@@ -150,10 +143,10 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
         // API request -> with the first year in the list, which should currently be selected
         // Maybe execute all already, to store them
-        new CausesTask(true).execute(yearsList.get(0));
+        new LastCausesTask(this, true).execute(yearsList.get(0));
         //Log.d("past", "Year to be executed: " + yearsList.get(0));
         for(int i = 1; i< yearsList.size(); i++) {
-            new CausesTask(false).execute(yearsList.get(i));
+            new LastCausesTask(this, false).execute(yearsList.get(i));
         }
         return view;
     }
@@ -236,161 +229,13 @@ public class ViewLastCausesFragment extends CauseListFragment {
         startActivity(intent);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    /*public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }*/
-
-    private class CausesTask extends AsyncTask<String, Void, JSONObject> {
-
-        String year;
-        boolean updateAfterRequest = false;
-
-        public CausesTask() {
-            super();
-        }
-
-        public CausesTask(boolean updateAfterRequest) {
-            this.updateAfterRequest = updateAfterRequest;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... parameters) {
-
-            //TODO: check if null
-            year = parameters[0];
-            // Preparation of variables for the request and response handling
-            HttpResponse<String> response = null;
-            JSONObject result = new JSONObject();
-            String token = "";
-
-            try {
-                SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
-                token = userDetails.getString("token", "");
-            }catch(Exception e){
-
-                //To prevent conflicts between async tasks, if user clicks various times on the menu item
-                return result;
-
-            }
-            // API Request
-            try {
-                //// TODO: 21/12/2016 Remove hardcoded fields - use R.string(..)
-                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.winner_causes_path) + "?ano=" + year)
-                        .header("accept", "application/json")
-                        .header("content-type", "application/json")
-                        .header("Authorization", token)
-                        .asString();
-            } catch (UnirestException e) {
-
-            }
-
-            try {
-                if (response == null) {
-                    ConnectivityManager cm =
-                            (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                    boolean isConnected = activeNetwork != null &&
-                            activeNetwork.isConnectedOrConnecting();
-
-                    String connectionError = getResources().getString(R.string.user_connection_error);
-                    String requestError = getResources().getString(R.string.causes_request_error);
-
-                    String error = isConnected ? requestError : connectionError;
-
-                    throw new Exception(error);
-                }
-
-                JSONObject obj = new JSONObject(response.getBody());
-                if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
-                    throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
-
-                // Get Yearly elections array from response
-                JSONArray yearlyElections = obj.getJSONArray("causes");
-                int totalElectionNr = yearlyElections.length();
-
-
-                ArrayList<PastCause> requestedCauses = new ArrayList<PastCause>();
-
-                for (int electionNr = 0; electionNr < totalElectionNr; electionNr++) {
-
-                    // Get each election's winning causes and add them
-                    JSONObject electionObject = yearlyElections.getJSONObject(electionNr);
-                    JSONArray winningCauses = electionObject.getJSONArray("causas");
-                    int totalCausesNr = winningCauses.length();
-
-                    Election election = new Election(electionObject);
-
-                    for (int causeNr = 0; causeNr < totalCausesNr; causeNr++) {
-
-                        JSONObject cause = winningCauses.getJSONObject(causeNr);
-
-                        //HashMap<String, String> tempCause = new HashMap<String, String>();
-                        //add titulo and montante to the cause object
-                        cause.put("titulo", electionObject.getString("titulo"));
-                        cause.put("montante_disponivel", electionObject.getString("montante_disponivel"));
-                        PastCause tempCause = new PastCause(cause);
-                        tempCause.setElection(election);
-
-
-                        requestedCauses.add(tempCause);
-                    }
-                }
-
-                allCausesByYear.put(year, requestedCauses);
-
-            } catch (JSONException e) {
-
-            } catch (Exception e) {
-                //Log.d("past", "Exception Where we put result: " + e.getMessage());
-
-                // Handle error
-                try {
-                    if(updateAfterRequest) {
-
-                        result.put("error", true);
-                        result.put("errorMessage", e.getMessage());
-
-                    }
-                }catch(Exception b){
-
-                }
-            }
-            // int code = response.getCode();
-            // Map<String, String> headers = response.getHeaders();
-            //InputStream rawBody = response.getRawBody();
-
-            return result;
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(JSONObject result) {
-
-            try {
-                if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
-                    String message = result.getString("errorMessage");
-
-                    //only shows toast for the request which was to update screen, in case several requests are made
-                    if (result.getBoolean("error") == true && updateAfterRequest) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                    }
-                }
-            } catch (JSONException e) {
-                // Log.d("causes", e.getMessage());
-            } catch (Exception b) {
-                // Log.d("causes", b.getMessage());
-            }
-
-            if(updateAfterRequest) {
-                spinnerAdapter.notifyDataSetChanged();
-                // Log.d("past", "I am on post execute updating: " + year);
-                updateFromSpinner(year);
-            }
-
-        }
+    public ArrayAdapter<String> getSpinnerAdapter() {
+        return spinnerAdapter;
     }
+
+    public void setSpinnerAdapter(ArrayAdapter<String> spinnerAdapter) {
+        this.spinnerAdapter = spinnerAdapter;
+    }
+
+
 }

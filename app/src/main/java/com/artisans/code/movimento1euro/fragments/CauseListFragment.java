@@ -22,7 +22,6 @@ public abstract class CauseListFragment extends Fragment {
     OnFragmentInteractionListener mListener;
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
-    ArrayAdapter<String> spinnerAdapter; // Spinner year list adapter
     Spinner spinner;
     ListView listView;
     SimpleAdapter listAdapter;
@@ -76,5 +75,45 @@ public abstract class CauseListFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    public OnFragmentInteractionListener getmListener() {
+        return mListener;
+    }
+
+    public void setmListener(OnFragmentInteractionListener mListener) {
+        this.mListener = mListener;
+    }
+
+    public ArrayList<HashMap<String, String>> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<HashMap<String, String>> list) {
+        this.list = list;
+    }
+
+    public Spinner getSpinner() {
+        return spinner;
+    }
+
+    public void setSpinner(Spinner spinner) {
+        this.spinner = spinner;
+    }
+
+    public ListView getListView() {
+        return listView;
+    }
+
+    public void setListView(ListView listView) {
+        this.listView = listView;
+    }
+
+    public SimpleAdapter getListAdapter() {
+        return listAdapter;
+    }
+
+    public void setListAdapter(SimpleAdapter listAdapter) {
+        this.listAdapter = listAdapter;
     }
 }
