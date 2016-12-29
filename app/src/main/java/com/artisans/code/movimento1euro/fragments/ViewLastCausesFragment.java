@@ -143,10 +143,10 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
         // API request -> with the first year in the list, which should currently be selected
         // Maybe execute all already, to store them
-        new LastCausesTask(this, true).execute(yearsList.get(0));
+        new LastCausesTask(this, allCausesByYear, true).execute(yearsList.get(0));
         //Log.d("past", "Year to be executed: " + yearsList.get(0));
         for(int i = 1; i< yearsList.size(); i++) {
-            new LastCausesTask(this, false).execute(yearsList.get(i));
+            new LastCausesTask(this, allCausesByYear, false).execute(yearsList.get(i));
         }
         return view;
     }

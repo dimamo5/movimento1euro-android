@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
@@ -36,16 +37,18 @@ public class LastCausesTask extends ApiRequestTask{
     ViewLastCausesFragment fragment;
     HashMap<String, ArrayList<PastCause>> allCausesByYear;
 
-    public LastCausesTask(ViewLastCausesFragment fragment) {
+    public LastCausesTask(ViewLastCausesFragment fragment, HashMap<String, ArrayList<PastCause>> allCausesByYear) {
         super(fragment.getContext());
         this.fragment = fragment;
         this.setMethod(Request.GET);
+        this.allCausesByYear = allCausesByYear;
     }
 
-    public LastCausesTask(ViewLastCausesFragment fragment, boolean updateAfterRequest) {
+    public LastCausesTask(ViewLastCausesFragment fragment, HashMap<String, ArrayList<PastCause>> allCausesByYear, boolean updateAfterRequest) {
         super(fragment.getContext());
         this.setMethod(Request.GET);
         this.fragment = fragment;
+        this.allCausesByYear = allCausesByYear;
         this.updateAfterRequest = updateAfterRequest;
 
     }
@@ -55,13 +58,51 @@ public class LastCausesTask extends ApiRequestTask{
 
         urlString = context.getString(R.string.api_server_url) + context.getString(R.string.winner_causes_path);
         parametersMap.put("ano",parameters[0]);
-
-        // Preparation of variables for the request and response handling
+        year = parameters[0];
         JSONObject result = new JSONObject();
 
+        // Preparation of variables for the request and response handling
+        HttpResponse<String> response = null;
+        String token = "";
+        try {
+            SharedPreferences userDetails = context.getSharedPreferences("userInfo", MODE_PRIVATE);
+            token = userDetails.getString("token", "");
+        }catch(Exception e){
+            e.printStackTrace();
+            //To prevent conflicts between async tasks, if user clicks various times on the menu item
+            return result;
+
+        }
+        // API Request
+        try {
+            //// TODO: 21/12/2016 Remove hardcoded fields - use R.string(..)
+            response = Unirest.get(context.getString(R.string.api_server_url) + context.getString(R.string.winner_causes_path) + "?ano=" + year)
+                    .header("accept", "application/json")
+                    .header("content-type", "application/json")
+                    .header("Authorization", token)
+                    .asString();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
         try {
 
-            JSONObject obj = executeRequest();
+            if (response == null) {
+                ConnectivityManager cm =
+                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                boolean isConnected = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
+
+                String connectionError = context.getString(R.string.user_connection_error);
+                String requestError = context.getString(R.string.causes_request_error);
+
+                String error = isConnected ? requestError : connectionError;
+
+                throw new Exception(error);
+            }
+
+            JSONObject obj = new JSONObject(response.getBody());;
 
             if (!obj.getString("result").equals(context.getString(R.string.api_success_response)))
                 throw new Exception(context.getString(R.string.user_loading_authetication_error));
@@ -101,9 +142,9 @@ public class LastCausesTask extends ApiRequestTask{
             allCausesByYear.put(year, requestedCauses);
 
         } catch (JSONException e) {
-
+            e.printStackTrace();
         } catch (Exception e) {
-            //Log.d("past", "Exception Where we put result: " + e.getMessage());
+            e.printStackTrace();
 
             // Handle error
             try {
@@ -114,7 +155,7 @@ public class LastCausesTask extends ApiRequestTask{
 
                 }
             }catch(Exception b){
-
+                b.printStackTrace();
             }
         }
         // int code = response.getCode();
@@ -129,21 +170,26 @@ public class LastCausesTask extends ApiRequestTask{
     protected void onPostExecute(JSONObject result) {
 
         try {
-            if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
-                String message = result.getString("errorMessage");
+            if (result != null) {
+                String message = "";
+                if(result.has("errorMessage")){
+                     message = result.getString("errorMessage");
+                }
 
                 //only shows toast for the request which was to update screen, in case several requests are made
-                if (result.getBoolean("error") == true && updateAfterRequest) {
+                if (result.has("error") == true && updateAfterRequest) {
                     Toast.makeText(context, message, Toast.LENGTH_LONG).show();
                 }
             }
         } catch (JSONException e) {
-            // Log.d("causes", e.getMessage());
+            e.printStackTrace();
+
         } catch (Exception b) {
-            // Log.d("causes", b.getMessage());
+            b.printStackTrace();
         }
 
         if(updateAfterRequest) {
+            Log.d(TAG, "Doing update");
             fragment.getSpinnerAdapter().notifyDataSetChanged();
             fragment.updateFromSpinner(year);
         }

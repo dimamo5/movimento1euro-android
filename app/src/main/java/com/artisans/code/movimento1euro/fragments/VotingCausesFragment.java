@@ -165,9 +165,13 @@ public class VotingCausesFragment extends CauseListFragment  {
 
             try {
                 if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
+                    String message = "";
 
-                    String message = result.getString("errorMessage");
-                    if (result.getBoolean("error"))
+                    if(result.has("errorMessage")){
+                        message = result.getString("errorMessage");
+                    }
+
+                    if (result.has("error"))
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
 
 

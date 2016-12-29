@@ -51,7 +51,7 @@ public class LoginTask extends ApiRequestTask {
                 urlString = activity.getResources().getString(R.string.api_server_url) + activity.getResources().getString(R.string.fb_login_path);
                 parametersMap.put("id", parameters[0]);
                 parametersMap.put("token",parameters[1]);
-                this.method = Request.GET;
+                //this.method = Request.GET;
                 break;
             case UNAUTHENTICATED:
                 urlString = activity.getResources().getString(R.string.api_server_url) + activity.getResources().getString(R.string.unauth_login_path);
