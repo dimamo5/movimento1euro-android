@@ -27,7 +27,7 @@ public abstract class CauseListFragment extends Fragment {
     SimpleAdapter listAdapter;
 
 
-    protected int updateAdapterList(ArrayList<Cause> causeList, ArrayList<HashMap<String,String>> hashmapList){
+    public int updateAdapterList(ArrayList<Cause> causeList, ArrayList<HashMap<String,String>> hashmapList){
         hashmapList.clear();
 
         if(causeList != null)

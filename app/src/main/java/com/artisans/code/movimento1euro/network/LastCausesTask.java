@@ -37,18 +37,18 @@ public class LastCausesTask extends ApiRequestTask{
     ViewLastCausesFragment fragment;
     HashMap<String, ArrayList<PastCause>> allCausesByYear;
 
-    public LastCausesTask(ViewLastCausesFragment fragment, HashMap<String, ArrayList<PastCause>> allCausesByYear) {
+    public LastCausesTask(ViewLastCausesFragment fragment) {
         super(fragment.getContext());
         this.fragment = fragment;
         this.setMethod(Request.GET);
-        this.allCausesByYear = allCausesByYear;
+        this.allCausesByYear = fragment.getAllCausesByYear();
     }
 
-    public LastCausesTask(ViewLastCausesFragment fragment, HashMap<String, ArrayList<PastCause>> allCausesByYear, boolean updateAfterRequest) {
+    public LastCausesTask(ViewLastCausesFragment fragment, boolean updateAfterRequest) {
         super(fragment.getContext());
         this.setMethod(Request.GET);
         this.fragment = fragment;
-        this.allCausesByYear = allCausesByYear;
+        this.allCausesByYear = fragment.getAllCausesByYear();
         this.updateAfterRequest = updateAfterRequest;
 
     }
@@ -87,19 +87,7 @@ public class LastCausesTask extends ApiRequestTask{
         try {
 
             if (response == null) {
-                ConnectivityManager cm =
-                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                boolean isConnected = activeNetwork != null &&
-                        activeNetwork.isConnectedOrConnecting();
-
-                String connectionError = context.getString(R.string.user_connection_error);
-                String requestError = context.getString(R.string.causes_request_error);
-
-                String error = isConnected ? requestError : connectionError;
-
-                throw new Exception(error);
+                checkConnectivity();
             }
 
             JSONObject obj = new JSONObject(response.getBody());;

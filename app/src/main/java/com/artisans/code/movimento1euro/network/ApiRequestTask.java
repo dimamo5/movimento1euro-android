@@ -2,6 +2,8 @@ package com.artisans.code.movimento1euro.network;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -42,6 +44,22 @@ public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject>
     protected String urlString;
     protected Map<String, String> parametersMap = new HashMap<>();
     protected Request method = POST;
+
+    protected JSONObject checkConnectivity() throws Exception {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        String connectionError = context.getString(R.string.user_connection_error);
+        String requestError =context.getString(R.string.causes_request_error);
+
+        String error = isConnected ? requestError : connectionError;
+
+        throw new Exception(error);
+    }
 
     public enum Request{
         POST,

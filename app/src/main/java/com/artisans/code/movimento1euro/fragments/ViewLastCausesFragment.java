@@ -143,10 +143,10 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
         // API request -> with the first year in the list, which should currently be selected
         // Maybe execute all already, to store them
-        new LastCausesTask(this, allCausesByYear, true).execute(yearsList.get(0));
+        new LastCausesTask(this, true).execute(yearsList.get(0));
         //Log.d("past", "Year to be executed: " + yearsList.get(0));
         for(int i = 1; i< yearsList.size(); i++) {
-            new LastCausesTask(this, allCausesByYear, false).execute(yearsList.get(i));
+            new LastCausesTask(this, false).execute(yearsList.get(i));
         }
         return view;
     }
@@ -237,5 +237,27 @@ public class ViewLastCausesFragment extends CauseListFragment {
         this.spinnerAdapter = spinnerAdapter;
     }
 
+    public ArrayList<Cause> getShownCauseslist() {
+        return shownCauseslist;
+    }
 
+    public void setShownCauseslist(ArrayList<Cause> shownCauseslist) {
+        this.shownCauseslist = shownCauseslist;
+    }
+
+    public ArrayList<String> getYearsList() {
+        return yearsList;
+    }
+
+    public void setYearsList(ArrayList<String> yearsList) {
+        this.yearsList = yearsList;
+    }
+
+    public HashMap<String, ArrayList<PastCause>> getAllCausesByYear() {
+        return allCausesByYear;
+    }
+
+    public void setAllCausesByYear(HashMap<String, ArrayList<PastCause>> allCausesByYear) {
+        this.allCausesByYear = allCausesByYear;
+    }
 }

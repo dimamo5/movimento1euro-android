@@ -25,6 +25,7 @@ import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
 import com.artisans.code.movimento1euro.models.Election;
 import com.artisans.code.movimento1euro.models.VotingCause;
+import com.artisans.code.movimento1euro.network.VotingCausesTask;
 import com.artisans.code.movimento1euro.network.VotingTask;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -49,9 +50,7 @@ public class VotingCausesFragment extends CauseListFragment  {
     private OnFragmentInteractionListener mListener;
 
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-    protected String idVote; //id da votacao (pode acontecer haver multiplas votacoes no mesmo mes)
     ArrayList<Cause> causesList = new ArrayList<>();
-    CauseListFragment fragment = this;
 
 
     public VotingCausesFragment() {
@@ -70,119 +69,6 @@ public class VotingCausesFragment extends CauseListFragment  {
     }
 
 
-    private class CausesTask extends AsyncTask<String, Void, JSONObject> {
-
-        public CausesTask() {
-            super();
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... parameters) {
-
-            HttpResponse<String> response = null;
-            JSONObject result = new JSONObject();
-            String token = "";
-
-            try {
-                SharedPreferences userDetails = getContext().getSharedPreferences("userInfo", MODE_PRIVATE);
-                token = userDetails.getString("token", "");
-            }catch(Exception e){
-                Log.d("past", e.getMessage());
-            //To prevent conflicts between async tasks, if user clicks various times on the menu item
-            return result;
-
-            }
-
-            try {
-                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.voting_causes_path))
-                        .header("accept", "application/json")
-                        .header("content-type", "application/json")
-                        .header("Authorization", token)
-                        .asString();
-            } catch (UnirestException e) {
-                Log.e("API", "Bad request");
-            }
-
-            try {
-                if (response == null) {
-                    ConnectivityManager cm =
-                            (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                    boolean isConnected = activeNetwork != null &&
-                            activeNetwork.isConnectedOrConnecting();
-
-                    String connectionError = getResources().getString(R.string.user_connection_error);
-                    String requestError = getResources().getString(R.string.causes_request_error);
-
-                    String error = isConnected ? requestError : connectionError;
-
-                    throw new Exception(error);
-                }
-
-                JSONObject obj = new JSONObject(response.getBody());
-                if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
-                    throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
-
-                JSONArray votingCauses = obj.getJSONArray("votacao");
-                Election election = new Election(obj);
-                VotingCause cause;
-                causesList.clear();
-                for (int j = 0; j < votingCauses.length(); j++) {
-                    //TODO discarded useful information?
-                    JSONArray arr = votingCauses.getJSONObject(j).getJSONArray("causas");
-                    for (int i = 0; i < arr.length(); i++) {
-                        cause = new VotingCause(arr.getJSONObject(i));
-                        cause.setElection(election);
-                        causesList.add(cause);
-                    }
-                }
-
-                updateAdapterList(causesList, list);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.e("causes", "JSONException: " + e.getMessage());
-            } catch (Exception e) {
-                e.printStackTrace();
-                try {
-                    result.put("error", true);
-                    result.put("errorMessage", e.getMessage());
-                } catch (Exception b) {
-                    b.printStackTrace();
-                    Log.e("causes", "Exception: " + b.getMessage());
-                }
-            }
-
-            return result;
-        }
-
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(JSONObject result) {
-
-
-            try {
-                if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
-                    String message = "";
-
-                    if(result.has("errorMessage")){
-                        message = result.getString("errorMessage");
-                    }
-
-                    if (result.has("error"))
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-
-
-                }
-            } catch (Exception b) {
-                b.printStackTrace();
-            }
-            notifyChanges();
-        }
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -191,7 +77,7 @@ public class VotingCausesFragment extends CauseListFragment  {
         View view = inflater.inflate(R.layout.fragment_voting_causes, container, false);
 
         initializeListAdapter(view);
-        new CausesTask().execute();
+        new VotingCausesTask(this).execute();
 
 
 
@@ -246,4 +132,21 @@ public class VotingCausesFragment extends CauseListFragment  {
         new VoteDialog(getContext(), (VotingCause) cause).create().show();
     }
 
+    @Override
+    public ArrayList<HashMap<String, String>> getList() {
+        return list;
+    }
+
+    @Override
+    public void setList(ArrayList<HashMap<String, String>> list) {
+        this.list = list;
+    }
+
+    public ArrayList<Cause> getCausesList() {
+        return causesList;
+    }
+
+    public void setCausesList(ArrayList<Cause> causesList) {
+        this.causesList = causesList;
+    }
 }
