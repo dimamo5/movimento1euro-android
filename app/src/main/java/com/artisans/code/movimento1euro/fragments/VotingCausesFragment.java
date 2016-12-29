@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -54,7 +55,6 @@ public class VotingCausesFragment extends CauseListFragment  {
 
 
     public VotingCausesFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -63,10 +63,10 @@ public class VotingCausesFragment extends CauseListFragment  {
     }
 
     public class Constants {
-        public static final String NAME_COLUMN = "Name";
-        public static final String MONEY_COLUMN = "Money";
-        public static final String DESCRIPTION_COLUMN = "Description";
-        public static final String IMAGE_COLUMN = "Image";
+        public static final String NAME_COLUMN = "name";
+        public static final String MONEY_COLUMN = "money";
+        public static final String DESCRIPTION_COLUMN = "description";
+        public static final String IMAGE_COLUMN = "thumbnail";
     }
 
 
@@ -198,7 +198,7 @@ public class VotingCausesFragment extends CauseListFragment  {
     protected void initializeListAdapter(View view) {
         listView = (ListView) view.findViewById(R.id.causes_list);
 
-        listAdapter = new SimpleAdapter(
+        listAdapter = new VotingCausesAdapter(
                 this.getContext(),
                 list,
                 R.layout.item_voting_cause,
@@ -217,6 +217,7 @@ public class VotingCausesFragment extends CauseListFragment  {
         hashMap.put(Constants.NAME_COLUMN, cause.getName());
         hashMap.put(Constants.DESCRIPTION_COLUMN, cause.getDescription());
         hashMap.put(Constants.MONEY_COLUMN, "Valor da causa: " + cause.getMoney() + "€");
+        hashMap.put(Constants.IMAGE_COLUMN,cause.getYoutubeThumbnailLink());
 
 
         return hashMap;

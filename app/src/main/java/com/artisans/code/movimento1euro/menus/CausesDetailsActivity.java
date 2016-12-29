@@ -12,13 +12,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.test.suitebuilder.TestMethod;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,6 +32,7 @@ import android.widget.Toast;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.VoteDialog;
 import com.artisans.code.movimento1euro.models.VotingCause;
+import com.artisans.code.movimento1euro.models.YoutubeUrlResource;
 import com.artisans.code.movimento1euro.network.VotingTask;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.UrlResource;
@@ -131,13 +135,6 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             addDocument(doc);
         }
 
-        try {
-            addDocument(new UrlResource(new URL("http://google.com"), "Googlerino"));
-            addDocument(new UrlResource(new URL("http://google.com"), "Googlerino123"));
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     private void addDocument(final UrlResource doc) {
@@ -177,10 +174,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     private void setupSocialMediaButtons(Cause cause) {
         final ImageButton facebookButton = (ImageButton) findViewById(R.id.facebook_url_button);
         facebookUrl = cause.getAssociation().getFacebook();
-        facebookUrl = "https://www.facebook.com/duarte.pinto.9";
+        //facebookUrl = "https://www.facebook.com/duarte.pinto.9";
 
-        //if (facebookUrl == null || facebookUrl.equals("")){
-        if(false){
+        if (facebookUrl == null || facebookUrl.equals("")){
+//        if(false){
             facebookButton.setVisibility(View.GONE);
         }else {
 
@@ -212,13 +209,15 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         }
 
         // TODO: 20/12/2016 Adicionar suport para o instagram
-        //findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
+        findViewById(R.id.instagram_url_button).setVisibility(View.GONE);
     }
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if (!(b || cause.getAssociation().getYoutube().equals(""))) {
-            youTubePlayer.cueVideo(cause.getAssociation().getYoutube());
+        YoutubeUrlResource resource = cause.getFirstYoutubeResource();
+
+        if (resource != null) {
+            youTubePlayer.cueVideo(resource.getVideoId());
 
         } else { //no video or error
             //release all resources related to youtubePlayer
@@ -284,10 +283,13 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         }
 
     }
-    /*@Override
-    public void onBackPressed() {
-        imgTask.imageView.destroyDrawingCache();
-    }*/
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return true;
+    }
 }
