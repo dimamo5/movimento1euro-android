@@ -343,6 +343,7 @@ public class MainMenu extends AppCompatActivity
                 if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
                     throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
 
+                result.put("active", obj.getBoolean("active"));
                 result.put("daysToWarn", obj.getInt("daysToWarn"));
                 result.put("title", obj.getString("alertTitle"));
                 result.put("msg", obj.getString("alertMsg"));
@@ -375,7 +376,8 @@ public class MainMenu extends AppCompatActivity
                         Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    refreshInfo(result.getInt("daysToWarn"), result.getString("title"), result.getString("msg"));
+                    if (result.getBoolean("active"))
+                        refreshInfo(result.getInt("daysToWarn"), result.getString("title"), result.getString("msg"));
                 }
             } catch (JSONException e) {
                 // Log.d("causes", e.getMessage());
