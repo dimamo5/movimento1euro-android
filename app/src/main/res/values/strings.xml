@@ -25,7 +25,7 @@
     <string name="fb_login_protocol_scheme">fb208375452933152</string>
 
     <!--API-->
-    <string name="api_server_url">http://ldso.diogomoura.me/api</string>
+    <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
     <string name="logout_path">/logout</string>
     <string name="fb_login_path">/loginFB</string>
