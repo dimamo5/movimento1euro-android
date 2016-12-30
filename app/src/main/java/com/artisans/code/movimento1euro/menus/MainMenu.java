@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -262,6 +266,11 @@ public class MainMenu extends AppCompatActivity
         msg = msg.replace("@proxPagamento", Long.toString(diffDays) + " " + (diffDays == 1 ? "dia" : "dias"));
 
         if (diffDays <= delta) {
+
+            Drawable warningIcon = getResources().getDrawable( android.R.drawable.ic_dialog_alert );
+            ColorFilter filter = new LightingColorFilter( Color.YELLOW, Color.BLACK);
+            warningIcon.setColorFilter(filter);
+
             new AlertDialog.Builder(this)
                     .setTitle(title)
                     .setMessage(msg)
@@ -270,7 +279,7 @@ public class MainMenu extends AppCompatActivity
                             // continue with delete
                         }
                     })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setIcon(warningIcon)
                     .show();
         }
 
