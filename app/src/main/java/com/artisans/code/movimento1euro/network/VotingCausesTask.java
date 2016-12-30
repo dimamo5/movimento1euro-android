@@ -39,6 +39,7 @@ public class VotingCausesTask extends ApiRequestTask {
         this.fragment = fragment;
         this.causesList = fragment.getCausesList();
         this.list = fragment.getList();
+        this.method = Request.GET;
     }
 
     @Override
