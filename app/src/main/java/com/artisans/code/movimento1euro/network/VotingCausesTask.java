@@ -48,8 +48,6 @@ public class VotingCausesTask extends ApiRequestTask {
         JSONObject result = new JSONObject();
 
         try {
-
-
             urlString = context.getString(R.string.api_server_url) + context.getString(R.string.voting_causes_path);
 
             JSONObject obj = executeRequest();

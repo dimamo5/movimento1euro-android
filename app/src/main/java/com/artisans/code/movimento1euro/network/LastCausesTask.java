@@ -45,10 +45,7 @@ public class LastCausesTask extends ApiRequestTask{
     }
 
     public LastCausesTask(ViewLastCausesFragment fragment, boolean updateAfterRequest) {
-        super(fragment.getContext());
-        this.setMethod(Request.GET);
-        this.fragment = fragment;
-        this.allCausesByYear = fragment.getAllCausesByYear();
+        this(fragment);
         this.updateAfterRequest = updateAfterRequest;
 
     }
@@ -61,37 +58,13 @@ public class LastCausesTask extends ApiRequestTask{
         year = parameters[0];
         JSONObject result = new JSONObject();
 
-        // Preparation of variables for the request and response handling
-        HttpResponse<String> response = null;
-        String token = "";
-        try {
-            SharedPreferences userDetails = context.getSharedPreferences("userInfo", MODE_PRIVATE);
-            token = userDetails.getString("token", "");
-        }catch(Exception e){
-            e.printStackTrace();
-            //To prevent conflicts between async tasks, if user clicks various times on the menu item
-            return result;
-
-        }
-        // API Request
-        try {
-            //// TODO: 21/12/2016 Remove hardcoded fields - use R.string(..)
-            response = Unirest.get(context.getString(R.string.api_server_url) + context.getString(R.string.winner_causes_path) + "?ano=" + year)
-                    .header("accept", "application/json")
-                    .header("content-type", "application/json")
-                    .header("Authorization", token)
-                    .asString();
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
         try {
 
-            if (response == null) {
+
+            JSONObject obj = executeRequest();
+            if(obj == null){
                 checkConnectivity();
             }
-
-            JSONObject obj = new JSONObject(response.getBody());;
-
             if (!obj.getString("result").equals(context.getString(R.string.api_success_response)))
                 throw new Exception(context.getString(R.string.user_loading_authetication_error));
 
