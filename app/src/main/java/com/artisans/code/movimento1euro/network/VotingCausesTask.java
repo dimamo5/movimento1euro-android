@@ -45,28 +45,11 @@ public class VotingCausesTask extends ApiRequestTask {
     @Override
     protected JSONObject doInBackground(String... parameters) {
 
-        HttpResponse<String> response = null;
         JSONObject result = new JSONObject();
-        String token = "";
-
-        /*token = ApiManager.getInstance().getAppToken(context);
 
         try {
-            response = Unirest.get(context.getString(R.string.api_server_url) + context.getString(R.string.voting_causes_path))
-                    .header("accept", "application/json")
-                    .header("content-type", "application/json")
-                    .header("Authorization", token)
-                    .asString();
-        } catch (UnirestException e) {
-            Log.e("API", "Bad request");
-        }*/
 
-        try {
-            /*if (response == null) {
-                checkConnectivity();
-            }*/
 
-//            JSONObject obj = new JSONObject(response.getBody());
             urlString = context.getString(R.string.api_server_url) + context.getString(R.string.voting_causes_path);
 
             JSONObject obj = executeRequest();
