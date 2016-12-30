@@ -25,7 +25,7 @@
     <string name="fb_login_protocol_scheme">fb208375452933152</string>
 
     <!--API-->
-    <string name="api_server_url">http://ldso.diogomoura.me/api</string>
+    <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
     <string name="logout_path">/logout</string>
     <string name="fb_login_path">/loginFB</string>
@@ -33,6 +33,7 @@
     <string name="voting_causes_path">/votingCauses</string>
     <string name="upd_firebase_token_path">/firebaseToken</string>
     <string name="vote_in_cause_path">/voteCause</string>
+    <string name="days_to_warn_path">/daysToWarn</string>
 
     <!--API responses-->
     <string name="api_success_response">success</string>
@@ -42,6 +43,7 @@
     <!--User errors-->
     <string name="user_connection_error">Não foi possível carregar a lista de causas. Verifique a sua conexão.</string>
     <string name="causes_request_error">Ocorreu um erro ao carregar as causas. Tente de novo. Se o problema persistir, por favor reporte o problema ao Movimento1Euro.</string>
+    <string name="days_to_warn_request_error">Ocorreu um erro ao efetuar a conexão. Tente de novo. Se o problema persistir, por favor reporte o problema ao Movimento1Euro.</string>
     <string name="user_loading_authetication_error">Não foi possível carregar a lista de causas. Verifique a sua autenticação.</string>
     <string name="user_vote_error">Erro ao registar voto. Verifique se já votou este mês.</string>
 
