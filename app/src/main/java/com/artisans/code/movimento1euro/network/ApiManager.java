@@ -1,6 +1,7 @@
 package com.artisans.code.movimento1euro.network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.artisans.code.movimento1euro.R;
@@ -10,6 +11,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.util.Date;
+
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -17,6 +21,9 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class ApiManager {
     public final static String TAG = ApiManager.class.getSimpleName();
+
+    public final static String UNAUTHENTICATED_FLAG = "UNAUTHENTICATED_USER";
+    public final static long UNAUTHENTICATED_ID = Integer.MAX_VALUE;
 
     private static ApiManager ourInstance = new ApiManager();
 
@@ -53,5 +60,27 @@ public class ApiManager {
         }
     }
 
+    public boolean setAsUnauthenticated(Context context) {
+        String token = UNAUTHENTICATED_FLAG;
+        long id = UNAUTHENTICATED_ID;
+        String name = UNAUTHENTICATED_FLAG;
+        try {
+            Date expDate = new Date(Long.MAX_VALUE);
+            saveLoginInfo(context,token,id, name,expDate);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    public void saveLoginInfo(Context context, String token, long id, String name, Date expDate) {
+        SharedPreferences loginInfo = context.getSharedPreferences("userInfo",MODE_PRIVATE);
+        SharedPreferences.Editor editor = loginInfo.edit();
+        editor.putString("token", token);
+        editor.putLong("id", id);
+        editor.putString("username", name);
+        editor.putString("expDate",expDate.toString());
+        editor.commit();
+    }
 }

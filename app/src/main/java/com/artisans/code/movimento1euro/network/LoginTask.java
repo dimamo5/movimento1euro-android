@@ -3,6 +3,7 @@ package com.artisans.code.movimento1euro.network;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
@@ -25,8 +26,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class LoginTask extends ApiRequestTask {
     public enum LoginType {
         STANDARD,
-        FACEBOOK,
-        UNAUTHENTICATED
+        FACEBOOK
     }
 
     LoginType type;
@@ -52,9 +52,6 @@ public class LoginTask extends ApiRequestTask {
                 parametersMap.put("id", parameters[0]);
                 parametersMap.put("token",parameters[1]);
                 //this.method = Request.GET;
-                break;
-            case UNAUTHENTICATED:
-                urlString = activity.getResources().getString(R.string.api_server_url) + activity.getResources().getString(R.string.unauth_login_path);
                 break;
             default:
                 try {
@@ -93,11 +90,10 @@ public class LoginTask extends ApiRequestTask {
             long id = result.getLong("id");
             String name = result.getString("name");
             String expirationDateStr = result.getString("expDate");
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+            SimpleDateFormat simpleDateFormat = getSimpleDateFormat();
             Date expDate = simpleDateFormat.parse(expirationDateStr);
 
-            saveLoginInfo(token, id, name, expDate);
+            ApiManager.getInstance().saveLoginInfo(context, token, id, name, expDate);
             ApiManager.getInstance().updateFirebaseToken(activity.getApplicationContext());
             Intent intent = new Intent(activity, MainMenu.class);
             activity.startActivity(intent);
@@ -114,13 +110,12 @@ public class LoginTask extends ApiRequestTask {
         }
     }
 
-    private void saveLoginInfo(String token, long id, String name, Date expDate) {
-        SharedPreferences loginInfo = activity.getSharedPreferences("userInfo",MODE_PRIVATE);
-        SharedPreferences.Editor editor = loginInfo.edit();
-        editor.putString("token", token);
-        editor.putLong("id", id);
-        editor.putString("username", name);
-        editor.putString("expDate",expDate.toString());
-        editor.commit();
+    @NonNull
+    public static SimpleDateFormat getSimpleDateFormat() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return simpleDateFormat;
     }
+
+
 }

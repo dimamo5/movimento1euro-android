@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.network.ApiManager;
 import com.artisans.code.movimento1euro.network.LoginTask;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -129,15 +130,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void unauthenticatedLogin(View view){
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            new LoginTask(activity, LoginTask.LoginType.UNAUTHENTICATED).execute();
-        } else {
-            Toast toast = Toast.makeText(this,activity.getString(R.string.failed_connection), Toast.LENGTH_SHORT);
+        if(!ApiManager.getInstance().setAsUnauthenticated(this)){
+            Toast toast = Toast.makeText(this,activity.getString(R.string.failed_login), Toast.LENGTH_SHORT);
             toast.show();
+        }else{
+            Intent intent = new Intent(activity, MainMenu.class);
+            activity.startActivity(intent);
+            activity.finish();
         }
+
     }
 
 
