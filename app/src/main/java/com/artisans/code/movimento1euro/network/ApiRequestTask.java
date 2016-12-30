@@ -123,6 +123,8 @@ public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject>
 
             if(ApiManager.getInstance().isAuthenticated(context)){
                request.header("Authorization", token);
+            }else{
+                request.header("Authorization", token); // TODO: 30/12/2016 Remover esta linha quando o servidor suportar não recever header Authorization
             }
             response = request.asString();
             retObj = new JSONObject(response.getBody());

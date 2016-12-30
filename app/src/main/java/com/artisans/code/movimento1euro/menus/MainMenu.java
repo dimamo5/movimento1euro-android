@@ -80,6 +80,7 @@ public class MainMenu extends AppCompatActivity
 
         if(!ApiManager.getInstance().isAuthenticated(getApplicationContext())){
             initUnAuthenticatedMode(navigationView);
+            hView.findViewById(R.id.nav_user_info_layout).setVisibility(View.GONE);
         }
     }
 

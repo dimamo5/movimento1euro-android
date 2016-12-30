@@ -44,7 +44,8 @@ public class ApiManager {
     }
 
     public boolean isAuthenticated(Context context){
-        if(getAppToken(context)==null){
+        String token = getAppToken(context);
+        if(token==null || token.equals(UNAUTHENTICATED_FLAG)){
             return false;
         }else{
             return true;

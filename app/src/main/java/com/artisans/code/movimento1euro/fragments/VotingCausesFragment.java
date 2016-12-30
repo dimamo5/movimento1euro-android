@@ -25,6 +25,7 @@ import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
 import com.artisans.code.movimento1euro.models.Election;
 import com.artisans.code.movimento1euro.models.VotingCause;
+import com.artisans.code.movimento1euro.network.ApiManager;
 import com.artisans.code.movimento1euro.network.VotingCausesTask;
 import com.artisans.code.movimento1euro.network.VotingTask;
 import com.mashape.unirest.http.HttpResponse;
@@ -129,7 +130,12 @@ public class VotingCausesFragment extends CauseListFragment  {
         int index = listView.getPositionForView(view);
         Cause cause = causesList.get(index);
 
-        new VoteDialog(getContext(), (VotingCause) cause).create().show();
+        if(!ApiManager.getInstance().isAuthenticated(getContext())){
+            Toast.makeText(getContext(), getContext().getString(R.string.unauthenticated_voting_error), Toast.LENGTH_LONG).show();
+            return;
+        }else{
+            new VoteDialog(getContext(), (VotingCause) cause).create().show();
+        }
     }
 
     @Override

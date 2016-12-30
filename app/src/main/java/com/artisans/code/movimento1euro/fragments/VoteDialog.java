@@ -3,6 +3,7 @@ package com.artisans.code.movimento1euro.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.models.VotingCause;
