@@ -48,7 +48,7 @@ public class VotingCausesTask extends ApiRequestTask {
         JSONObject result = new JSONObject();
         String token = "";
 
-        token = ApiManager.getInstance().getAppToken(context);
+        /*token = ApiManager.getInstance().getAppToken(context);
 
         try {
             response = Unirest.get(context.getString(R.string.api_server_url) + context.getString(R.string.voting_causes_path))
@@ -58,14 +58,20 @@ public class VotingCausesTask extends ApiRequestTask {
                     .asString();
         } catch (UnirestException e) {
             Log.e("API", "Bad request");
-        }
+        }*/
 
         try {
-            if (response == null) {
+            /*if (response == null) {
+                checkConnectivity();
+            }*/
+
+//            JSONObject obj = new JSONObject(response.getBody());
+            urlString = context.getString(R.string.api_server_url) + context.getString(R.string.voting_causes_path);
+
+            JSONObject obj = executeRequest();
+            if(obj == null){
                 checkConnectivity();
             }
-
-            JSONObject obj = new JSONObject(response.getBody());
 
             if (!obj.getString("result").equals(context.getString(R.string.api_success_response)))
                 throw new Exception(context.getString(R.string.user_loading_authetication_error));

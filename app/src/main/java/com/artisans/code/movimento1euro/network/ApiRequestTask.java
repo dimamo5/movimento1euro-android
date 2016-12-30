@@ -13,6 +13,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.BaseRequest;
+import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.mashape.unirest.request.body.MultipartBody;
 
@@ -27,9 +28,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
+import static com.artisans.code.movimento1euro.network.ApiRequestTask.Request.GET;
 import static com.artisans.code.movimento1euro.network.ApiRequestTask.Request.POST;
 import static com.mashape.unirest.http.Unirest.post;
 
@@ -75,6 +79,11 @@ public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject>
     protected JSONObject executeRequest() {
         JSONObject result;
         String token;
+
+        if(this.method.equals(GET)){
+            return executeGetRequest();
+        }
+
         try {
             token = ApiManager.getInstance().getAppToken(context);
             URL url = new URL(urlString);
@@ -97,6 +106,51 @@ public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject>
             e.printStackTrace();
         }
         return null;
+    }
+
+    private JSONObject executeGetRequest() {
+        JSONObject retObj;
+        HttpRequest request;
+        HttpResponse<String> response;
+        String token = ApiManager.getInstance().getAppToken(context);
+        String url = urlString;
+        url = addParametersToGetUrl(url);
+
+        try {
+            request = Unirest.get(url)
+                    .header("accept", "application/json")
+                    .header("content-type", "application/json");
+
+            if(ApiManager.getInstance().isAuthenticated(context)){
+               request.header("Authorization", token);
+            }
+            response = request.asString();
+            retObj = new JSONObject(response.getBody());
+            return retObj;
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String addParametersToGetUrl(String url){
+        Set<String> keys = parametersMap.keySet();
+        String value;
+        int i = 0;
+        for (String key:
+             keys) {
+            value = parametersMap.get(key);
+            if(i== 0){
+                url += "?";
+            }else {
+                url += "&";
+            }
+            url += key + "="+value;
+            i++;
+        }
+        return url;
     }
 
     public Request getMethod() {
