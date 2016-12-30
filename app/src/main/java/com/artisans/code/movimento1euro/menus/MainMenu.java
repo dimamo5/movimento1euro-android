@@ -259,9 +259,9 @@ public class MainMenu extends AppCompatActivity
 
         long diffDays = TimeUnit.DAYS.convert(expDate.getTime() - currentDate.getTime(), TimeUnit.MILLISECONDS);
 
-        msg.replace("@proxPagamento", Long.toString(diffDays) + " " + (diffDays == 1 ? "dia" : "dias"));
+        msg = msg.replace("@proxPagamento", Long.toString(diffDays) + " " + (diffDays == 1 ? "dia" : "dias"));
 
-        if (diffDays > delta) {
+        if (diffDays <= delta) {
             new AlertDialog.Builder(this)
                     .setTitle(title)
                     .setMessage(msg)
@@ -306,10 +306,7 @@ public class MainMenu extends AppCompatActivity
                 SharedPreferences userDetails = getSharedPreferences("userInfo", MODE_PRIVATE);
                 token = userDetails.getString("token", "");
             }catch(Exception e){
-
-                //To prevent conflicts between async tasks, if user clicks various times on the menu item
-                return result;
-
+                return null;
             }
             // API Request
             try {
@@ -319,7 +316,7 @@ public class MainMenu extends AppCompatActivity
                         .header("Authorization", token)
                         .asString();
             } catch (UnirestException e) {
-
+                return null;
             }
 
             try {
@@ -349,15 +346,11 @@ public class MainMenu extends AppCompatActivity
                 result.put("msg", obj.getString("alertMsg"));
 
             } catch (JSONException e) {
-
+                return null;
             } catch (Exception e) {
                 // Handle error
-                try {
-                    result.put("error", true);
-                    result.put("errorMessage", e.getMessage());
-                }catch(Exception b){
-
-                }
+                Toast.makeText(activity, e.getMessage(), Toast.LENGTH_LONG).show();
+                return null;
             }
 
             return result;
@@ -368,17 +361,8 @@ public class MainMenu extends AppCompatActivity
         protected void onPostExecute(JSONObject result) {
 
             try {
-                if (result != null) {  // RESULT != NULL MEANS THERE WAS AN ERROR
-                    String message = result.getString("errorMessage");
-
-                    //only shows toast for the request which was to update screen, in case several requests are made
-                    if (result.getBoolean("error")) {
-                        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    if (result.getBoolean("active"))
-                        refreshInfo(result.getInt("daysToWarn"), result.getString("title"), result.getString("msg"));
-                }
+                if (result != null && result.getBoolean("active"))
+                    refreshInfo(result.getInt("daysToWarn"), result.getString("title"), result.getString("msg"));
             } catch (JSONException e) {
                 // Log.d("causes", e.getMessage());
             }
