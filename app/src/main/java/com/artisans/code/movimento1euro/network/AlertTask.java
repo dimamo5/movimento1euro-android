@@ -18,6 +18,7 @@ public class AlertTask extends ApiRequestTask{
 
     public AlertTask(MainMenu activity) {
         super(activity);
+        setMethod(Request.GET);
         this.activity = activity;
     }
 
@@ -28,7 +29,7 @@ public class AlertTask extends ApiRequestTask{
         HttpResponse<String> response = null;
         JSONObject result = new JSONObject();
 
-
+        urlString = context.getString(R.string.api_server_url)+context.getString(R.string.days_to_warn_path);
 
         try {
 

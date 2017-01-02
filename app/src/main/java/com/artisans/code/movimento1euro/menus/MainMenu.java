@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.view.menu.MenuView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -256,8 +257,10 @@ public class MainMenu extends AppCompatActivity
         String username = preferences.getString("username", "");
 
         Date expDate = new Date(preferences.getString("expDate",""));
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String expDateStr = sdf.format(expDate);
+
+        Log.d(TAG, expDateStr);
 
         this.username.setText(username);
         this.expDate.setText(expDateStr);
