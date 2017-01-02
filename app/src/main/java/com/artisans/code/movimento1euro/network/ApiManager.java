@@ -2,9 +2,11 @@ package com.artisans.code.movimento1euro.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.SharedPreferencesNames;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -12,7 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -54,7 +58,7 @@ public class ApiManager {
 
     public String getAppToken(Context context){
         try {
-            return context.getApplicationContext().getSharedPreferences("userInfo",0).getString("token", "");
+            return context.getSharedPreferences(SharedPreferencesNames.USER_INFO,MODE_PRIVATE).getString("token", "");
         }
         catch(Exception e){
             return null;
@@ -76,12 +80,49 @@ public class ApiManager {
     }
 
     public void saveLoginInfo(Context context, String token, long id, String name, Date expDate) {
-        SharedPreferences loginInfo = context.getSharedPreferences("userInfo",MODE_PRIVATE);
+        SharedPreferences loginInfo = context.getSharedPreferences(SharedPreferencesNames.USER_INFO,MODE_PRIVATE);
         SharedPreferences.Editor editor = loginInfo.edit();
         editor.putString("token", token);
         editor.putLong("id", id);
         editor.putString("username", name);
         editor.putString("expDate",expDate.toString());
         editor.commit();
+    }
+
+    public void updateExpirationAlertInfo(Context context, boolean expirationAlertActive, int daysToWarn, String title, String errorMessage){
+        SharedPreferences settings = context.getSharedPreferences(SharedPreferencesNames.SETTINGS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("expirationAlertActive", expirationAlertActive);
+        editor.putInt("daysToWarn", daysToWarn);
+        editor.putString("expirationAlertTitle",title);
+        editor.putString("expirationAlertMessage", errorMessage);
+        editor.commit();
+    }
+
+    public int getDaysToWarn(Context context){
+        return context.getSharedPreferences(SharedPreferencesNames.SETTINGS,MODE_PRIVATE).getInt("daysToWarn", 0);
+    }
+
+    public String getExpirationAlertTitle(Context context){
+        return context.getSharedPreferences(SharedPreferencesNames.SETTINGS,MODE_PRIVATE).getString("expirationAlertTitle", "");
+    }
+
+    public String getExpirationAlertMessage(Context context){
+        return context.getSharedPreferences(SharedPreferencesNames.SETTINGS,MODE_PRIVATE).getString("expirationAlertMessage", "");
+    }
+
+    public boolean isExpirationAlertActive(Context context){
+        return context.getSharedPreferences(SharedPreferencesNames.SETTINGS,MODE_PRIVATE).getBoolean("expirationAlertActive", false);
+    }
+
+    public Date getExpirationDate(Context context){
+        return new Date(context.getSharedPreferences(SharedPreferencesNames.USER_INFO,0).getString("expDate", ""));
+    }
+
+    @NonNull
+    public SimpleDateFormat getExpirationSimpleDateFormat() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return simpleDateFormat;
     }
 }

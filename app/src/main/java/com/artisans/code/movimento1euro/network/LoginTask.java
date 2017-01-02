@@ -2,8 +2,6 @@ package com.artisans.code.movimento1euro.network;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
@@ -16,9 +14,6 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Duart on 28/12/2016.
@@ -90,7 +85,7 @@ public class LoginTask extends ApiRequestTask {
             long id = result.getLong("id");
             String name = result.getString("name");
             String expirationDateStr = result.getString("expDate");
-            SimpleDateFormat simpleDateFormat = getSimpleDateFormat();
+            SimpleDateFormat simpleDateFormat = ApiManager.getInstance().getExpirationSimpleDateFormat();
             Date expDate = simpleDateFormat.parse(expirationDateStr);
 
             ApiManager.getInstance().saveLoginInfo(context, token, id, name, expDate);
@@ -108,13 +103,6 @@ public class LoginTask extends ApiRequestTask {
             LoginManager.getInstance().logOut();
             e.printStackTrace();
         }
-    }
-
-    @NonNull
-    public static SimpleDateFormat getSimpleDateFormat() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return simpleDateFormat;
     }
 
 
