@@ -113,6 +113,9 @@ public class MainMenu extends AppCompatActivity
                 new SeenNotificationTask(this).execute(notificationId);
             }
         }
+        else{
+            Log.d(TAG,"cenas");
+        }
     }
 
     private void initUnAuthenticatedMode(NavigationView navigationView) {

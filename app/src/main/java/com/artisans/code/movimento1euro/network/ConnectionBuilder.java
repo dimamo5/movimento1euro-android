@@ -36,7 +36,7 @@ public class ConnectionBuilder {
 
 
         request.connect();
-        /*Log.d(TAG,"parametersStr: " + parametersStr);
+        Log.d(TAG,"parametersStr: " + parametersStr);/*
         Log.d(TAG, "Authorization token: " + token);*/
         OutputStreamWriter out = new OutputStreamWriter(request.getOutputStream());
 

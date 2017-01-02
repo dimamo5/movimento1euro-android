@@ -24,7 +24,7 @@ public class SeenNotificationTask extends ApiRequestTask {
         JSONObject result;
 
         urlString = context.getString(R.string.api_server_url)+context.getString(R.string.seen_notification_path);
-        parametersMap.put("notificationID", params[0]);
+        parametersMap.put("notificationId", params[0]);
 
         result = executeRequest();
         return result;
