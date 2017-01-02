@@ -36,6 +36,7 @@ import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
 import com.artisans.code.movimento1euro.network.AlertTask;
 import com.artisans.code.movimento1euro.network.ApiManager;
 import com.artisans.code.movimento1euro.network.LoginTask;
+import com.artisans.code.movimento1euro.network.SeenNotificationTask;
 import com.facebook.login.LoginManager;
 
 import java.text.SimpleDateFormat;
@@ -99,6 +100,18 @@ public class MainMenu extends AppCompatActivity
         if(!ApiManager.getInstance().isAuthenticated(getApplicationContext())){
             initUnAuthenticatedMode(navigationView);
             hView.findViewById(R.id.nav_user_info_layout).setVisibility(View.GONE);
+        }
+
+        //checks if activity is started from notification
+        if (getIntent().getExtras() != null) {
+            Bundle b = getIntent().getExtras();
+            boolean cameFromNotification = b.getBoolean("fromNotification");
+
+            //api task to update message status on db
+            if(cameFromNotification){
+                String notificationId = b.getString("notificationID");
+                new SeenNotificationTask(this).execute(notificationId);
+            }
         }
     }
 

@@ -48,6 +48,7 @@
     <string name="upd_firebase_token_path">/firebaseToken</string>
     <string name="vote_in_cause_path">/voteCause</string>
     <string name="days_to_warn_path">/daysToWarn</string>
+    <string name="seen_notification_path">/notificationSeen</string>
 
     <!--API responses-->
     <string name="api_success_response">success</string>

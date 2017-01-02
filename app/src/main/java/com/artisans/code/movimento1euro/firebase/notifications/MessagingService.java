@@ -33,15 +33,19 @@ public class MessagingService extends FirebaseMessagingService {
         if(remoteMessage.getNotification() != null){
             Log.d(TAG, "Message body: " + remoteMessage.getNotification().getBody());
 
-            sendNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
+            Log.d(TAG, "ID: " + remoteMessage.getMessageId());
+
+            sendNotification(remoteMessage.getMessageId(), remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
         }
 
     }
 
-    private void sendNotification(String title,String body) {
+    private void sendNotification(String id, String title, String body) {
 
         Intent intent = new Intent(this, MainMenu.class); // AINDA NÃO TENHO A CERTEZA SE COLOCO MainMenu.class ou SplashScreen.class
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("fromNotification", true);  //this values are checked out on MainMenu.class
+        intent.putExtra("notificationID", id); 
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
@@ -58,6 +62,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0,notificationBuilder.build());
+
     }
 
 }
