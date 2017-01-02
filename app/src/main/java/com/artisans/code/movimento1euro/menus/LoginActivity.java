@@ -47,8 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.layout_login_screen).requestFocus();
 
         // TODO: 13-11-2016 Remover isto antes de entregar
-        inputEmail.setText("diogo@cenas.pt");
-        inputPassword.setText("123");
+/*        inputEmail.setText("diogo@cenas.pt");
+        inputPassword.setText("123");*/
 
         Button signUpBtn = (Button) findViewById(R.id.btn_sign_up);
         signUpBtn.setOnClickListener(new View.OnClickListener() {
