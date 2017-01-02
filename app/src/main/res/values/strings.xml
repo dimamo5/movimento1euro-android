@@ -14,11 +14,23 @@
     <string name="activity_cause">Causa</string>
     <string name="action_about">Sobre</string>
 
-    <!--MENSAGENS DE ERRO-->
+    <string name="nav_logout">Terminar Sessão</string>
+    <string name="nav_logout_unauth">Iniciar Sessão</string>
+    <string name="nav_contacts">Contactos</string>
+    <string name="nav_news">Noticias</string>
+    <string name="nav_about_us">Sobre nós</string>
+    <string name="nav_prev_winners">Vencedores Passados</string>
+    <string name="nav_causes">Causas</string>
+
+
+
     <!--LOGIN-->
+        <!--ERROR MESSAGES-->
     <string name="failed_connection">Ligação Falhou</string>
     <string name="failed_login">Falha a iniciar sessão</string>
     <string name="wrong_parameters">Pârametros Errados</string>
+        <!--LAYOUT-->
+    <string name="unauthenticated_user_button">Entrar como visitante</string>
 
     <!--FACEBOOK API-->
     <string name="facebook_app_id">208375452933152</string>
@@ -29,6 +41,8 @@
     <string name="std_login_path">/login</string>
     <string name="logout_path">/logout</string>
     <string name="fb_login_path">/loginFB</string>
+    <!--TODO REVER PATH UNAUTH LOGIN-->
+    <string name="unauth_login_path">/unauth_login</string>
     <string name="winner_causes_path">/winnerCauses</string>
     <string name="voting_causes_path">/votingCauses</string>
     <string name="upd_firebase_token_path">/firebaseToken</string>
@@ -44,7 +58,8 @@
     <string name="user_connection_error">Não foi possível carregar a lista de causas. Verifique a sua conexão.</string>
     <string name="causes_request_error">Ocorreu um erro ao carregar as causas. Tente de novo. Se o problema persistir, por favor reporte o problema ao Movimento1Euro.</string>
     <string name="days_to_warn_request_error">Ocorreu um erro ao efetuar a conexão. Tente de novo. Se o problema persistir, por favor reporte o problema ao Movimento1Euro.</string>
-    <string name="user_loading_authetication_error">Não foi possível carregar a lista de causas. Verifique a sua autenticação.</string>
+    <string name="user_loading_authetication_error">Não foi possível carregar a lista de causas. Verifique se está autenticado</string>
+    <string name="unauthenticated_voting_error">Não pode votar se não estiver autenticado. Por favor inicie sessão</string>
     <string name="user_vote_error">Erro ao registar voto. Verifique se já votou este mês.</string>
 
     <!--WEBSITE URLS-->

@@ -15,6 +15,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.view.menu.MenuItemImpl;
+import android.support.v7.view.menu.MenuView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,6 +33,9 @@ import android.widget.Toast;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.CauseListFragment;
 import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
+import com.artisans.code.movimento1euro.network.AlertTask;
+import com.artisans.code.movimento1euro.network.ApiManager;
+import com.artisans.code.movimento1euro.network.LoginTask;
 import com.facebook.login.LoginManager;
 
 import java.text.SimpleDateFormat;
@@ -89,6 +95,17 @@ public class MainMenu extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         username = (TextView)hView.findViewById(R.id.nav_username);
         expDate = (TextView) hView.findViewById(R.id.nav_expiration_date);
+
+        if(!ApiManager.getInstance().isAuthenticated(getApplicationContext())){
+            initUnAuthenticatedMode(navigationView);
+            hView.findViewById(R.id.nav_user_info_layout).setVisibility(View.GONE);
+        }
+    }
+
+    private void initUnAuthenticatedMode(NavigationView navigationView) {
+
+        MenuItemImpl item = (MenuItemImpl) navigationView.getMenu().findItem(R.id.nav_logout);
+        item.setTitle(getResources().getString(R.string.nav_logout_unauth));
     }
 
     public void cardClickLastCauses(View view) {
@@ -229,61 +246,73 @@ public class MainMenu extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
+        refreshAlertStatus();
         fillUserDetails();
     }
 
     private void fillUserDetails() {
-
-        // if necessary, it displays to the user a dialog warning about the proximity of the due date
-        new AlertTask(this).execute();
 
         // fill user info (name and expiration date)
         SharedPreferences preferences = getSharedPreferences("userInfo",MODE_PRIVATE);
         String username = preferences.getString("username", "");
 
         Date expDate = new Date(preferences.getString("expDate",""));
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String expDateStr = sdf.format(expDate);
+
+        Log.d(TAG, expDateStr);
 
         this.username.setText(username);
         this.expDate.setText(expDateStr);
     }
 
-    private void refreshInfo(int delta, String title, String msg) {
+    /**
+     * Renova a informação do alerta e após renovar a informção chama a função showExpirationDateAlert()
+     */
+    private void refreshAlertStatus() {
+        new AlertTask(this).execute();
+    }
 
-        //refreshInfoRequest();
+    public void showExpirationDateAlert() {
+        try{
+            if(!ApiManager.getInstance().isExpirationAlertActive(this)){
+                return;
+            }
 
-        SharedPreferences preferences = getSharedPreferences("userInfo",MODE_PRIVATE);
+            int delta = ApiManager.getInstance().getDaysToWarn(this);
+            String title = ApiManager.getInstance().getExpirationAlertTitle(this);
+            String msg = ApiManager.getInstance().getExpirationAlertMessage(this);
+            Date expDate = ApiManager.getInstance().getExpirationDate(this);
+            SimpleDateFormat sdf = ApiManager.getInstance().getExpirationSimpleDateFormat();
+            String expDateStr = sdf.format(expDate);
 
-        Date expDate = new Date(preferences.getString("expDate",""));
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
-        String expDateStr = sdf.format(expDate);
+            Date currentDate = new Date(System.currentTimeMillis());
 
-        Date currentDate = new Date(System.currentTimeMillis());
+            long diffDays = TimeUnit.DAYS.convert(expDate.getTime() - currentDate.getTime(), TimeUnit.MILLISECONDS);
 
-        long diffDays = TimeUnit.DAYS.convert(expDate.getTime() - currentDate.getTime(), TimeUnit.MILLISECONDS);
+            msg = msg.replace("@proxPagamento", Long.toString(diffDays) + " " + (diffDays == 1 ? "dia" : "dias"));
 
-        msg = msg.replace("@proxPagamento", Long.toString(diffDays) + " " + (diffDays == 1 ? "dia" : "dias"));
+            if (diffDays <= delta) {
 
-        if (diffDays <= delta) {
+                Drawable warningIcon = getResources().getDrawable( android.R.drawable.ic_dialog_alert );
+                ColorFilter filter = new LightingColorFilter( Color.YELLOW, Color.BLACK);
+                warningIcon.setColorFilter(filter);
 
-            Drawable warningIcon = getResources().getDrawable( android.R.drawable.ic_dialog_alert );
-            ColorFilter filter = new LightingColorFilter( Color.YELLOW, Color.BLACK);
-            warningIcon.setColorFilter(filter);
-
-            new AlertDialog.Builder(this)
-                    .setTitle(title)
-                    .setMessage(msg)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
-                        }
-                    })
-                    .setIcon(warningIcon)
-                    .show();
+                new AlertDialog.Builder(this)
+                        .setTitle(title)
+                        .setMessage(msg)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                            }
+                        })
+                        .setIcon(warningIcon)
+                        .show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        this.expDate.setText(expDateStr);
     }
 
     @Override
@@ -291,90 +320,5 @@ public class MainMenu extends AppCompatActivity
         
     }
 
-    private class AlertTask extends AsyncTask<String, Void, JSONObject> {
 
-        AppCompatActivity activity;
-
-        public AlertTask() {
-            super();
-        }
-
-        public AlertTask(AppCompatActivity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... parameters) {
-
-            // Preparation of variables for the request and response handling
-            HttpResponse<String> response = null;
-            JSONObject result = new JSONObject();
-            String token = "";
-
-            try {
-                SharedPreferences userDetails = getSharedPreferences("userInfo", MODE_PRIVATE);
-                token = userDetails.getString("token", "");
-            }catch(Exception e){
-                return null;
-            }
-            // API Request
-            try {
-                response = Unirest.get(getResources().getString(R.string.api_server_url) + getResources().getString(R.string.days_to_warn_path))
-                        .header("accept", "application/json")
-                        .header("content-type", "application/json")
-                        .header("Authorization", token)
-                        .asString();
-            } catch (UnirestException e) {
-                return null;
-            }
-
-            try {
-                if (response == null) {
-                    ConnectivityManager cm =
-                            (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                    boolean isConnected = activeNetwork != null &&
-                            activeNetwork.isConnectedOrConnecting();
-
-                    String connectionError = getResources().getString(R.string.user_connection_error);
-                    String requestError = getResources().getString(R.string.days_to_warn_request_error);
-
-                    String error = isConnected ? requestError : connectionError;
-
-                    throw new Exception(error);
-                }
-
-                JSONObject obj = new JSONObject(response.getBody());
-                if (!obj.getString("result").equals(getResources().getString(R.string.api_success_response)))
-                    throw new Exception(getResources().getString(R.string.user_loading_authetication_error));
-
-                result.put("active", obj.getBoolean("active"));
-                result.put("daysToWarn", obj.getInt("daysToWarn"));
-                result.put("title", obj.getString("alertTitle"));
-                result.put("msg", obj.getString("alertMsg"));
-
-            } catch (JSONException e) {
-                return null;
-            } catch (Exception e) {
-                // Handle error
-                Toast.makeText(activity, e.getMessage(), Toast.LENGTH_LONG).show();
-                return null;
-            }
-
-            return result;
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(JSONObject result) {
-
-            try {
-                if (result != null && result.getBoolean("active"))
-                    refreshInfo(result.getInt("daysToWarn"), result.getString("title"), result.getString("msg"));
-            } catch (JSONException e) {
-                // Log.d("causes", e.getMessage());
-            }
-        }
-    }
 }

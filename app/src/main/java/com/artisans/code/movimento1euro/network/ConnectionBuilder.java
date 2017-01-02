@@ -20,12 +20,9 @@ import java.util.Map;
 public class ConnectionBuilder {
     public static final String TAG = ConnectionBuilder.class.getSimpleName();
 
-    public enum Request{
-        POST,
-        PUT
-    }
 
-    public static HttpURLConnection buildConnection(URL url,Request requestMethod,String token ,Map<String, String> parameters) throws IOException {
+
+    public static HttpURLConnection buildConnection(URL url, ApiRequestTask.Request requestMethod, String token , Map<String, String> parameters) throws IOException {
         String parametersStr = createQueryStringForParameters(parameters);
         HttpURLConnection request = (HttpURLConnection) url.openConnection();
         request.setReadTimeout(10000);

@@ -20,13 +20,10 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by sergi on 21/12/2016.
  */
 
-public class VotingTask extends AsyncTask<String, Void, JSONObject> {
-
-    private Context context;
+public class VotingTask extends ApiRequestTask{
 
     public VotingTask(Context context) {
-        super();
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -34,46 +31,14 @@ public class VotingTask extends AsyncTask<String, Void, JSONObject> {
         String idCause,idVote;
 
         if (parameters != null && parameters.length == 2) {
-            idVote = parameters[0];
-            idCause = parameters[1];
+            parametersMap.put("idVote", parameters[0]);
+            parametersMap.put("idCause", parameters[1]);
         } else {
             Log.e("Voting", "Exception: " + "Wrong params.");
             return null;
         }
 
-        // Preparation of variables for the request and response handling
-        HttpResponse<String> response = null;
-        JSONObject result = null;
-        SharedPreferences userDetails;
-        String token;
-
-        try {
-            userDetails = context.getSharedPreferences("userInfo", MODE_PRIVATE);
-        }
-        catch(Exception e){
-            return null;
-        }
-
-        token = userDetails.getString("token", "");
-        // API Request
-        try {
-            String url = context.getResources().getString(R.string.api_server_url) + context.getResources().getString(R.string.vote_in_cause_path) + "/" + idVote + "/" + idCause;
-            response = Unirest.post(url)
-                    .header("accept", "application/json")
-                    .header("content-type", "application/json")
-                    .header("Authorization", token)
-                    .asString();
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            result = new JSONObject(response != null ? response.getBody() : null);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+        return executeRequest();
     }
 
     // onPostExecute displays the results of the AsyncTask.

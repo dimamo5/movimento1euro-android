@@ -33,6 +33,7 @@ import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.VoteDialog;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.artisans.code.movimento1euro.models.YoutubeUrlResource;
+import com.artisans.code.movimento1euro.network.ApiManager;
 import com.artisans.code.movimento1euro.network.VotingTask;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.UrlResource;
@@ -233,7 +234,12 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     }
 
     public void vote(final View view) {
-        new VoteDialog(this, (VotingCause) cause).create().show();
+        if(!ApiManager.getInstance().isAuthenticated(this)){
+            Toast.makeText(this, getString(R.string.unauthenticated_voting_error), Toast.LENGTH_LONG).show();
+            return;
+        }else{
+            new VoteDialog(this, (VotingCause) cause).create().show();
+        }
     }
 
 
