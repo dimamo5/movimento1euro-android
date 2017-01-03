@@ -62,6 +62,7 @@
     <string name="user_loading_authetication_error">Não foi possível carregar a lista de causas. Verifique se está autenticado</string>
     <string name="unauthenticated_voting_error">Não pode votar se não estiver autenticado. Por favor inicie sessão</string>
     <string name="user_vote_error">Erro ao registar voto. Verifique se já votou este mês.</string>
+    <string name="unkown_vote_error">Erro a ligar com o servidor. Por favor tente mais tarde</string>
 
     <!--WEBSITE URLS-->
     <string name="website_url">http://movimento1euro.com</string>

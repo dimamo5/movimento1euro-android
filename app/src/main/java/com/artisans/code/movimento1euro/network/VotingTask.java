@@ -24,6 +24,7 @@ public class VotingTask extends ApiRequestTask{
 
     public VotingTask(Context context) {
         super(context);
+        urlString = context.getString(R.string.api_server_url)+context.getString(R.string.vote_in_cause_path);
     }
 
     @Override
@@ -45,9 +46,10 @@ public class VotingTask extends ApiRequestTask{
     @Override
     protected void onPostExecute(JSONObject result) {
         try {
-            if (result == null)
-                throw new Exception("Ocorreu um erro ao realizar o pedido de votação");
-
+            if (result == null) {
+                Toast.makeText(context, context.getResources().getString(R.string.unkown_vote_error), Toast.LENGTH_LONG).show();
+                return;
+            }
             if (result.get("result").equals(R.string.api_success_response)) {
                 Toast.makeText(context, context.getResources().getString(R.string.vote_cause_success), Toast.LENGTH_SHORT).show();
             } else {
