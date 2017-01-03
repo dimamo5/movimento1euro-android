@@ -20,10 +20,18 @@ import com.google.firebase.messaging.RemoteMessage;
  * Created by duarte on 15-11-2016.
  */
 
+/**
+ * Represents a Messaging service extending the Firebase messaging service
+ * used to handle messages, create notifications and handle actions(click/dismiss) on notifications in the client app
+ */
 public class MessagingService extends FirebaseMessagingService {
     private final String TAG = MessagingService.class.getCanonicalName();
     private static String notificationId;
 
+    /**
+     * Handler for received firebase messages.
+     * @param remoteMessage
+     */
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "FROM" + remoteMessage.getFrom());
@@ -35,6 +43,12 @@ public class MessagingService extends FirebaseMessagingService {
         }
     }
 
+    /**
+     * Method used to send notification to the android system. Creates intents for on click/dismiss notification events
+     * @param id
+     * @param title
+     * @param body
+     */
     private void sendNotification(String id, String title, String body) {
 
         Intent intent = new Intent(this, MainMenu.class); // AINDA NÃO TENHO A CERTEZA SE COLOCO MainMenu.class ou SplashScreen.class
@@ -65,7 +79,10 @@ public class MessagingService extends FirebaseMessagingService {
         notificationManager.notify(0,notificationBuilder.build());
     }
 
-    //dismiss notification related
+    /**
+     * This class is used for the dismiss notification receiver handler, that calls Api when a notification is dismissed
+     * to update that message as 'seen'
+     */
     public static class MyBroadcastReceiver extends BroadcastReceiver {
 
         public MyBroadcastReceiver() {
