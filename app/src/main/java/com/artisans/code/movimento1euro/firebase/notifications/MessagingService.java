@@ -22,7 +22,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MessagingService extends FirebaseMessagingService {
     private final String TAG = MessagingService.class.getCanonicalName();
-    private String notificationId;
+    private static String notificationId;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -30,23 +30,9 @@ public class MessagingService extends FirebaseMessagingService {
 
         if(remoteMessage.getData().size() > 0){
             Log.d(TAG, "Message data: " +remoteMessage.getData());
-
             notificationId = remoteMessage.getMessageId();
-
             sendNotification(remoteMessage.getMessageId(), remoteMessage.getData().get("title"),remoteMessage.getData().get("body"));
-
         }
-
-        /*if(remoteMessage.getNotification() != null){
-            Log.d(TAG, "Message body: " + remoteMessage.getNotification().getBody());
-
-            Log.d(TAG, "ID: " + remoteMessage.getMessageId());
-
-            notificationId = remoteMessage.getMessageId();
-
-            sendNotification(remoteMessage.getMessageId(), remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
-        }*/
-
     }
 
     private void sendNotification(String id, String title, String body) {
@@ -58,10 +44,9 @@ public class MessagingService extends FirebaseMessagingService {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        /*Intent deleteIntent = new Intent(this, MyBroadcastReceiver.class);
+        Intent deleteIntent = new Intent(this, MyBroadcastReceiver.class);
         deleteIntent.putExtra("com.my.app.notificationId", notificationId);
-        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent,0);//mudar one shot para 0 caso esteja a dar peido
-        */
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, 0, deleteIntent, 0);//mudar one shot para 0 caso esteja a dar peido
 
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
@@ -74,19 +59,23 @@ public class MessagingService extends FirebaseMessagingService {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(body));
 
-        //notificationBuilder.setDeleteIntent(pendingIntent2);
+        notificationBuilder.setDeleteIntent(pendingIntent2);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0,notificationBuilder.build());
     }
 
     //dismiss notification related
-    /*public class MyBroadcastReceiver extends BroadcastReceiver {
+    public static class MyBroadcastReceiver extends BroadcastReceiver {
+
+        public MyBroadcastReceiver() {
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             new SeenNotificationTask(context).execute(notificationId);
         }
 
-    }*/
+    }
 
 }

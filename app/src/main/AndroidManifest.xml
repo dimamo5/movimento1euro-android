@@ -81,6 +81,8 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".firebase.notifications.MessagingService$MyBroadcastReceiver" android:exported="false"></receiver>
+
         <service android:name=".firebase.notifications.IdService" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
