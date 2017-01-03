@@ -30,9 +30,14 @@ public class MessagingService extends FirebaseMessagingService {
 
         if(remoteMessage.getData().size() > 0){
             Log.d(TAG, "Message data: " +remoteMessage.getData());
+
+            notificationId = remoteMessage.getMessageId();
+
+            sendNotification(remoteMessage.getMessageId(), remoteMessage.getData().get("title"),remoteMessage.getData().get("body"));
+
         }
 
-        if(remoteMessage.getNotification() != null){
+        /*if(remoteMessage.getNotification() != null){
             Log.d(TAG, "Message body: " + remoteMessage.getNotification().getBody());
 
             Log.d(TAG, "ID: " + remoteMessage.getMessageId());
@@ -40,7 +45,7 @@ public class MessagingService extends FirebaseMessagingService {
             notificationId = remoteMessage.getMessageId();
 
             sendNotification(remoteMessage.getMessageId(), remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
-        }
+        }*/
 
     }
 
