@@ -7,7 +7,7 @@
 * Android version: 4.4+
 
 ###Install
-1. On your Android device download the latest .apk [here](https://github.com/dimamo5/movimento1euro-mobile)
+1. On your Android device download the latest .apk [here](https://github.com/dimamo5/movimento1euro-mobile/releases/tag/0.5)
 2. Go to Settings -> Security. Check the option Unknown sources. Tap OK on the prompt message.
 3. Install the .apk file
 
