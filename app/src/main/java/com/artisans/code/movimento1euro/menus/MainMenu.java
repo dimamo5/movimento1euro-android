@@ -37,6 +37,7 @@ import com.artisans.code.movimento1euro.network.AlertTask;
 import com.artisans.code.movimento1euro.network.ApiManager;
 import com.artisans.code.movimento1euro.network.LoginTask;
 import com.artisans.code.movimento1euro.network.SeenNotificationTask;
+import com.artisans.code.movimento1euro.network.UserInfoUpdateTask;
 import com.facebook.login.LoginManager;
 
 import java.text.SimpleDateFormat;
@@ -262,16 +263,20 @@ public class MainMenu extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
+        updateUserInfo();
         refreshAlertStatus();
         fillUserDetails();
     }
 
+    private void updateUserInfo(){
+
+        new UserInfoUpdateTask(this).execute();
+    }
     private void fillUserDetails() {
 
         // fill user info (name and expiration date)
         SharedPreferences preferences = getSharedPreferences("userInfo",MODE_PRIVATE);
         String username = preferences.getString("username", "");
-
         Date expDate = new Date(preferences.getString("expDate",""));
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String expDateStr = sdf.format(expDate);

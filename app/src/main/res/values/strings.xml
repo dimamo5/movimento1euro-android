@@ -37,7 +37,7 @@
     <string name="fb_login_protocol_scheme">fb208375452933152</string>
 
     <!--API-->
-    <string name="api_server_url">http://ldso.diogomoura.me/api</string>
+    <string name="api_server_url">http://staging.diogomoura.me/api</string>
     <string name="std_login_path">/login</string>
     <string name="logout_path">/logout</string>
     <string name="fb_login_path">/loginFB</string>
@@ -48,6 +48,7 @@
     <string name="upd_firebase_token_path">/firebaseToken</string>
     <string name="vote_in_cause_path">/voteCause</string>
     <string name="days_to_warn_path">/daysToWarn</string>
+    <string name="update_user_info">/refresh</string>
     <string name="seen_notification_path">/notificationSeen</string>
 
     <!--API responses-->
