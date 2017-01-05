@@ -117,8 +117,8 @@ public class VotingCausesFragment extends CauseListFragment  {
     }
 
     /**
-     *
-     * @param view
+     * Calls API web request to vote on the selected view (selected cause card)
+     * @param view selected view (cause card)
      */
     public void vote(final View view) {
         int index = listView.getPositionForView(view);
