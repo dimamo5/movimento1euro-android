@@ -2,6 +2,7 @@ package com.artisans.code.movimento1euro;
 
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.Election;
+import com.artisans.code.movimento1euro.models.PastCause;
 import com.artisans.code.movimento1euro.models.VotingCause;
 
 import org.json.JSONArray;
@@ -9,7 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Duart on 05/01/2017.
@@ -195,6 +198,507 @@ public class ProtoGenerator {
         }
 
         return causesList;
+    }
+
+    public static void generatePastCauses(String year,Map<String,List<Cause>> allCausesByYear){
+        JSONObject obj = null;
+        List<Cause> causesList= new ArrayList<>();
+
+        try {
+
+            if(year.equals("2017")){
+                obj = new JSONObject("{\n" +
+                        "  \"result\": \"success\",\n" +
+                        "  \"causes\": [\n" +
+                        "    {\n" +
+                        "      \"id\": 129,\n" +
+                        "      \"titulo\": \"Janeiro 2017\",\n" +
+                        "      \"data_de_inicio\": \"01-01-2017 00:00:00\",\n" +
+                        "      \"data_de_fim\": \"02-01-2017 23:59:59\",\n" +
+                        "      \"montante_disponivel\": \"700\",\n" +
+                        "      \"total_votos\": null,\n" +
+                        "      \"causas\": [\n" +
+                        "        {\n" +
+                        "         \"id\": 130,\n" +
+                        "         \"titulo\": \"Higiene para todos\",\n" +
+                        "         \"descricao\": \"A Comunidade Vida e Paz tem como missão ir ao encontro e acolher pessoas sem-abrigo, ou em situação de vulnerabilidade social, ajudando-as a recuperar a sua dignidade e a (re)construir o seu projeto de vida, através de uma ação integrada de prevenção, reabilitação e reinserção.\\r\\n\\r\\nPara podermos oferecer os cuidados básicos de higiene às pessoas sem-abrigo e aos utentes em programa de reabilitação e reinserção necessitamos de produtos básicos de higiene: gel de banho, champô, e pasta de dentes.\\r\\n\\r\\nEm 2015, apoiámos diariamente cerca de 500 pessoas através das Equipas de Rua e acolhemos aproximadamente 300  situações nas respostas residenciais da Comunidade: Comunidades Terapêuticas, Comunidades de Inserção, Apartamentos de Reinserção e partilhados e Unidade de Vida Autónoma.\\r\\n\\r\\nCom esta simbólica ajuda é abrigo para quem o perdeu!\",\n" +
+                        "         \"verba\": \"750\",\n" +
+                        "         \"votos\": \"0\",\n" +
+                        "         \"voto_utilizador\": false,\n" +
+                        "         \"associacao\": {\n" +
+                        "           \"nome\": \"Comunidade Vida e Paz\",\n" +
+                        "           \"apresentacao\": null,\n" +
+                        "           \"morada\": \"\n" +
+                        "  Rua Domingos Bomtempo, nº 7\n" +
+                        "  \\n1700-142 Lisboa\\n\",    //CUIDADO QUE ISTO RETORNA HTML\n" +
+                        "           \"telefone\": \"218460165\",\n" +
+                        "           \"telemovel\": \"\",\n" +
+                        "           \"website\": \"movimento1euro.com\",\n" +
+                        "           \"email\": \"testes@movimento1euro.com\",\n" +
+                        "           \"facebook\": \"https://www.facebook.com/movimento1euro\",\n" +
+                        "           \"youtube\": \"\"\n" +
+                        "         },\n" +
+                        "         \"documentos\": [\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Paper\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Revista\"\n" +
+                        "          }\n" +
+                        "         ],\n" +
+                        "         \"videos\": [\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=oAVtOmhQ5D4\",\n" +
+                        "              \"descricao\": \"video\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=baVQCdgS0KI\",\n" +
+                        "              \"descricao\": \"video2\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=sLz6B-gkm_4\",\n" +
+                        "              \"descricao\": \"video3\"\n" +
+                        "            }\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "  ]\n" +
+                        "}");
+            }else {
+                obj = new JSONObject("{\n" +
+                        "  \"result\": \"success\",\n" +
+                        "  \"causes\": [\n" +
+                        "    {\n" +
+                        "      \"id\": 123465,\n" +
+                        "      \"titulo\": \"Dezembro 2016\",\n" +
+                        "      \"data_de_inicio\": \"21-08-2016 00:00:00\",\n" +
+                        "      \"data_de_fim\": \"20-12-2016 23:59:59\",\n" +
+                        "      \"montante_disponivel\": \"700\",\n" +
+                        "      \"total_votos\": null,\n" +
+                        "      \"causas\": [\n" +
+                        "        {\n" +
+                        "         \"id\": 130,\n" +
+                        "         \"nome\": \"Higiene para todos\",\n" +
+                        "         \"descricao\": \"A Comunidade Vida e Paz tem como missão ir ao encontro e acolher pessoas sem-abrigo, ou em situação de vulnerabilidade social, ajudando-as a recuperar a sua dignidade e a (re)construir o seu projeto de vida, através de uma ação integrada de prevenção, reabilitação e reinserção.\\r\\n\\r\\nPara podermos oferecer os cuidados básicos de higiene às pessoas sem-abrigo e aos utentes em programa de reabilitação e reinserção necessitamos de produtos básicos de higiene: gel de banho, champô, e pasta de dentes.\\r\\n\\r\\nEm 2015, apoiámos diariamente cerca de 500 pessoas através das Equipas de Rua e acolhemos aproximadamente 300  situações nas respostas residenciais da Comunidade: Comunidades Terapêuticas, Comunidades de Inserção, Apartamentos de Reinserção e partilhados e Unidade de Vida Autónoma.\\r\\n\\r\\nCom esta simbólica ajuda é abrigo para quem o perdeu!\",\n" +
+                        "         \"verba\": \"750\",\n" +
+                        "         \"votos\": \"0\",\n" +
+                        "         \"voto_utilizador\": false,\n" +
+                        "         \"associacao\": {\n" +
+                        "           \"nome\": \"Comunidade Vida e Paz\",\n" +
+                        "           \"apresentacao\": null,\n" +
+                        "           \"morada\": \"\n" +
+                        "  Rua Domingos Bomtempo, nº 7\n" +
+                        "  \\n1700-142 Lisboa\\n\",    //CUIDADO QUE ISTO RETORNA HTML\n" +
+                        "           \"telefone\": \"218460165\",\n" +
+                        "           \"telemovel\": \"\",\n" +
+                        "           \"website\": \"movimento1euro.com\",\n" +
+                        "           \"email\": \"testes@movimento1euro.com\",\n" +
+                        "           \"facebook\": \"https://www.facebook.com/movimento1euro\",\n" +
+                        "           \"youtube\": \"\"\n" +
+                        "         },\n" +
+                        "         \"documentos\": [\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Paper\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Revista\"\n" +
+                        "          }\n" +
+                        "         ],\n" +
+                        "         \"videos\": [\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=oAVtOmhQ5D4\",\n" +
+                        "              \"descricao\": \"video\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=baVQCdgS0KI\",\n" +
+                        "              \"descricao\": \"video2\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=sLz6B-gkm_4\",\n" +
+                        "              \"descricao\": \"video3\"\n" +
+                        "            }\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"id\": 129,\n" +
+                        "      \"titulo\": \"Novembro 2016\",\n" +
+                        "      \"data_de_inicio\": \"21-08-2016 00:00:00\",\n" +
+                        "      \"data_de_fim\": \"20-10-2016 23:59:59\",\n" +
+                        "      \"montante_disponivel\": \"700\",\n" +
+                        "      \"total_votos\": null,\n" +
+                        "      \"causas\": [\n" +
+                        "        {\n" +
+                        "         \"id\": 130,\n" +
+                        "         \"nome\": \"Higiene para todos\",\n" +
+                        "         \"descricao\": \"A Comunidade Vida e Paz tem como missão ir ao encontro e acolher pessoas sem-abrigo, ou em situação de vulnerabilidade social, ajudando-as a recuperar a sua dignidade e a (re)construir o seu projeto de vida, através de uma ação integrada de prevenção, reabilitação e reinserção.\\r\\n\\r\\nPara podermos oferecer os cuidados básicos de higiene às pessoas sem-abrigo e aos utentes em programa de reabilitação e reinserção necessitamos de produtos básicos de higiene: gel de banho, champô, e pasta de dentes.\\r\\n\\r\\nEm 2015, apoiámos diariamente cerca de 500 pessoas através das Equipas de Rua e acolhemos aproximadamente 300  situações nas respostas residenciais da Comunidade: Comunidades Terapêuticas, Comunidades de Inserção, Apartamentos de Reinserção e partilhados e Unidade de Vida Autónoma.\\r\\n\\r\\nCom esta simbólica ajuda é abrigo para quem o perdeu!\",\n" +
+                        "         \"verba\": \"750\",\n" +
+                        "         \"votos\": \"0\",\n" +
+                        "         \"voto_utilizador\": false,\n" +
+                        "         \"associacao\": {\n" +
+                        "           \"nome\": \"Comunidade Vida e Paz\",\n" +
+                        "           \"apresentacao\": null,\n" +
+                        "           \"morada\": \"\n" +
+                        "  Rua Domingos Bomtempo, nº 7\n" +
+                        "  \\n1700-142 Lisboa\\n\",    //CUIDADO QUE ISTO RETORNA HTML\n" +
+                        "           \"telefone\": \"218460165\",\n" +
+                        "           \"telemovel\": \"\",\n" +
+                        "           \"website\": \"movimento1euro.com\",\n" +
+                        "           \"email\": \"testes@movimento1euro.com\",\n" +
+                        "           \"facebook\": \"https://www.facebook.com/movimento1euro\",\n" +
+                        "           \"youtube\": \"\"\n" +
+                        "         },\n" +
+                        "         \"documentos\": [\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Paper\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Revista\"\n" +
+                        "          }\n" +
+                        "         ],\n" +
+                        "         \"videos\": [\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=oAVtOmhQ5D4\",\n" +
+                        "              \"descricao\": \"video\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=baVQCdgS0KI\",\n" +
+                        "              \"descricao\": \"video2\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=sLz6B-gkm_4\",\n" +
+                        "              \"descricao\": \"video3\"\n" +
+                        "            }\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"id\": 129,\n" +
+                        "      \"titulo\": \"Outubro 2016\",\n" +
+                        "      \"data_de_inicio\": \"21-08-2016 00:00:00\",\n" +
+                        "      \"data_de_fim\": \"20-10-2016 23:59:59\",\n" +
+                        "      \"montante_disponivel\": \"700\",\n" +
+                        "      \"total_votos\": null,\n" +
+                        "      \"causas\": [\n" +
+                        "        {\n" +
+                        "         \"id\": 130,\n" +
+                        "         \"nome\": \"Higiene para todos\",\n" +
+                        "         \"descricao\": \"A Comunidade Vida e Paz tem como missão ir ao encontro e acolher pessoas sem-abrigo, ou em situação de vulnerabilidade social, ajudando-as a recuperar a sua dignidade e a (re)construir o seu projeto de vida, através de uma ação integrada de prevenção, reabilitação e reinserção.\\r\\n\\r\\nPara podermos oferecer os cuidados básicos de higiene às pessoas sem-abrigo e aos utentes em programa de reabilitação e reinserção necessitamos de produtos básicos de higiene: gel de banho, champô, e pasta de dentes.\\r\\n\\r\\nEm 2015, apoiámos diariamente cerca de 500 pessoas através das Equipas de Rua e acolhemos aproximadamente 300  situações nas respostas residenciais da Comunidade: Comunidades Terapêuticas, Comunidades de Inserção, Apartamentos de Reinserção e partilhados e Unidade de Vida Autónoma.\\r\\n\\r\\nCom esta simbólica ajuda é abrigo para quem o perdeu!\",\n" +
+                        "         \"verba\": \"750\",\n" +
+                        "         \"votos\": \"0\",\n" +
+                        "         \"voto_utilizador\": false,\n" +
+                        "         \"associacao\": {\n" +
+                        "           \"nome\": \"Comunidade Vida e Paz\",\n" +
+                        "           \"apresentacao\": null,\n" +
+                        "           \"morada\": \"\n" +
+                        "  Rua Domingos Bomtempo, nº 7\n" +
+                        "  \\n1700-142 Lisboa\\n\",    //CUIDADO QUE ISTO RETORNA HTML\n" +
+                        "           \"telefone\": \"218460165\",\n" +
+                        "           \"telemovel\": \"\",\n" +
+                        "           \"website\": \"movimento1euro.com\",\n" +
+                        "           \"email\": \"testes@movimento1euro.com\",\n" +
+                        "           \"facebook\": \"https://www.facebook.com/movimento1euro\",\n" +
+                        "           \"youtube\": \"\"\n" +
+                        "         },\n" +
+                        "         \"documentos\": [\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Paper\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Revista\"\n" +
+                        "          }\n" +
+                        "         ],\n" +
+                        "         \"videos\": [\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=oAVtOmhQ5D4\",\n" +
+                        "              \"descricao\": \"video\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=baVQCdgS0KI\",\n" +
+                        "              \"descricao\": \"video2\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=sLz6B-gkm_4\",\n" +
+                        "              \"descricao\": \"video3\"\n" +
+                        "            }\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"id\": 129,\n" +
+                        "      \"titulo\": \"Setembro 2016\",\n" +
+                        "      \"data_de_inicio\": \"21-08-2016 00:00:00\",\n" +
+                        "      \"data_de_fim\": \"20-09-2016 23:59:59\",\n" +
+                        "      \"montante_disponivel\": \"700\",\n" +
+                        "      \"total_votos\": null,\n" +
+                        "      \"causas\": [\n" +
+                        "        {\n" +
+                        "         \"id\": 130,\n" +
+                        "         \"nome\": \"Higiene para todos\",\n" +
+                        "         \"descricao\": \"A Comunidade Vida e Paz tem como missão ir ao encontro e acolher pessoas sem-abrigo, ou em situação de vulnerabilidade social, ajudando-as a recuperar a sua dignidade e a (re)construir o seu projeto de vida, através de uma ação integrada de prevenção, reabilitação e reinserção.\\r\\n\\r\\nPara podermos oferecer os cuidados básicos de higiene às pessoas sem-abrigo e aos utentes em programa de reabilitação e reinserção necessitamos de produtos básicos de higiene: gel de banho, champô, e pasta de dentes.\\r\\n\\r\\nEm 2015, apoiámos diariamente cerca de 500 pessoas através das Equipas de Rua e acolhemos aproximadamente 300  situações nas respostas residenciais da Comunidade: Comunidades Terapêuticas, Comunidades de Inserção, Apartamentos de Reinserção e partilhados e Unidade de Vida Autónoma.\\r\\n\\r\\nCom esta simbólica ajuda é abrigo para quem o perdeu!\",\n" +
+                        "         \"verba\": \"750\",\n" +
+                        "         \"votos\": \"0\",\n" +
+                        "         \"voto_utilizador\": false,\n" +
+                        "         \"associacao\": {\n" +
+                        "           \"nome\": \"Comunidade Vida e Paz\",\n" +
+                        "           \"apresentacao\": null,\n" +
+                        "           \"morada\": \"\n" +
+                        "  Rua Domingos Bomtempo, nº 7\n" +
+                        "  \\n1700-142 Lisboa\\n\",    //CUIDADO QUE ISTO RETORNA HTML\n" +
+                        "           \"telefone\": \"218460165\",\n" +
+                        "           \"telemovel\": \"\",\n" +
+                        "           \"website\": \"movimento1euro.com\",\n" +
+                        "           \"email\": \"testes@movimento1euro.com\",\n" +
+                        "           \"facebook\": \"https://www.facebook.com/movimento1euro\",\n" +
+                        "           \"youtube\": \"\"\n" +
+                        "         },\n" +
+                        "         \"documentos\": [\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Paper\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Revista\"\n" +
+                        "          }\n" +
+                        "         ],\n" +
+                        "         \"videos\": [\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=oAVtOmhQ5D4\",\n" +
+                        "              \"descricao\": \"video\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=baVQCdgS0KI\",\n" +
+                        "              \"descricao\": \"video2\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=sLz6B-gkm_4\",\n" +
+                        "              \"descricao\": \"video3\"\n" +
+                        "            }\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"id\": 129,\n" +
+                        "      \"titulo\": \"Agosto 2016\",\n" +
+                        "      \"data_de_inicio\": \"21-08-2016 00:00:00\",\n" +
+                        "      \"data_de_fim\": \"27-08-2016 23:59:59\",\n" +
+                        "      \"montante_disponivel\": \"700\",\n" +
+                        "      \"total_votos\": null,\n" +
+                        "      \"causas\": [\n" +
+                        "        {\n" +
+                        "         \"id\": 130,\n" +
+                        "         \"nome\": \"Higiene para todos\",\n" +
+                        "         \"descricao\": \"A Comunidade Vida e Paz tem como missão ir ao encontro e acolher pessoas sem-abrigo, ou em situação de vulnerabilidade social, ajudando-as a recuperar a sua dignidade e a (re)construir o seu projeto de vida, através de uma ação integrada de prevenção, reabilitação e reinserção.\\r\\n\\r\\nPara podermos oferecer os cuidados básicos de higiene às pessoas sem-abrigo e aos utentes em programa de reabilitação e reinserção necessitamos de produtos básicos de higiene: gel de banho, champô, e pasta de dentes.\\r\\n\\r\\nEm 2015, apoiámos diariamente cerca de 500 pessoas através das Equipas de Rua e acolhemos aproximadamente 300  situações nas respostas residenciais da Comunidade: Comunidades Terapêuticas, Comunidades de Inserção, Apartamentos de Reinserção e partilhados e Unidade de Vida Autónoma.\\r\\n\\r\\nCom esta simbólica ajuda é abrigo para quem o perdeu!\",\n" +
+                        "         \"verba\": \"750\",\n" +
+                        "         \"votos\": \"0\",\n" +
+                        "         \"voto_utilizador\": false,\n" +
+                        "         \"associacao\": {\n" +
+                        "           \"nome\": \"Comunidade Vida e Paz\",\n" +
+                        "           \"apresentacao\": null,\n" +
+                        "           \"morada\": \"\n" +
+                        "  Rua Domingos Bomtempo, nº 7\n" +
+                        "  \\n1700-142 Lisboa\\n\",    //CUIDADO QUE ISTO RETORNA HTML\n" +
+                        "           \"telefone\": \"218460165\",\n" +
+                        "           \"telemovel\": \"\",\n" +
+                        "           \"website\": \"movimento1euro.com\",\n" +
+                        "           \"email\": \"testes@movimento1euro.com\",\n" +
+                        "           \"facebook\": \"https://www.facebook.com/movimento1euro\",\n" +
+                        "           \"youtube\": \"\"\n" +
+                        "         },\n" +
+                        "         \"documentos\": [\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Paper\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Revista\"\n" +
+                        "          }\n" +
+                        "         ],\n" +
+                        "         \"videos\": [\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=oAVtOmhQ5D4\",\n" +
+                        "              \"descricao\": \"video\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=baVQCdgS0KI\",\n" +
+                        "              \"descricao\": \"video2\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=sLz6B-gkm_4\",\n" +
+                        "              \"descricao\": \"video3\"\n" +
+                        "            }\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"id\": 129,\n" +
+                        "      \"titulo\": \"Julho 2016\",\n" +
+                        "      \"data_de_inicio\": \"21-06-2016 00:00:00\",\n" +
+                        "      \"data_de_fim\": \"20-07-2016 23:59:59\",\n" +
+                        "      \"montante_disponivel\": \"700\",\n" +
+                        "      \"total_votos\": null,\n" +
+                        "      \"causas\": [\n" +
+                        "        {\n" +
+                        "         \"id\": 130,\n" +
+                        "         \"nome\": \"Higiene para todos\",\n" +
+                        "         \"descricao\": \"A Comunidade Vida e Paz tem como missão ir ao encontro e acolher pessoas sem-abrigo, ou em situação de vulnerabilidade social, ajudando-as a recuperar a sua dignidade e a (re)construir o seu projeto de vida, através de uma ação integrada de prevenção, reabilitação e reinserção.\\r\\n\\r\\nPara podermos oferecer os cuidados básicos de higiene às pessoas sem-abrigo e aos utentes em programa de reabilitação e reinserção necessitamos de produtos básicos de higiene: gel de banho, champô, e pasta de dentes.\\r\\n\\r\\nEm 2015, apoiámos diariamente cerca de 500 pessoas através das Equipas de Rua e acolhemos aproximadamente 300  situações nas respostas residenciais da Comunidade: Comunidades Terapêuticas, Comunidades de Inserção, Apartamentos de Reinserção e partilhados e Unidade de Vida Autónoma.\\r\\n\\r\\nCom esta simbólica ajuda é abrigo para quem o perdeu!\",\n" +
+                        "         \"verba\": \"750\",\n" +
+                        "         \"votos\": \"0\",\n" +
+                        "         \"voto_utilizador\": false,\n" +
+                        "         \"associacao\": {\n" +
+                        "           \"nome\": \"Comunidade Vida e Paz\",\n" +
+                        "           \"apresentacao\": null,\n" +
+                        "           \"morada\": \"\n" +
+                        "  Rua Domingos Bomtempo, nº 7\n" +
+                        "  \\n1700-142 Lisboa\\n\",    //CUIDADO QUE ISTO RETORNA HTML\n" +
+                        "           \"telefone\": \"218460165\",\n" +
+                        "           \"telemovel\": \"\",\n" +
+                        "           \"website\": \"movimento1euro.com\",\n" +
+                        "           \"email\": \"testes@movimento1euro.com\",\n" +
+                        "           \"facebook\": \"https://www.facebook.com/movimento1euro\",\n" +
+                        "           \"youtube\": \"\"\n" +
+                        "         },\n" +
+                        "         \"documentos\": [\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Paper\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Revista\"\n" +
+                        "          }\n" +
+                        "         ],\n" +
+                        "         \"videos\": [\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=oAVtOmhQ5D4\",\n" +
+                        "              \"descricao\": \"video\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=baVQCdgS0KI\",\n" +
+                        "              \"descricao\": \"video2\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=sLz6B-gkm_4\",\n" +
+                        "              \"descricao\": \"video3\"\n" +
+                        "            }\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"id\": 129,\n" +
+                        "      \"titulo\": \"Junho 2016\",\n" +
+                        "      \"data_de_inicio\": \"21-05-2016 00:00:00\",\n" +
+                        "      \"data_de_fim\": \"20-06-2016 23:59:59\",\n" +
+                        "      \"montante_disponivel\": \"700\",\n" +
+                        "      \"total_votos\": null,\n" +
+                        "      \"causas\": [\n" +
+                        "        {\n" +
+                        "         \"id\": 130,\n" +
+                        "         \"nome\": \"Higiene para todos\",\n" +
+                        "         \"descricao\": \"A Comunidade Vida e Paz tem como missão ir ao encontro e acolher pessoas sem-abrigo, ou em situação de vulnerabilidade social, ajudando-as a recuperar a sua dignidade e a (re)construir o seu projeto de vida, através de uma ação integrada de prevenção, reabilitação e reinserção.\\r\\n\\r\\nPara podermos oferecer os cuidados básicos de higiene às pessoas sem-abrigo e aos utentes em programa de reabilitação e reinserção necessitamos de produtos básicos de higiene: gel de banho, champô, e pasta de dentes.\\r\\n\\r\\nEm 2015, apoiámos diariamente cerca de 500 pessoas através das Equipas de Rua e acolhemos aproximadamente 300  situações nas respostas residenciais da Comunidade: Comunidades Terapêuticas, Comunidades de Inserção, Apartamentos de Reinserção e partilhados e Unidade de Vida Autónoma.\\r\\n\\r\\nCom esta simbólica ajuda é abrigo para quem o perdeu!\",\n" +
+                        "         \"verba\": \"750\",\n" +
+                        "         \"votos\": \"0\",\n" +
+                        "         \"voto_utilizador\": false,\n" +
+                        "         \"associacao\": {\n" +
+                        "           \"nome\": \"Comunidade Vida e Paz\",\n" +
+                        "           \"apresentacao\": null,\n" +
+                        "           \"morada\": \"\n" +
+                        "  Rua Domingos Bomtempo, nº 7\n" +
+                        "  \\n1700-142 Lisboa\\n\",    //CUIDADO QUE ISTO RETORNA HTML\n" +
+                        "           \"telefone\": \"218460165\",\n" +
+                        "           \"telemovel\": \"\",\n" +
+                        "           \"website\": \"movimento1euro.com\",\n" +
+                        "           \"email\": \"testes@movimento1euro.com\",\n" +
+                        "           \"facebook\": \"https://www.facebook.com/movimento1euro\",\n" +
+                        "           \"youtube\": \"\"\n" +
+                        "         },\n" +
+                        "         \"documentos\": [\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Paper\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"url\": \"http://www.illumina.com/content/dam/illumina-marketing/documents/products/research_reviews/cancer_research_review.pdf\",\n" +
+                        "            \"descricao\": \"Revista\"\n" +
+                        "          }\n" +
+                        "         ],\n" +
+                        "         \"videos\": [\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=oAVtOmhQ5D4\",\n" +
+                        "              \"descricao\": \"video\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=baVQCdgS0KI\",\n" +
+                        "              \"descricao\": \"video2\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "              \"url\": \"https://www.youtube.com/watch?v=sLz6B-gkm_4\",\n" +
+                        "              \"descricao\": \"video3\"\n" +
+                        "            }\n" +
+                        "          ]\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    }\n" +
+                        "  ]\n" +
+                        "}");
+            }
+
+
+
+            // Get Yearly elections array from response
+            JSONArray yearlyElections = obj.getJSONArray("causes");
+            int totalElectionNr = yearlyElections.length();
+
+
+            List<Cause> requestedCauses = new ArrayList<Cause>();
+
+            for (int electionNr = 0; electionNr < totalElectionNr; electionNr++) {
+
+                // Get each election's winning causes and add them
+                JSONObject electionObject = yearlyElections.getJSONObject(electionNr);
+                JSONArray winningCauses = electionObject.getJSONArray("causas");
+                int totalCausesNr = winningCauses.length();
+
+                Election election = new Election(electionObject);
+
+                for (int causeNr = 0; causeNr < totalCausesNr; causeNr++) {
+
+                    JSONObject cause = winningCauses.getJSONObject(causeNr);
+
+                    //HashMap<String, String> tempCause = new HashMap<String, String>();
+                    //add titulo and montante to the cause object
+                    cause.put("titulo", electionObject.getString("titulo"));
+                    cause.put("montante_disponivel", electionObject.getString("montante_disponivel"));
+                    PastCause tempCause = new PastCause(cause);
+                    tempCause.setElection(election);
+
+
+                    requestedCauses.add(tempCause);
+                }
+            }
+
+            allCausesByYear.put(year, requestedCauses);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

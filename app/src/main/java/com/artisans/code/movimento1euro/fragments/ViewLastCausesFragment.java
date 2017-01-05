@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.artisans.code.movimento1euro.ProtoGenerator;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.PastCauseDetailsActivity;
 import com.artisans.code.movimento1euro.models.Cause;
@@ -38,6 +40,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -61,7 +64,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
 
     ArrayAdapter<String> spinnerAdapter; // Spinner year list adapter
-    HashMap<String, ArrayList<PastCause>> allCausesByYear = new HashMap<>();
+    Map<String, List<Cause>> allCausesByYear = new HashMap<>();
     ArrayList<String> yearsList = new ArrayList<String>();
     ArrayList<Cause> shownCauseslist = new ArrayList<>();
 
@@ -143,10 +146,21 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
         // API request -> with the first year in the list, which should currently be selected
         // Maybe execute all already, to store them
-        new LastCausesTask(this, true).execute(yearsList.get(0));
-        //Log.d("past", "Year to be executed: " + yearsList.get(0));
+
+
+        //new LastCausesTask(this, true).execute(yearsList.get(0));
+
+        // TODO: 05/01/2017 Remover isto
+        ProtoGenerator.generatePastCauses("2017",allCausesByYear);
+        getSpinnerAdapter().notifyDataSetChanged();
+        updateFromSpinner(yearsList.get(0));
+
         for(int i = 1; i< yearsList.size(); i++) {
-            new LastCausesTask(this, false).execute(yearsList.get(i));
+            // TODO: 05/01/2017 REMOVER ISTO
+            //new LastCausesTask(this, false).execute(yearsList.get(i));
+            ProtoGenerator.generatePastCauses(yearsList.get(i),allCausesByYear);
+            getSpinnerAdapter().notifyDataSetChanged();
+            updateFromSpinner(yearsList.get(i));
         }
         return view;
     }
@@ -183,6 +197,7 @@ public class ViewLastCausesFragment extends CauseListFragment {
                 //Log.d("past",  "I am on item selected updating: " + yearsList.get(i));
                //new CausesTask().execute(yearsList.get(i), "true");
                 updateFromSpinner(yearsList.get(i));
+                getSpinnerAdapter().notifyDataSetChanged();
             }
 
             @Override
@@ -253,11 +268,11 @@ public class ViewLastCausesFragment extends CauseListFragment {
         this.yearsList = yearsList;
     }
 
-    public HashMap<String, ArrayList<PastCause>> getAllCausesByYear() {
+    public Map<String, List<Cause>> getAllCausesByYear() {
         return allCausesByYear;
     }
 
-    public void setAllCausesByYear(HashMap<String, ArrayList<PastCause>> allCausesByYear) {
+    public void setAllCausesByYear(Map<String, List<Cause>> allCausesByYear) {
         this.allCausesByYear = allCausesByYear;
     }
 }

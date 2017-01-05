@@ -80,7 +80,7 @@ public class Cause implements Serializable {
 
     private void initializeYouTubeThumbnailLink() {
         YoutubeUrlResource ytResource = getFirstYoutubeResource();
-        Log.d(TAG, ytResource.toString());
+        //Log.d(TAG, ytResource.toString());
         if(ytResource == null){
             this.youtubeThumbnailLink = "";
 //            this.youtubeThumbnailLink = "https://img.youtube.com/vi/GDFUdMvacI0/0.jpg";

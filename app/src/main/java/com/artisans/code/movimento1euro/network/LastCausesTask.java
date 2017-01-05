@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
+import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.Election;
 import com.artisans.code.movimento1euro.models.PastCause;
 import com.mashape.unirest.http.HttpResponse;
@@ -23,6 +24,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -35,7 +38,7 @@ public class LastCausesTask extends ApiRequestTask{
     String year;
     boolean updateAfterRequest = false;
     ViewLastCausesFragment fragment;
-    HashMap<String, ArrayList<PastCause>> allCausesByYear;
+    Map<String, List<Cause>> allCausesByYear;
 
     public LastCausesTask(ViewLastCausesFragment fragment) {
         super(fragment.getContext());
@@ -73,7 +76,7 @@ public class LastCausesTask extends ApiRequestTask{
             int totalElectionNr = yearlyElections.length();
 
 
-            ArrayList<PastCause> requestedCauses = new ArrayList<PastCause>();
+            List<Cause> requestedCauses = new ArrayList<Cause>();
 
             for (int electionNr = 0; electionNr < totalElectionNr; electionNr++) {
 
