@@ -2,46 +2,25 @@ package com.artisans.code.movimento1euro.menus;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.artisans.code.movimento1euro.network.ApiRequest;
 import com.artisans.code.movimento1euro.R;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 import com.artisans.code.movimento1euro.network.ApiManager;
+import com.artisans.code.movimento1euro.network.LoginTask;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -56,22 +35,19 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
-    public enum LoginType {
-        STANDARD,
-        FACEBOOK
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppEventsLogger.activateApp(this);
-        setContentView(R.layout.login_screen);
+        setContentView(R.layout.activity_login_layout);
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
         findViewById(R.id.layout_login_screen).requestFocus();
 
         // TODO: 13-11-2016 Remover isto antes de entregar
-        /*inputEmail.setText("diogo@cenas.pt");
+/*        inputEmail.setText("diogo@cenas.pt");
         inputPassword.setText("123");*/
 
         Button signUpBtn = (Button) findViewById(R.id.btn_sign_up);
@@ -112,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "token: " + token.getToken());
                 /*Toast toast = Toast.makeText(activity,token.getUserId(), Toast.LENGTH_SHORT);
                 toast.show();*/
-                new LoginTask(getApplicationContext(), LoginType.FACEBOOK).execute(token.getUserId(), token.getToken());
+                new LoginTask(activity, LoginTask.LoginType.FACEBOOK).execute(token.getUserId(), token.getToken());
             }
 
             @Override
@@ -146,103 +122,26 @@ public class LoginActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new LoginTask(getApplicationContext(), LoginType.STANDARD).execute(email,password);
+            new LoginTask(activity, LoginTask.LoginType.STANDARD).execute(email,password);
         } else {
             Toast toast = Toast.makeText(this,activity.getString(R.string.failed_connection), Toast.LENGTH_SHORT);
             toast.show();
         }
     }
 
-    private class LoginTask extends ApiRequest{
-        LoginType type;
-
-        public LoginTask(Context context, LoginType type){
-            super(context);
-            this.type = type;
+    public void unauthenticatedLogin(View view){
+        if(!ApiManager.getInstance().setAsUnauthenticated(this)){
+            Toast toast = Toast.makeText(this,activity.getString(R.string.failed_login), Toast.LENGTH_SHORT);
+            toast.show();
+        }else{
+            Intent intent = new Intent(activity, MainMenu.class);
+            activity.startActivity(intent);
+            activity.finish();
         }
 
-        @Override
-        protected JSONObject doInBackground(String... parameters) {
-
-            switch (type){
-                case STANDARD:
-                    urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.std_login_path);
-                    parametersMap.put("mail", parameters[0]);
-                    parametersMap.put("password", parameters[1]);
-                    break;
-                case FACEBOOK:
-                    urlString = getResources().getString(R.string.api_server_url) + getResources().getString(R.string.fb_login_path);
-                    parametersMap.put("id", parameters[0]);
-                    parametersMap.put("token",parameters[1]);
-                    break;
-                default:
-                    try {
-                        throw new Exception();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-            }
-
-
-            JSONObject result = executeRequest();
-
-            return result;
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            try {
-                if(result == null
-                        || result.getString("result").equals("login failed")
-                        || result.getString("result").equals("wrong params")
-                        || result.getString("result").equals("error")){
-
-                    if(result.getString("result").equals("wrong params")){
-                        Toast.makeText(activity.getApplicationContext(), context.getString(R.string.wrong_parameters), Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(activity.getApplicationContext(), context.getString(R.string.failed_login), Toast.LENGTH_SHORT).show();
-                    }
-                    LoginManager.getInstance().logOut();
-                    return;
-                }
-
-                String token = result.getString("token");
-                long id = result.getLong("id");
-                String name = result.getString("name");
-                String expirationDateStr = result.getString("expDate");
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                Date expDate = simpleDateFormat.parse(expirationDateStr);
-
-                saveLoginInfo(token, id, name, expDate);
-                ApiManager.getInstance().updateFirebaseToken(getApplicationContext());
-                Intent intent = new Intent(activity, MainMenu.class);
-                startActivity(intent);
-                activity.finish();
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(activity.getApplicationContext(), context.getString(R.string.failed_login), Toast.LENGTH_SHORT).show();
-                LoginManager.getInstance().logOut();
-                return;
-            } catch (ParseException e) {
-                LoginManager.getInstance().logOut();
-                e.printStackTrace();
-            }
-        }
-
-        private void saveLoginInfo(String token, long id, String name, Date expDate) {
-            SharedPreferences loginInfo = getSharedPreferences("userInfo",MODE_PRIVATE);
-            SharedPreferences.Editor editor = loginInfo.edit();
-            editor.putString("token", token);
-            editor.putLong("id", id);
-            editor.putString("username", name);
-            editor.putString("expDate",expDate.toString());
-            editor.commit();
-        }
     }
+
+
 
 
 }
