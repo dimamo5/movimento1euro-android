@@ -19,12 +19,15 @@ import android.widget.Toast;
 import com.artisans.code.movimento1euro.R;
 
 /**
- * Created by Duarte on 22/10/2016.
+ * Activity to open the various possible webpages related
+ * Receives the URL to open specifically from the button clicked on the main menu
  */
-
 public class WebViewActivity extends AppCompatActivity {
 
     WebView webview;
+    /**
+     * Swipe Layout to refresh on swipe
+     */
     SwipeRefreshLayout webSwipeRefreshLayout;
     boolean firstTimeLaunch = true;
 
@@ -33,7 +36,7 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview_layout);
 
-        Log.d("load_url", "onCreate");
+        //Log.d("load_url", "onCreate");
 
         webview = (WebView) findViewById(R.id.webview);
         webSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.web_swipeToRefresh);
@@ -61,7 +64,7 @@ public class WebViewActivity extends AppCompatActivity {
             public void onProgressChanged(WebView view, int progress) {
                 // Activities and WebViews measure progress with different scales.
                 // The progress meter will automatically disappear when we reach 100%
-                Log.d("progress", "Value of progress: "+progress);
+               // Log.d("progress", "Value of progress: "+progress);
                 activity.setProgress(progress * 1000);
 
                 if(progress == 100)
@@ -82,13 +85,13 @@ public class WebViewActivity extends AppCompatActivity {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        Log.d("load_url", "Calling Reload");
+                        //Log.d("load_url", "Calling Reload");
 
                         if (webview != null)
                             webview.loadUrl(webview.getUrl());
                         else
                             Log.d("load_url", "webview is null");
-                        Log.d("load_url", "Called Reload");
+                        //Log.d("load_url", "Called Reload");
                     }
                 }
         );
@@ -106,11 +109,11 @@ public class WebViewActivity extends AppCompatActivity {
         webview = (WebView) findViewById(R.id.webview);
 
         if(firstTimeLaunch) {
-            Log.d("load_url", "onStart - firstTimeLaunch is true, didn't load url again");
+            //Log.d("load_url", "onStart - firstTimeLaunch is true, didn't load url again");
             firstTimeLaunch = false;
         }else{
             webview.loadUrl(((Uri) getIntent().getExtras().get("url")).toString());
-            Log.d("load_url", "onStart - firstTimeLaunch is false, reloading url");
+            //Log.d("load_url", "onStart - firstTimeLaunch is false, reloading url");
         }
     }
 

@@ -9,13 +9,10 @@ import android.support.v7.widget.Toolbar;
 import com.artisans.code.movimento1euro.R;
 
 /**
- *
+ * Activity for the About menu option.
  */
 public class AboutActivity extends AppCompatActivity {
-    /**
-     *
-     * @param savedInstanceState
-     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

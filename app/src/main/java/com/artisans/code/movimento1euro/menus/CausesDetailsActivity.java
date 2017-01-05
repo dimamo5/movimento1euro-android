@@ -41,11 +41,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Filipe on 02/12/2016.
+ * Activity to open a new window for the details of a cause. Receives a cause when being initiated
  */
-
 public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
+    /**
+     * Cause to be loaded
+     */
     Cause cause;
     private final int lineLimit = 5;
     private String facebookUrl;
@@ -85,6 +87,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     }
 
 
+    /**
+     * Fill the activity fields with all the information from the  cause
+     * @param cause Cause to be shown
+     */
     private void fillFields(Cause cause) {
         TextView textBox;
 
@@ -135,9 +141,12 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     }
 
+    /**
+     * Opens and adds a document to the page
+     * @param doc URL resource containing the document to add
+     */
     private void addDocument(final UrlResource doc) {
         LayoutInflater inflater = LayoutInflater.from(this);
-
 
         /*LinearLayout layout = new LinearLayout(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -168,11 +177,13 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         documents.addView(layout);
     }
 
-
+    /**
+     * Sets social network buttons as visible, if the link to the associaton's social network pages exist (e.g.: facebook, twitter)
+     * @param cause Cause shown, to extract the facebook URL from
+     */
     private void setupSocialMediaButtons(Cause cause) {
         final ImageButton facebookButton = (ImageButton) findViewById(R.id.facebook_url_button);
         facebookUrl = cause.getAssociation().getFacebook();
-        //facebookUrl = "https://www.facebook.com/duarte.pinto.9";
 
         if (facebookUrl == null || facebookUrl.equals("")){
 //        if(false){
@@ -230,6 +241,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         return (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtube_fragment);
     }
 
+    /**
+     * Prompts a vote dialog, in which the user can either cancel or confirm
+     * @param view Currently selected view
+     */
     public void vote(final View view) {
         if(!ApiManager.getInstance().isAuthenticated(this)){
             Toast.makeText(this, getString(R.string.unauthenticated_voting_error), Toast.LENGTH_LONG).show();
@@ -238,7 +253,6 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             new VoteDialog(this, (VotingCause) cause).create().show();
         }
     }
-
 
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
