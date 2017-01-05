@@ -270,7 +270,8 @@ public class MainMenu extends AppCompatActivity
 
     private void updateUserInfo(){
 
-        new UserInfoUpdateTask(this).execute();
+        if(ApiManager.getInstance().isAuthenticated(getApplicationContext()))
+            new UserInfoUpdateTask(this).execute();
     }
     private void fillUserDetails() {
 
