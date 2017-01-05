@@ -14,6 +14,7 @@ import com.artisans.code.movimento1euro.models.PastCause;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Duart on 19/12/2016.
@@ -27,7 +28,7 @@ public abstract class CauseListFragment extends Fragment {
     SimpleAdapter listAdapter;
 
 
-    public int updateAdapterList(ArrayList<Cause> causeList, ArrayList<HashMap<String,String>> hashmapList){
+    public int updateAdapterList(List<Cause> causeList, List<HashMap<String,String>> hashmapList){
         hashmapList.clear();
 
         if(causeList != null)
@@ -85,7 +86,7 @@ public abstract class CauseListFragment extends Fragment {
         this.mListener = mListener;
     }
 
-    public ArrayList<HashMap<String, String>> getList() {
+    public List<HashMap<String, String>> getList() {
         return list;
     }
 

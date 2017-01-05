@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -32,8 +33,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class VotingCausesTask extends ApiRequestTask {
     VotingCausesFragment fragment;
-    ArrayList<Cause> causesList;
-    ArrayList<HashMap<String, String>> list;
+    List<Cause> causesList;
+    List<HashMap<String, String>> list;
     public VotingCausesTask(VotingCausesFragment fragment) {
         super(fragment.getContext());
         this.fragment = fragment;

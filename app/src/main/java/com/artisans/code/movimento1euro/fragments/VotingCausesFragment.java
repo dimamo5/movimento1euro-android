@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.artisans.code.movimento1euro.ProtoGenerator;
 import com.artisans.code.movimento1euro.menus.LoginActivity;
 import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.R;
@@ -50,8 +51,8 @@ public class VotingCausesFragment extends CauseListFragment  {
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
     private OnFragmentInteractionListener mListener;
 
-    ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-    ArrayList<Cause> causesList = new ArrayList<>();
+    List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    List<Cause> causesList = new ArrayList<>();
 
 
     public VotingCausesFragment() {
@@ -78,7 +79,11 @@ public class VotingCausesFragment extends CauseListFragment  {
         View view = inflater.inflate(R.layout.fragment_voting_causes, container, false);
 
         initializeListAdapter(view);
-        new VotingCausesTask(this).execute();
+
+        // TODO: 05/01/2017 Mudar isto
+        //new VotingCausesTask(this).execute();
+        causesList = ProtoGenerator.generateVotingCauses();
+        updateAdapterList(causesList,list);
 
 
 
@@ -139,7 +144,7 @@ public class VotingCausesFragment extends CauseListFragment  {
     }
 
     @Override
-    public ArrayList<HashMap<String, String>> getList() {
+    public List<HashMap<String, String>> getList() {
         return list;
     }
 
@@ -148,7 +153,7 @@ public class VotingCausesFragment extends CauseListFragment  {
         this.list = list;
     }
 
-    public ArrayList<Cause> getCausesList() {
+    public List<Cause> getCausesList() {
         return causesList;
     }
 

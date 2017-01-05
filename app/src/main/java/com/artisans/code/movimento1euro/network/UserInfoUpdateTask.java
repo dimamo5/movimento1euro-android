@@ -70,7 +70,7 @@ public class UserInfoUpdateTask extends ApiRequestTask{
     protected void onPostExecute(JSONObject result) {
 
         try {
-            Log.d(TAG, result.toString());
+            //Log.d(TAG, result.toString());
             String token = result.getString("token");
             long id = result.getLong("id");
             String name = result.getString("name");

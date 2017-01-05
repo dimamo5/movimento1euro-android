@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Build;
 import android.text.Html;
+import android.util.Log;
 import android.util.Pair;
 
 import org.json.JSONArray;
@@ -33,6 +34,7 @@ import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
  */
 
 public class Cause implements Serializable {
+    public static final String TAG= Cause.class.getSimpleName();
     protected int id;
     protected String description;
     protected String money;
@@ -65,8 +67,12 @@ public class Cause implements Serializable {
             this.votes = json.getString(VOTES_COLUMN);
 
             this.association = new Association(json.getJSONObject(ASSOCIATION_COLUMN));
+            this.documents = parseUrlArray(json.getJSONArray(JSONFields.DOCUMENTS_ARRAY_COLUMN));
+            this.videos = parseUrlArray(json.getJSONArray("videos"));
             initializeYouTubeThumbnailLink();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
@@ -74,7 +80,7 @@ public class Cause implements Serializable {
 
     private void initializeYouTubeThumbnailLink() {
         YoutubeUrlResource ytResource = getFirstYoutubeResource();
-
+        Log.d(TAG, ytResource.toString());
         if(ytResource == null){
             this.youtubeThumbnailLink = "";
 //            this.youtubeThumbnailLink = "https://img.youtube.com/vi/GDFUdMvacI0/0.jpg";

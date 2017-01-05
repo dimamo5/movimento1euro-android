@@ -21,10 +21,7 @@ public class VotingCause extends Cause {
         try {
             this.name = json.getString(JSONFields.VOTING_NAME_COLUMN);
             this.userVoted = json.getBoolean("voto_utilizador");
-            this.videos = parseUrlArray(json.getJSONArray("videos"));
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
