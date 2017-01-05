@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import com.artisans.code.movimento1euro.R;
 import com.squareup.picasso.Picasso;
@@ -17,6 +16,7 @@ import java.util.Map;
 
 /**
  * Created by Duart on 27/12/2016.
+ * Custom list adapter for the voting causes list
  */
 
 public class VotingCausesAdapter extends SimpleAdapter {

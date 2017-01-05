@@ -2,8 +2,6 @@ package com.artisans.code.movimento1euro.menus;
 
 
 import android.content.Intent;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
@@ -12,14 +10,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.test.suitebuilder.TestMethod;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,12 +26,11 @@ import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.VoteDialog;
+import com.artisans.code.movimento1euro.models.Cause;
+import com.artisans.code.movimento1euro.models.UrlResource;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.artisans.code.movimento1euro.models.YoutubeUrlResource;
 import com.artisans.code.movimento1euro.network.ApiManager;
-import com.artisans.code.movimento1euro.network.VotingTask;
-import com.artisans.code.movimento1euro.models.Cause;
-import com.artisans.code.movimento1euro.models.UrlResource;
 import com.artisans.code.movimento1euro.youtube.DeveloperKey;
 import com.artisans.code.movimento1euro.youtube.YouTubeFailureRecoveryActivity;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -44,7 +38,6 @@ import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -58,6 +51,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     private String facebookUrl;
     private String webUrl;
 
+    /**
+     *
+     * @param savedInstanceState Activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
