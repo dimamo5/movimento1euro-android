@@ -1,11 +1,7 @@
 package com.artisans.code.movimento1euro.models;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Build;
 import android.text.Html;
-import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,23 +11,16 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.artisans.code.movimento1euro.models.JSONFields.ASSOCIATION_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.DESCRIPTION_COLUMN;
-import static com.artisans.code.movimento1euro.models.JSONFields.ELECTION_TITLE_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
-import static com.artisans.code.movimento1euro.models.JSONFields.INTRODUCTION_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.MONEY_COLUMN;
 import static com.artisans.code.movimento1euro.models.JSONFields.VOTES_COLUMN;
-import static com.artisans.code.movimento1euro.models.JSONFields.ID_COLUMN;
 
 /**
- * Created by Antonio on 30-11-2016.
+ * Represents a cause with all its information
  */
-
 public class Cause implements Serializable {
     protected int id;
     protected String description;
@@ -48,10 +37,11 @@ public class Cause implements Serializable {
     public Cause () {
     }
 
-    // TODO: 13/12/2016 Remover isto para uma classe fora
-
+    /**
+     * Constructor. Parses a JSON object to construct the cause.
+     * @param json JSON Object containing information for the cause
+     */
     public Cause(JSONObject json) {
-
 
         try {
             this.id = json.getInt(ID_COLUMN);
@@ -72,6 +62,9 @@ public class Cause implements Serializable {
 
     }
 
+    /**
+     * If there was an youtube resource, it initializes the thumbnail with the correct info from the resource.
+     */
     private void initializeYouTubeThumbnailLink() {
         YoutubeUrlResource ytResource = getFirstYoutubeResource();
 
@@ -83,7 +76,13 @@ public class Cause implements Serializable {
         }
     }
 
-
+    /**
+     * Parses a JSON object containing various URLs. These are URLs for the cause's resources, like images, videos and other documents
+     * @param jsonArray JSON Object containing the URLs to parse
+     * @return list of UrlResources parsed from the object
+     * @throws JSONException JSON Malformed
+     * @throws MalformedURLException URL Malformed
+     */
     protected static ArrayList<UrlResource> parseUrlArray(JSONArray jsonArray) throws JSONException, MalformedURLException {
         ArrayList<UrlResource> ret = new ArrayList<>();
         String url;
@@ -107,6 +106,10 @@ public class Cause implements Serializable {
         return ret;
     }
 
+    /**
+     * Get first video available on the resources
+     * @return Returns an YoutubeUrlResource containing the information for the video, if there is any video.
+     */
     public YoutubeUrlResource getFirstYoutubeResource(){
         for(UrlResource resource : videos){
             if(YoutubeUrlResource.class.isInstance(resource)){
@@ -161,7 +164,6 @@ public class Cause implements Serializable {
     public ArrayList<UrlResource> getVideos() {
         return videos;
     }
-
 
     public Association getAssociation() {
         return association;

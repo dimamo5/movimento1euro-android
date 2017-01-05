@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Duart on 19/12/2016.
+ *Fragment abstract class for the cause lists
  */
 public abstract class CauseListFragment extends Fragment {
     OnFragmentInteractionListener mListener;

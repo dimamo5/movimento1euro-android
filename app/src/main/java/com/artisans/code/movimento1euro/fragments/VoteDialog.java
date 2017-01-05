@@ -9,7 +9,6 @@ import com.artisans.code.movimento1euro.models.VotingCause;
 import com.artisans.code.movimento1euro.network.ApiManager;
 
 /**
- * Created by Duart on 21/12/2016.
  * Confirmation dialog for voting on a cause
  */
 

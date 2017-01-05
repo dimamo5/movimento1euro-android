@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import com.artisans.code.movimento1euro.R;
 
 /**
- * Created by Duarte on 22/10/2016.
+ *
  */
 public class AboutActivity extends AppCompatActivity {
     /**

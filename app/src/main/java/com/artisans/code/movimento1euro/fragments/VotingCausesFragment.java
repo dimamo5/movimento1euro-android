@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Fragment for the list that shows the current voting causes
+ */
 public class VotingCausesFragment extends CauseListFragment  {
 
     private static final String TAG = VotingCausesFragment.class.getSimpleName();

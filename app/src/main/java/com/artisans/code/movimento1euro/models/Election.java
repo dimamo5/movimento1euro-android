@@ -8,11 +8,11 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
- * Created by PedroCosta on 03/12/2016.
+ * Represents an election among various causes, in which users vote.
  */
 
 public class Election implements Serializable{
@@ -21,20 +21,32 @@ public class Election implements Serializable{
     private SimpleDateFormat readingFormat = new SimpleDateFormat(dateFormat);
     private Calendar cal = Calendar.getInstance();
 
+    /**
+     * Causes that won the election
+     */
     private ArrayList<Cause> winningCauses;
+    /**
+     * All the causes voted on this election
+     */
     private ArrayList<Cause> causes;
     private int id;
     private int year;
     private String title;
     private Date startDate;
     private Date endDate;
+    /**
+     * Ammount M1E has available to reward the winners of this specific election
+     */
     private double availableAmmount;
     private int totalVotes;
-
 
     public Election() {
     }
 
+    /**
+     * Constructor. Parses a JSON object to construct the election.
+     * @param election JSON Object containing information for the election
+     */
     public Election(JSONObject election) {
         try {
             id = election.getInt("id");

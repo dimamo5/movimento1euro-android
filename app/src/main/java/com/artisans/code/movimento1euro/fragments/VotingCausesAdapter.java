@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Duart on 27/12/2016.
  * Custom list adapter for the voting causes list
  */
 

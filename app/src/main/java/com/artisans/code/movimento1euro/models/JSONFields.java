@@ -1,9 +1,8 @@
 package com.artisans.code.movimento1euro.models;
 
 /**
- * Created by Duart on 19/12/2016.
+ * Constants for the JSON fields to parse
  */
-
 public class JSONFields {
 
         public static final String ELECTION_TITLE_COLUMN = "titulo";

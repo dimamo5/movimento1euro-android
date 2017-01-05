@@ -10,9 +10,8 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 /**
- * Created by Antonio on 30-11-2016.
+ * Represents an association, which normally requests causes
  */
-
 public class Association  implements Serializable{
     private String name;
     private String presentation;
@@ -24,6 +23,10 @@ public class Association  implements Serializable{
     private String facebook;
     private String youtube;
 
+    /**
+     * Creates an association object through the parsing of a json object
+     * @param json JSON Object to parse
+     */
     Association(JSONObject json) {
         try {
             name = json.getString("nome");
@@ -46,6 +49,11 @@ public class Association  implements Serializable{
         }
     }
 
+    /**
+     * Removes < and > tags from a string
+     * @param in String to parse
+     * @return
+     */
     public String removeTags(String in)
     {
         int index=0;
