@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Movimento1Euro</string>
-    <string name="versionCode">0.5</string>
-    <string name="versionName">0.5</string>
+    <string name="versionCode">0.5.1</string>
+    <string name="versionName">0.5.1</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -48,6 +48,7 @@
     <string name="upd_firebase_token_path">/firebaseToken</string>
     <string name="vote_in_cause_path">/voteCause</string>
     <string name="days_to_warn_path">/daysToWarn</string>
+    <string name="update_user_info">/refresh</string>
     <string name="seen_notification_path">/notificationSeen</string>
 
     <!--API responses-->

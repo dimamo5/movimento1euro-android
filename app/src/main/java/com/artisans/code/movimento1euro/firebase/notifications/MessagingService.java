@@ -20,30 +20,35 @@ import com.google.firebase.messaging.RemoteMessage;
  * Created by duarte on 15-11-2016.
  */
 
+/**
+ * Represents a Messaging service extending the Firebase messaging service
+ * used to handle messages, create notifications and handle actions(click/dismiss) on notifications in the client app
+ */
 public class MessagingService extends FirebaseMessagingService {
     private final String TAG = MessagingService.class.getCanonicalName();
-    private String notificationId;
+    private static String notificationId;
 
+    /**
+     * Handler for received firebase messages.
+     * @param remoteMessage
+     */
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "FROM" + remoteMessage.getFrom());
 
         if(remoteMessage.getData().size() > 0){
             Log.d(TAG, "Message data: " +remoteMessage.getData());
-        }
-
-        if(remoteMessage.getNotification() != null){
-            Log.d(TAG, "Message body: " + remoteMessage.getNotification().getBody());
-
-            Log.d(TAG, "ID: " + remoteMessage.getMessageId());
-
             notificationId = remoteMessage.getMessageId();
-
-            sendNotification(remoteMessage.getMessageId(), remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
+            sendNotification(remoteMessage.getMessageId(), remoteMessage.getData().get("title"),remoteMessage.getData().get("body"));
         }
-
     }
 
+    /**
+     * Method used to send notification to the android system. Creates intents for on click/dismiss notification events
+     * @param id
+     * @param title
+     * @param body
+     */
     private void sendNotification(String id, String title, String body) {
 
         Intent intent = new Intent(this, MainMenu.class); // AINDA NÃO TENHO A CERTEZA SE COLOCO MainMenu.class ou SplashScreen.class
@@ -53,10 +58,9 @@ public class MessagingService extends FirebaseMessagingService {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        /*Intent deleteIntent = new Intent(this, MyBroadcastReceiver.class);
+        Intent deleteIntent = new Intent(this, MyBroadcastReceiver.class);
         deleteIntent.putExtra("com.my.app.notificationId", notificationId);
-        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this.getApplicationContext(), 0, deleteIntent,0);//mudar one shot para 0 caso esteja a dar peido
-        */
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, 0, deleteIntent, 0);//mudar one shot para 0 caso esteja a dar peido
 
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
@@ -69,19 +73,26 @@ public class MessagingService extends FirebaseMessagingService {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(body));
 
-        //notificationBuilder.setDeleteIntent(pendingIntent2);
+        notificationBuilder.setDeleteIntent(pendingIntent2);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0,notificationBuilder.build());
     }
 
-    //dismiss notification related
-    /*public class MyBroadcastReceiver extends BroadcastReceiver {
+    /**
+     * This class is used for the dismiss notification receiver handler, that calls Api when a notification is dismissed
+     * to update that message as 'seen'
+     */
+    public static class MyBroadcastReceiver extends BroadcastReceiver {
+
+        public MyBroadcastReceiver() {
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             new SeenNotificationTask(context).execute(notificationId);
         }
 
-    }*/
+    }
 
 }
