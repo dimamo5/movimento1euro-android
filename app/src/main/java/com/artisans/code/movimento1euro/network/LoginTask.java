@@ -18,6 +18,8 @@ import java.util.Date;
 
 /**
  * Asynchronous task to execute the login. It supports both login using Facebook's API and standard login (email + password).
+ * After, if the login is successful, the finishes the current LoginActivity and sends an intent to start the MainMenu. Otherwise shows a toast saying the login failed.
+ *
  * Parameters:
  * STANDARD- email and password. Ex: new LoginTask(context, type).execute(email, password);
  * FACEBOOK- user's Facebook ID and User's Facebook Token(obtained using Facebook's Graph API). Ex: new LoginTask(context, type).execute(facebookUserId, facebookToken);

@@ -14,7 +14,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * Util class used for building the request.
+ * Util class used for building the requests used by ApiRequestTask (except for the GET requests).
  */
 
 public class ConnectionBuilder {
@@ -22,7 +22,7 @@ public class ConnectionBuilder {
 
 
     /**
-     *
+     * Builds the connection and adds the parameters as json to the request.
      * @param url url to where the request will be sent
      * @param requestMethod type of method
      * @param token api token to authenticate
