@@ -10,7 +10,6 @@ import org.json.JSONObject;
 /**
  * Created by Duart on 02/01/2017.
  */
-
 public class AlertTask extends ApiRequestTask{
 
     MainMenu activity;

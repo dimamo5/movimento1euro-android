@@ -14,14 +14,22 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * Created by duarte on 30-10-2016.
+ * Util class used for building the request.
  */
 
 public class ConnectionBuilder {
     public static final String TAG = ConnectionBuilder.class.getSimpleName();
 
 
-
+    /**
+     *
+     * @param url url to where the request will be sent
+     * @param requestMethod type of method
+     * @param token api token to authenticate
+     * @param parameters map<parameterName, parameter>
+     * @return
+     * @throws IOException
+     */
     public static HttpURLConnection buildConnection(URL url, ApiRequestTask.Request requestMethod, String token , Map<String, String> parameters) throws IOException {
         String parametersStr = createQueryStringForParameters(parameters);
         HttpURLConnection request = (HttpURLConnection) url.openConnection();
