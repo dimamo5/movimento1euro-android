@@ -16,9 +16,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by Duart on 28/12/2016.
+ * Asynchronous task to execute the login. It supports both login using Facebook's API and standard login (email + password).
+ * Parameters:
+ * STANDARD- email and password. Ex: new LoginTask(context, type).execute(email, password);
+ * FACEBOOK- user's Facebook ID and User's Facebook Token(obtained using Facebook's Graph API). Ex: new LoginTask(context, type).execute(facebookUserId, facebookToken);
  */
 public class LoginTask extends ApiRequestTask {
+
+    /**
+     * Types of login supported by the LoginTask class
+     */
     public enum LoginType {
         STANDARD,
         FACEBOOK
