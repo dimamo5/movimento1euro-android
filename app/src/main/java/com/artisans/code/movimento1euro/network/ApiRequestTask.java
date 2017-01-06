@@ -41,6 +41,9 @@ import static com.mashape.unirest.http.Unirest.post;
  * Created by duarte on 16-11-2016.
  */
 
+/**
+ * Abstract class to build and execute the API requests. Requires the method and parameters and urlString to be set before executing the request. The both content-type and accept used are "application/json/
+ */
 public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject> {
 
     public final static String TAG = ApiRequestTask.class.getSimpleName();
@@ -49,6 +52,11 @@ public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject>
     protected Map<String, String> parametersMap = new HashMap<>();
     protected Request method = POST;
 
+    /**
+     * Checks connectivity and throws an exception with a message according to the connectivity state.
+     * @return
+     * @throws Exception
+     */
     protected JSONObject checkConnectivity() throws Exception {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -65,6 +73,9 @@ public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject>
         throw new Exception(error);
     }
 
+    /**
+     * Requests supported
+     */
     public enum Request{
         POST,
         GET,
@@ -106,6 +117,10 @@ public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject>
         return null;
     }
 
+    /**
+     * Function that should be executed when the url, parameters and request method have all been set.
+     * @return null if there was an error. Else returns the JSON with the response from the server
+     */
     private JSONObject executeGetRequest() {
         JSONObject retObj;
         HttpRequest request;
@@ -135,6 +150,11 @@ public abstract class ApiRequestTask extends AsyncTask<String, Void, JSONObject>
         return null;
     }
 
+    /**
+     * Function used to build the full url with the servers link and the parameters for the GET requests. Ex: http://website.com?year=2017&mobile=true
+     * @param url
+     * @return
+     */
     private String addParametersToGetUrl(String url){
         Set<String> keys = parametersMap.keySet();
         String value;
