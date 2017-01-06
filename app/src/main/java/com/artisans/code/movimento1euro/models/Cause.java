@@ -55,8 +55,13 @@ public class Cause implements Serializable {
             this.votes = json.getString(VOTES_COLUMN);
 
             this.association = new Association(json.getJSONObject(ASSOCIATION_COLUMN));
+            this.videos = parseUrlArray(json.getJSONArray("videos"));
+            this.documents = parseUrlArray(json.getJSONArray(JSONFields.DOCUMENTS_ARRAY_COLUMN));
+
             initializeYouTubeThumbnailLink();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 

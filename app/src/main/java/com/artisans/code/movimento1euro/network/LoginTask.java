@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
+import com.artisans.code.movimento1euro.menus.LoginActivity;
 import com.artisans.code.movimento1euro.menus.MainMenu;
 import com.facebook.login.LoginManager;
 
@@ -32,9 +33,9 @@ public class LoginTask extends ApiRequestTask {
     }
 
     LoginType type;
-    Activity activity;
+    LoginActivity activity;
 
-    public LoginTask(Activity activity, LoginType type){
+    public LoginTask(LoginActivity activity, LoginType type){
         super(activity.getApplicationContext());
         this.activity = activity;
         this.type = type;
