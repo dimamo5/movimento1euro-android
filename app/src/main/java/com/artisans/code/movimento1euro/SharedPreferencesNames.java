@@ -1,11 +1,7 @@
 package com.artisans.code.movimento1euro;
 
 /**
- * Created by Duart on 02/01/2017.
- */
-
-/**
- *
+ * List of the SharedPreferences names used
  */
 public class SharedPreferencesNames {
     public static final String USER_INFO = "userInfo";
