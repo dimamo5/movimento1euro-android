@@ -1,7 +1,6 @@
 package com.artisans.code.movimento1euro.models;
 
 import android.util.Log;
-import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,31 +9,34 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static com.artisans.code.movimento1euro.models.JSONFields.INTRODUCTION_COLUMN;
 
 /**
- * Created by Duart on 13/12/2016.
+ * Represents a past cause with all its information
  */
-
 public class PastCause extends Cause {
 
-
+    /**
+     * Constructor. Parses a JSON object to construct the cause.
+     * @param json JSON Object containing information for the cause
+     */
     public PastCause(JSONObject json) {
         super(json);
 
         try {
             this.name = json.getString(JSONFields.PAST_NAME_COLUMN);
             this.introduction = json.getString(INTRODUCTION_COLUMN);
-            this.documents = parseUrlArray(json.getJSONArray(JSONFields.DOCUMENTS_ARRAY_COLUMN));
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Parses JSON to URL resource list of objects
+     * @param array JSON Object containing the URL resources
+     * @return List of URL resources for the past cause
+     */
     @Deprecated
     protected static ArrayList<UrlResource> parseDocuments(JSONArray array){
         ArrayList<UrlResource> documents = new ArrayList<>();

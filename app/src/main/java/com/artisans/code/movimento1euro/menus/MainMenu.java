@@ -1,7 +1,6 @@
 package com.artisans.code.movimento1euro.menus;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,49 +8,42 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.view.menu.MenuItemImpl;
-import android.support.v7.view.menu.MenuView;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.CauseListFragment;
 import com.artisans.code.movimento1euro.fragments.ViewLastCausesFragment;
+import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
 import com.artisans.code.movimento1euro.network.AlertTask;
 import com.artisans.code.movimento1euro.network.ApiManager;
-import com.artisans.code.movimento1euro.network.LoginTask;
 import com.artisans.code.movimento1euro.network.SeenNotificationTask;
 import com.artisans.code.movimento1euro.network.UserInfoUpdateTask;
 import com.facebook.login.LoginManager;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import com.artisans.code.movimento1euro.fragments.VotingCausesFragment;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
+/**
+ * Main Menu activity with sidebar menu option
+ */
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CauseListFragment.OnFragmentInteractionListener {
@@ -62,10 +54,25 @@ public class MainMenu extends AppCompatActivity
     protected String ABOUT_US_URL;
     protected String CONTACTS_URL;
 
+    /**
+     * Username text holder
+     */
     TextView username;
+    /**
+     * User's subscription expiration date text holder
+     */
     TextView expDate;
+    /**
+     * Fragment to be showed when clicking Past Causes menu option
+     */
     ViewLastCausesFragment viewLastCausesFragment;
+    /**
+     * Fragment to be showed when clicking Past Causes menu option
+     */
     VotingCausesFragment viewVotingCausesFragment;
+    /**
+     * Fragment to be launched when selecting a cause, on either the voting or past causes fragment
+     */
     CausesDetailsActivity viewCauses;
 
     @Override
@@ -119,6 +126,10 @@ public class MainMenu extends AppCompatActivity
         }
     }
 
+    /**
+     * Change logout button text for the unAuthenticated user
+     * @param navigationView
+     */
     private void initUnAuthenticatedMode(NavigationView navigationView) {
 
         MenuItemImpl item = (MenuItemImpl) navigationView.getMenu().findItem(R.id.nav_logout);
@@ -217,6 +228,9 @@ public class MainMenu extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Asynchronous task to logout
+     */
     private class LogoutTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -247,6 +261,9 @@ public class MainMenu extends AppCompatActivity
         }
     }
 
+    /**
+     * Logs the user out, clearing the local data
+     */
     protected void logout(){
         SharedPreferences sharedPreferences = getSharedPreferences("userInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -268,11 +285,19 @@ public class MainMenu extends AppCompatActivity
         fillUserDetails();
     }
 
+    /**
+     * Internally updates user information, including his subscription's expiration date, name, id and token.
+     * Saves these into the Shared Preferences
+     */
     private void updateUserInfo(){
 
         if(ApiManager.getInstance().isAuthenticated(getApplicationContext()))
             new UserInfoUpdateTask(this).execute();
     }
+
+    /**
+     * Fills the user details with the information stored in the Shared Preferences
+     */
     private void fillUserDetails() {
 
         // fill user info (name and expiration date)
@@ -289,7 +314,7 @@ public class MainMenu extends AppCompatActivity
     }
 
     /**
-     * Renova a informação do alerta e após renovar a informção chama a função showExpirationDateAlert()
+     * Renews the alert information and after renewing, calls the function showExpirationDateAlert()
      */
     private void refreshAlertStatus() {
         new AlertTask(this).execute();

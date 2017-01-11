@@ -9,7 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by Duart on 28/12/2016.
+ * Asynchronous task to send (and update) the new Firebase token to the server.
+ * The firebase token must be passed like ex: new UpdateFirebaseTokenTask(context).execute(firebaseToken)
  */
 
 public class UpdateFirebaseTokenTask extends ApiRequestTask {

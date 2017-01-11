@@ -4,29 +4,35 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 import com.artisans.code.movimento1euro.models.Cause;
-import com.artisans.code.movimento1euro.models.PastCause;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Duart on 19/12/2016.
+ *Fragment abstract class for the cause lists
  */
 public abstract class CauseListFragment extends Fragment {
     OnFragmentInteractionListener mListener;
+    /**
+     * Stores the past causes that are shown on the screen, each cause being on an hashmap format
+     */
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
     Spinner spinner;
     ListView listView;
     SimpleAdapter listAdapter;
 
-
+    /**
+     * Clears the hashmap list and fills it with new values transformed from the causes list
+     * @param causeList list of causes to transform into hashmap
+     * @param hashmapList list of hashmaps that is updated - each hashmap object on the list corresponds to a cause, the keys of the hashmap correspond to the data fields of the cause
+     * @return
+     */
     public int updateAdapterList(ArrayList<Cause> causeList, ArrayList<HashMap<String,String>> hashmapList){
         hashmapList.clear();
 
@@ -37,8 +43,17 @@ public abstract class CauseListFragment extends Fragment {
         return hashmapList.size();
     }
 
+    /**
+     * Transforms a cause object into HashMap format (for adapter list to receive later)
+     * @param cause Cause object to be transformed
+     * @return Hashmap, the names of the data fields are the keys, mapping each cause data field to its value
+     */
     protected abstract HashMap<String,String> causeToHashMap(Cause cause);
 
+    /**
+     * Internally updates the adapter with the current state of the list of causes
+     * Updating the list itself does nothing until this method is called.
+     */
     public void notifyChanges() {
         listAdapter.notifyDataSetChanged();
     }
@@ -85,10 +100,18 @@ public abstract class CauseListFragment extends Fragment {
         this.mListener = mListener;
     }
 
+    /**
+     *
+     * @return  HashMap list that contains the information for the list of causes being shown
+     */
     public ArrayList<HashMap<String, String>> getList() {
         return list;
     }
 
+    /**
+     * Sets the HashMap list with information to be shown as the one on the parameters
+     * @param  list of hashmaps that contain causes' information
+     */
     public void setList(ArrayList<HashMap<String, String>> list) {
         this.list = list;
     }

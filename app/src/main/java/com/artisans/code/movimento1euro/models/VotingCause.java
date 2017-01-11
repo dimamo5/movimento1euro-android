@@ -4,12 +4,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
-import java.util.HashMap;
-
-import static com.artisans.code.movimento1euro.models.JSONFields.INTRODUCTION_COLUMN;
 
 /**
- * Created by Duart on 13/12/2016.
+ * Represents a voting cause with all its information.
+ * Also stores information as to whether the current logged user has voted or not on this cause.
  */
 
 public class VotingCause extends Cause {
@@ -21,13 +19,9 @@ public class VotingCause extends Cause {
         try {
             this.name = json.getString(JSONFields.VOTING_NAME_COLUMN);
             this.userVoted = json.getBoolean("voto_utilizador");
-            this.videos = parseUrlArray(json.getJSONArray("videos"));
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         }
-
     }
 
     public boolean isUserVoted() {

@@ -1,12 +1,6 @@
 package com.artisans.code.movimento1euro.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,32 +11,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.PastCauseDetailsActivity;
 import com.artisans.code.movimento1euro.models.Cause;
-import com.artisans.code.movimento1euro.models.Election;
 import com.artisans.code.movimento1euro.models.PastCause;
 import com.artisans.code.movimento1euro.network.LastCausesTask;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 /**
+ * Fragment for the list that shows the past causes
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link ViewLastCausesFragment.OnFragmentInteractionListener} interface
@@ -52,17 +34,27 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class ViewLastCausesFragment extends CauseListFragment {
 
+    /**
+     * First year to appear on the spinner. The requests will count the years upward from here.
+     */
+    public static final int START_YEAR = 2011;
 
     public final static String requestError = "";
     public final static String connectionError = "";
     public final static String TAG = ViewLastCausesFragment.class.getCanonicalName();
-    public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
-    public static final int START_YEAR = 2011;
-
 
     ArrayAdapter<String> spinnerAdapter; // Spinner year list adapter
+    /**
+     * Hashmap mapping each year to the list of causes it contains
+     */
     HashMap<String, ArrayList<PastCause>> allCausesByYear = new HashMap<>();
+    /**
+     * List of years available to search causes from
+     */
     ArrayList<String> yearsList = new ArrayList<String>();
+    /**
+     * Auxiliar container of the list of causes to be shown on the screen (when transformed to hashmap)
+     */
     ArrayList<Cause> shownCauseslist = new ArrayList<>();
 
 
@@ -104,6 +96,9 @@ public class ViewLastCausesFragment extends CauseListFragment {
         spinner.setVisibility(View.GONE);
     }
 
+    /**
+     * Constants to be used as field names/keys for the list hashmap of the Past Causes
+     */
     public class Constants {
         public static final String TITLE_COLUMN = "Title";
         public static final String ELECTION_TITLE_COLUMN = "Election_Title";
@@ -111,7 +106,10 @@ public class ViewLastCausesFragment extends CauseListFragment {
 
     }
 
-
+    /**
+     * Updates screen with the causes from a certain year
+     * @param year Year whence the causes to load belong to
+     */
     public void updateFromSpinner(String year) {
 
         if (allCausesByYear.get(year) != null) {
@@ -130,6 +128,14 @@ public class ViewLastCausesFragment extends CauseListFragment {
     }
 
 
+    /**
+     * Initializes all the adapters and makes the web requests for all the causes of each year.
+     * Additionaly, the request for the current year is updated on the screen, when received.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -151,6 +157,9 @@ public class ViewLastCausesFragment extends CauseListFragment {
         return view;
     }
 
+    /**
+     * Makes a list with all the years from START_YEAR up until the present
+     */
     protected void fillYearsList() {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         if (currentYear >= START_YEAR) {
@@ -163,7 +172,9 @@ public class ViewLastCausesFragment extends CauseListFragment {
         }
     }
 
-    // SPINNER - Create Spinner on ACTIVITY BAR + define adapter, functions and spinner items
+    /**
+     * Create Spinner on ACTIVITY BAR and define adapter, functions and spinner items
+     */
     protected void createSpinnerOnActivityBar() {
         spinner = (Spinner) getActivity().findViewById(R.id.spinner_nav);
         spinner.setVisibility(View.VISIBLE);
@@ -219,6 +230,10 @@ public class ViewLastCausesFragment extends CauseListFragment {
         listView.setAdapter(listAdapter);
     }
 
+    /**
+     * Event on clicking a cause item - starts a new activity detailing the cause
+     * @param view
+     */
     @Override
     public void cardClick(View view) {
         int index=listView.getPositionForView(view);

@@ -27,7 +27,7 @@ import java.util.HashMap;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by Duart on 29/12/2016.
+ * Asynchronous task to get the list of voting causes from the server. After the request it updates the list of voting causes.
  */
 
 public class VotingCausesTask extends ApiRequestTask {

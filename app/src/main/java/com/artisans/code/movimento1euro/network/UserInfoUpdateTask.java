@@ -17,7 +17,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 /**
- * Created by Filipe on 04/01/2017.
+ * Asynchronous task to refresh the user's personal information (authentication token, id, name, and expiration date.
  */
 
 public class UserInfoUpdateTask extends ApiRequestTask{

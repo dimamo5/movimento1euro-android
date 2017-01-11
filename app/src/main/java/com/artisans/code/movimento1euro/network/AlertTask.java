@@ -8,9 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by Duart on 02/01/2017.
+ * Asynchronous task to refresh the alert settings from the API. After a successful request it launches the expiration alert.
  */
-
 public class AlertTask extends ApiRequestTask{
 
     MainMenu activity;

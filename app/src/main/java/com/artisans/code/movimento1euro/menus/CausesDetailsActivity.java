@@ -2,8 +2,6 @@ package com.artisans.code.movimento1euro.menus;
 
 
 import android.content.Intent;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
@@ -12,14 +10,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.test.suitebuilder.TestMethod;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,12 +26,11 @@ import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.fragments.VoteDialog;
+import com.artisans.code.movimento1euro.models.Cause;
+import com.artisans.code.movimento1euro.models.UrlResource;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.artisans.code.movimento1euro.models.YoutubeUrlResource;
 import com.artisans.code.movimento1euro.network.ApiManager;
-import com.artisans.code.movimento1euro.network.VotingTask;
-import com.artisans.code.movimento1euro.models.Cause;
-import com.artisans.code.movimento1euro.models.UrlResource;
 import com.artisans.code.movimento1euro.youtube.DeveloperKey;
 import com.artisans.code.movimento1euro.youtube.YouTubeFailureRecoveryActivity;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -44,20 +38,25 @@ import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by Filipe on 02/12/2016.
+ * Activity to open a new window for the details of a cause. Receives a cause when being initiated
  */
-
 public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
+    /**
+     * Cause to be loaded
+     */
     Cause cause;
     private final int lineLimit = 5;
     private String facebookUrl;
     private String webUrl;
 
+    /**
+     *
+     * @param savedInstanceState Activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -88,6 +87,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
     }
 
 
+    /**
+     * Fill the activity fields with all the information from the  cause
+     * @param cause Cause to be shown
+     */
     private void fillFields(Cause cause) {
         TextView textBox;
 
@@ -138,9 +141,12 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
 
     }
 
+    /**
+     * Opens and adds a document to the page
+     * @param doc URL resource containing the document to add
+     */
     private void addDocument(final UrlResource doc) {
         LayoutInflater inflater = LayoutInflater.from(this);
-
 
         /*LinearLayout layout = new LinearLayout(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -171,11 +177,13 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         documents.addView(layout);
     }
 
-
+    /**
+     * Sets social network buttons as visible, if the link to the associaton's social network pages exist (e.g.: facebook, twitter)
+     * @param cause Cause shown, to extract the facebook URL from
+     */
     private void setupSocialMediaButtons(Cause cause) {
         final ImageButton facebookButton = (ImageButton) findViewById(R.id.facebook_url_button);
         facebookUrl = cause.getAssociation().getFacebook();
-        //facebookUrl = "https://www.facebook.com/duarte.pinto.9";
 
         if (facebookUrl == null || facebookUrl.equals("")){
 //        if(false){
@@ -233,6 +241,10 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
         return (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtube_fragment);
     }
 
+    /**
+     * Prompts a vote dialog, in which the user can either cancel or confirm
+     * @param view Currently selected view
+     */
     public void vote(final View view) {
         if(!ApiManager.getInstance().isAuthenticated(this)){
             Toast.makeText(this, getString(R.string.unauthenticated_voting_error), Toast.LENGTH_LONG).show();
@@ -241,7 +253,6 @@ public class CausesDetailsActivity extends YouTubeFailureRecoveryActivity {
             new VoteDialog(this, (VotingCause) cause).create().show();
         }
     }
-
 
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 

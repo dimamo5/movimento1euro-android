@@ -3,14 +3,13 @@ package com.artisans.code.movimento1euro.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.widget.Toast;
 
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.artisans.code.movimento1euro.network.ApiManager;
 
 /**
- * Created by Duart on 21/12/2016.
+ * Confirmation dialog for voting on a cause
  */
 
 public class VoteDialog extends AlertDialog.Builder {

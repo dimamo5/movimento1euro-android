@@ -17,7 +17,8 @@ import org.json.JSONObject;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by sergi on 21/12/2016.
+ * Asynchronous task to send a user's vote to the server. Must receive the ID of the voting and the ID of the cause in which the user will vote.
+ * Both ID's must be passed in the following order ex: new VotingTask(context).execute(idVote,idCause)
  */
 
 public class VotingTask extends ApiRequestTask{

@@ -5,7 +5,7 @@ import java.net.URL;
 
 
 /**
- * Created by Duart on 20/12/2016.
+ * Wrapper for a URL with a description associated
  */
 
 public class UrlResource implements Serializable {

@@ -27,9 +27,8 @@ import java.util.HashMap;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by Duart on 28/12/2016.
+ * Asynchronous task to get the list of past causes from the server. After the request it updates the list of past causes.
  */
-
 public class LastCausesTask extends ApiRequestTask{
 
     String year;

@@ -8,7 +8,7 @@ import com.mashape.unirest.http.HttpResponse;
 import org.json.JSONObject;
 
 /**
- * Created by sergi on 02/01/2017.
+ * Asynchronous task to notify the server that the user has viewed the notification
  */
 
 public class SeenNotificationTask extends ApiRequestTask {

@@ -9,10 +9,10 @@ import android.support.v7.widget.Toolbar;
 import com.artisans.code.movimento1euro.R;
 
 /**
- * Created by Duarte on 22/10/2016.
+ * Activity for the About menu option.
  */
-
 public class AboutActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

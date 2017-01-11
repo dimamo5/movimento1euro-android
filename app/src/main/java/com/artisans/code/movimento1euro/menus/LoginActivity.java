@@ -24,6 +24,9 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+/**
+ * Activity for the login screen.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -35,8 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +47,6 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword = (EditText) findViewById(R.id.input_password);
         findViewById(R.id.layout_login_screen).requestFocus();
 
-        // TODO: 13-11-2016 Remover isto antes de entregar
-/*        inputEmail.setText("diogo@cenas.pt");
-        inputPassword.setText("123");*/
 
         Button signUpBtn = (Button) findViewById(R.id.btn_sign_up);
         signUpBtn.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +71,9 @@ public class LoginActivity extends AppCompatActivity {
         facebookLoginInit();
     }
 
+    /**
+     * Attempts to login on facebook
+     */
     private void facebookLoginInit() {
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
@@ -114,6 +115,10 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Attempts to login by normal means with the email and password input
+     * @param view
+     */
     public void standardLogin(View view) {
         // Gets the URL from the UI's text field.
         String email = inputEmail.getText().toString();
@@ -129,6 +134,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Accesses the app as an unauthenticated user (has no token set)
+     * @param view
+     */
     public void unauthenticatedLogin(View view){
         if(!ApiManager.getInstance().setAsUnauthenticated(this)){
             Toast toast = Toast.makeText(this,activity.getString(R.string.failed_login), Toast.LENGTH_SHORT);

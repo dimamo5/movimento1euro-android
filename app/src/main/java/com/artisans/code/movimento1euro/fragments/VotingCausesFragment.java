@@ -1,48 +1,28 @@
 package com.artisans.code.movimento1euro.fragments;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.artisans.code.movimento1euro.menus.LoginActivity;
-import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.R;
 import com.artisans.code.movimento1euro.menus.CausesDetailsActivity;
-import com.artisans.code.movimento1euro.models.Election;
+import com.artisans.code.movimento1euro.models.Cause;
 import com.artisans.code.movimento1euro.models.VotingCause;
 import com.artisans.code.movimento1euro.network.ApiManager;
 import com.artisans.code.movimento1euro.network.VotingCausesTask;
-import com.artisans.code.movimento1euro.network.VotingTask;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
-
+/**
+ * Fragment for the list that shows the current voting causes
+ */
 public class VotingCausesFragment extends CauseListFragment  {
 
     private static final String TAG = VotingCausesFragment.class.getSimpleName();
@@ -50,7 +30,13 @@ public class VotingCausesFragment extends CauseListFragment  {
     public static final List<String> MONTHS = Arrays.asList("No Month", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * Stores the causes that are shown on the screen, each cause being on an hashmap format
+     */
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    /**
+     * Auxiliar container of the list of causes (to be transformed to hashmap)
+     */
     ArrayList<Cause> causesList = new ArrayList<>();
 
 
@@ -62,6 +48,9 @@ public class VotingCausesFragment extends CauseListFragment  {
         super.onDestroy();
     }
 
+    /**
+     * Constants to be used as field names/keys for the list hashmap of the Voting Causes
+     */
     public class Constants {
         public static final String NAME_COLUMN = "name";
         public static final String MONEY_COLUMN = "money";
@@ -69,8 +58,13 @@ public class VotingCausesFragment extends CauseListFragment  {
         public static final String IMAGE_COLUMN = "thumbnail";
     }
 
-
-
+    /**
+     * Android function. On creating view, starts a web request for the voting causes
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,8 +73,6 @@ public class VotingCausesFragment extends CauseListFragment  {
 
         initializeListAdapter(view);
         new VotingCausesTask(this).execute();
-
-
 
         return view;
     }
@@ -104,7 +96,6 @@ public class VotingCausesFragment extends CauseListFragment  {
     protected HashMap<String, String> causeToHashMap(Cause cause) {
         HashMap<String, String> hashMap = new HashMap<String, String>();
 
-
         hashMap.put(Constants.NAME_COLUMN, cause.getName());
         hashMap.put(Constants.DESCRIPTION_COLUMN, cause.getDescription());
         hashMap.put(Constants.MONEY_COLUMN, "Valor da causa: " + cause.getMoney() + "€");
@@ -114,6 +105,10 @@ public class VotingCausesFragment extends CauseListFragment  {
         return hashMap;
     }
 
+    /**
+     * Event on clicking a cause item - starts a new activity detailing the cause
+     * @param view
+     */
     @Override
     public void cardClick(View view) {
         int index = listView.getPositionForView(view);
@@ -124,8 +119,10 @@ public class VotingCausesFragment extends CauseListFragment  {
         startActivity(intent);
     }
 
-
-
+    /**
+     * Calls API web request to vote on the selected view (selected cause card)
+     * @param view selected view (cause card)
+     */
     public void vote(final View view) {
         int index = listView.getPositionForView(view);
         Cause cause = causesList.get(index);
