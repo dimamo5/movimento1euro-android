@@ -12,13 +12,13 @@ The product includes two applications. A mobile application for ordinary users, 
 ##Android
 
 ###Documentation
-[Documentation](https://dimamo5.github.io/movimento1euro-mobile/)
+[Documentation](https://dimamo5.github.io/movimento1euro-android/)
 
 ###Requirements
 * Android version: 4.4+
 
 ###Install
-1. On your Android device download the latest .apk [here](https://github.com/dimamo5/movimento1euro-mobile/releases/tag/0.5)
+1. On your Android device download the latest .apk [here](https://github.com/dimamo5/movimento1euro-android/releases/tag/0.5)
 2. Go to Settings -> Security. Check the option Unknown sources. Tap OK on the prompt message.
 3. Install the .apk file
 
